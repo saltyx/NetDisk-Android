@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SecuDisk</string>
+
+    <string name="welcome_button">Start Now</string>
+    <string name="welcome">SecuDisk</string>
+    <string name="welcome_description">Your Own Secure Cloud Disk</string>
+</resources>
