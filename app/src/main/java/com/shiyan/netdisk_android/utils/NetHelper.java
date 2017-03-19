@@ -24,9 +24,18 @@
 
 package com.shiyan.netdisk_android.utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -35,6 +44,20 @@ import okhttp3.Request;
 
 public class NetHelper {
 
+    public static class LoginModel {
+        String ip;
+        String port;
+        String username;
+        String password;
+
+        public LoginModel(String ip, String port, String username, String password) {
+            this.ip = ip;
+            this.port = port;
+            this.username = username;
+            this.password = password;
+        }
+    }
+
     private static NetHelper INSTANCE;
     private OkHttpClient client;
 
@@ -42,7 +65,7 @@ public class NetHelper {
         client = new OkHttpClient();
     }
 
-    public NetHelper getInstance() {
+    public static NetHelper getInstance() {
         if (INSTANCE == null) {
             synchronized (NetHelper.class) {
                 if (INSTANCE == null) {
@@ -55,5 +78,34 @@ public class NetHelper {
 
     public void newCall(Request request, Callback callback) {
         client.newCall(request).enqueue(callback);
+    }
+
+    public void login(LoginModel loginModel , final CallBack callback) throws JSONException, IllegalArgumentException {
+        JSONObject object = new JSONObject();
+        object.put("username", loginModel.username);
+        object.put("password", loginModel.password);
+        JSONObject data = new JSONObject();
+        data.put("user", data);
+
+        Request request = new Request.Builder()
+                .url(String.format("%s:%s/v1/login", loginModel.ip, loginModel.port))
+                .post(RequestBody.create(MediaType.parse("application/json"), data.toString()))
+                .build();
+        newCall(request, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.error("IO_ERROR");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String result = response.body().string();
+                    callback.success(result);
+                } else {
+                    callback.error("RESPONSE_FAIL");
+                }
+            }
+        });
     }
 }

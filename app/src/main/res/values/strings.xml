@@ -4,4 +4,7 @@
     <string name="welcome_button">Start Now</string>
     <string name="welcome">SecuDisk</string>
     <string name="welcome_description">Your Own Secure Cloud Disk</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="setting_ok">Ready to go</string>
 </resources>

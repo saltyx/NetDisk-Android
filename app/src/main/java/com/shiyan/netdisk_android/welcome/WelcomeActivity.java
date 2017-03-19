@@ -30,7 +30,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.shiyan.netdisk_android.R;
-import com.shiyan.netdisk_android.activity.LoginActivity;
+import com.shiyan.netdisk_android.login.LoginActivity;
+import com.shiyan.netdisk_android.setting.SettingActivity;
 import com.shiyan.netdisk_android.utils.SPHelper;
 import com.shiyan.netdisk_android.SercuDiskApplication;
 
@@ -47,7 +48,7 @@ public class WelcomeActivity extends AppCompatActivity {
         editor.putBoolean(isFirstKey, false);
         editor.commit();
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
 

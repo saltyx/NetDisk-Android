@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.shiyan.netdisk_android.activity.LoginActivity">
+    tools:context="com.shiyan.netdisk_android.login.LoginActivity">
 
 </android.support.constraint.ConstraintLayout>

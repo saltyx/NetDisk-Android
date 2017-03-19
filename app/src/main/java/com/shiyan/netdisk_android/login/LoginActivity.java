@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.activity;
+package com.shiyan.netdisk_android.login;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
