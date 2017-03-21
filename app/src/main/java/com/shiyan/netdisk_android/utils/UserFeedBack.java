@@ -22,23 +22,22 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android;
+package com.shiyan.netdisk_android.utils;
 
-import android.app.Application;
+import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.widget.Toast;
 
-import com.squareup.leakcanary.LeakCanary;
+import com.shiyan.netdisk_android.SecuDiskApplication;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class SercuDiskApplication extends Application {
+public class UserFeedBack {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) return;
-        LeakCanary.install(this);
+    public static void show(View view, String message) {
+
     }
 }

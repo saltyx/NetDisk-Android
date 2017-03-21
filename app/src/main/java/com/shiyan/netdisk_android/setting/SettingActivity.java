@@ -25,6 +25,7 @@
 package com.shiyan.netdisk_android.setting;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -36,6 +37,7 @@ import android.widget.EditText;
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.utils.CallBack;
 import com.shiyan.netdisk_android.utils.NetHelper;
+import com.shiyan.netdisk_android.utils.SPHelper;
 
 import org.json.JSONException;
 
@@ -46,10 +48,10 @@ import butterknife.OnClick;
 public class SettingActivity extends AppCompatActivity {
 
     @OnClick(R.id.ok) void goToMain() {
-        CharSequence ip = mIP.getText();
-        CharSequence port = mPort.getText();
-        CharSequence username = mUsername.getText();
-        CharSequence password = mPassword.getText();
+        final CharSequence ip = mIP.getText();
+        final CharSequence port = mPort.getText();
+        final CharSequence username = mUsername.getText();
+        final CharSequence password = mPassword.getText();
 
         if (ip.length() == 0 || username.length() == 0
                 || password.length() == 0 || port.length() == 0) {
@@ -59,8 +61,13 @@ public class SettingActivity extends AppCompatActivity {
             try {
                 NetHelper.getInstance().login(new NetHelper.LoginModel(ip.toString(), port.toString(), username.toString(), password.toString()), new CallBack() {
                     @Override
-                    public void success(@NonNull String data) {
-                        Snackbar.make(ok, "Connected!",Snackbar.LENGTH_SHORT).show();
+                    public void success(@NonNull String token) {
+                        Snackbar.make(ok, String.format("Connected!\n%s",token),Snackbar.LENGTH_INDEFINITE).show();
+                        SharedPreferences.Editor editor = SPHelper.getInstance(getApplication()).getSP().edit();
+                        editor.putString(SPHelper.IP_KEY, ip.toString());
+                        editor.putString(SPHelper.PORT_KEY, port.toString());
+                        editor.putString(SPHelper.TOKEN_KEY, token);
+                        editor.apply();
                     }
 
                     @Override

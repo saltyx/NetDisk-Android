@@ -22,48 +22,64 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.welcome;
+package com.shiyan.netdisk_android.main;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.shiyan.netdisk_android.R;
-import com.shiyan.netdisk_android.main.MainActivity;
-import com.shiyan.netdisk_android.setting.SettingActivity;
-import com.shiyan.netdisk_android.utils.SPHelper;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private String isFirstKey = "IS_FIRST";
+    @BindView(R.id.toolbar_main)
+    Toolbar mainToolBar;
 
-    @OnClick(R.id.button2) void goSetting() {
-        SharedPreferences.Editor editor = SPHelper.getInstance(getApplication())
-                .getSP().edit();
-        editor.putBoolean(isFirstKey, false);
-        editor.commit();
-
-        Intent intent = new Intent(this, SettingActivity.class);
-        startActivity(intent);
-    }
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
-        Boolean isFirst = SPHelper.getInstance(getApplication())
-                .getSP().getBoolean(isFirstKey, true);
-        if (!isFirst) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        mainToolBar.inflateMenu(R.menu.main_toolbar_menus);
+        setSupportActionBar(mainToolBar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_toolbar_menus, menu);
+        final MenuItem actionMenuItem = menu.findItem(R.id.action_search);
+
+        searchView = (SearchView) actionMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                if( ! searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                actionMenuItem.collapseActionView();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                return false;
+            }
+        });
+
+        return true;
 
     }
 }

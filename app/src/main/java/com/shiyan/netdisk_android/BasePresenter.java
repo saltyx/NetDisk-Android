@@ -22,18 +22,14 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.login;
+package com.shiyan.netdisk_android;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+/**
+ * Contact shiyan233@hotmail.com
+ * Blog    https://saltyx.github.io
+ */
 
-import com.shiyan.netdisk_android.R;
+public interface BasePresenter {
 
-public class LoginActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-    }
 }

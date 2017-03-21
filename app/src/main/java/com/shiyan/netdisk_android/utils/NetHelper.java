@@ -82,13 +82,13 @@ public class NetHelper {
 
     public void login(LoginModel loginModel , final CallBack callback) throws JSONException, IllegalArgumentException {
         JSONObject object = new JSONObject();
-        object.put("username", loginModel.username);
+        object.put("name", loginModel.username);
         object.put("password", loginModel.password);
         JSONObject data = new JSONObject();
-        data.put("user", data);
+        data.put("user", object);
 
         Request request = new Request.Builder()
-                .url(String.format("%s:%s/v1/login", loginModel.ip, loginModel.port))
+                .url(String.format("http://%s:%s/v1/login", loginModel.ip, loginModel.port))
                 .post(RequestBody.create(MediaType.parse("application/json"), data.toString()))
                 .build();
         newCall(request, new Callback() {

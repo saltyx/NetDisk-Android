@@ -22,46 +22,15 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.utils;
-
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-
+package com.shiyan.netdisk_android;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class SPHelper {
+public interface BaseView <T> {
 
-    public final static String IP_KEY = "IP";
-    public final static String PORT_KEY = "PORT";
-    public final static String TOKEN_KEY = "TOKEN_";
-
-    public final static String KEY = "SecureDisk";
-
-    private static SPHelper INSTANCE;
-    private SharedPreferences mSP;
-
-    private SPHelper(Application context) {
-        mSP = context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
-    }
-
-    public static SPHelper getInstance(Application context) {
-        if (INSTANCE == null) {
-            synchronized (SPHelper.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new SPHelper(context);
-                }
-            }
-        }
-        return INSTANCE;
-    }
-
-    public SharedPreferences getSP() {
-        return mSP;
-    }
+    void setPresenter(T presenter);
 
 }
