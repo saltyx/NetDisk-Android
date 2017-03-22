@@ -24,22 +24,39 @@
 
 package com.shiyan.netdisk_android.main;
 
-import com.shiyan.netdisk_android.BaseView;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.shiyan.netdisk_android.R;
 
 /**
- * Contact shiyan233@hotmail.com
- * Blog    https://saltyx.github.io
+ * A simple {@link Fragment} subclass.
  */
-
-public class MainView implements BaseView<MainPresenter> {
+public class ContentFragment extends Fragment implements MainContract.View {
 
     private MainContract.Presenter mPresenter;
 
+    public ContentFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    public void setPresenter(MainPresenter presenter) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_content, container, false);
+    }
+
+    @Override
+    public void setPresenter(MainContract.Presenter presenter) {
         this.mPresenter = presenter;
     }
 
-
-
+    public static ContentFragment newInstance() {
+        return new ContentFragment();
+    }
 }

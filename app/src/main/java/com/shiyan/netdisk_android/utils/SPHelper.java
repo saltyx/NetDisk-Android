@@ -39,6 +39,7 @@ public class SPHelper {
     public final static String IP_KEY = "IP";
     public final static String PORT_KEY = "PORT";
     public final static String TOKEN_KEY = "TOKEN_";
+    public final static String IS_FIRST_KEY = "IS_FIRST";
 
     public final static String KEY = "SecureDisk";
 

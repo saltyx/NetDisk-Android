@@ -35,6 +35,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.shiyan.netdisk_android.R;
+import com.shiyan.netdisk_android.SecuDiskApplication;
+import com.shiyan.netdisk_android.main.MainActivity;
 import com.shiyan.netdisk_android.utils.CallBack;
 import com.shiyan.netdisk_android.utils.NetHelper;
 import com.shiyan.netdisk_android.utils.SPHelper;
@@ -68,6 +70,11 @@ public class SettingActivity extends AppCompatActivity {
                         editor.putString(SPHelper.PORT_KEY, port.toString());
                         editor.putString(SPHelper.TOKEN_KEY, token);
                         editor.apply();
+                        SecuDiskApplication.Token = token;
+                        SecuDiskApplication.IP = ip.toString();
+                        SecuDiskApplication.Port = port.toString();
+                        Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+                        startActivity(intent);
                     }
 
                     @Override

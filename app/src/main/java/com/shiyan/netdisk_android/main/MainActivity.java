@@ -24,6 +24,7 @@
 
 package com.shiyan.netdisk_android.main;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -32,6 +33,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.shiyan.netdisk_android.R;
+import com.shiyan.netdisk_android.SecuDiskApplication;
+import com.shiyan.netdisk_android.utils.ActivityHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     SearchView searchView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
 
         mainToolBar.inflateMenu(R.menu.main_toolbar_menus);
         setSupportActionBar(mainToolBar);
+
+        ContentFragment contentFragment =
+                (ContentFragment) getSupportFragmentManager().findFragmentById(R.id.content);
+        if (contentFragment == null) {
+            contentFragment = ContentFragment.newInstance();
+            ActivityHelper.addFragmentToActivity(getSupportFragmentManager(),contentFragment ,R.id.content);
+        }
+
     }
 
     @Override

@@ -24,10 +24,14 @@
 
 package com.shiyan.netdisk_android.utils;
 
+import com.shiyan.netdisk_android.SecuDiskApplication;
+import com.shiyan.netdisk_android.model.UserFile;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -57,6 +61,9 @@ public class NetHelper {
             this.password = password;
         }
     }
+
+    public final static String IO_ERROR = "IO_ERROR";
+    public final static String RESPONSE_ERROR = "RESPONSE_ERROR";
 
     private static NetHelper INSTANCE;
     private OkHttpClient client;
@@ -94,7 +101,7 @@ public class NetHelper {
         newCall(request, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                callback.error("IO_ERROR");
+                callback.error(IO_ERROR);
             }
 
             @Override
@@ -103,9 +110,39 @@ public class NetHelper {
                     String result = response.body().string();
                     callback.success(result);
                 } else {
-                    callback.error("RESPONSE_FAIL");
+                    callback.error(RESPONSE_ERROR);
                 }
             }
         });
+    }
+
+    public void getFilesByFolder(int folderId, final CallBack callBack) {
+        final Request request = new Request.Builder()
+                .url(String.format("http://%s:%s/v1/folder/%d", SecuDiskApplication.IP,SecuDiskApplication.Port, folderId))
+                .header("Authorization", String.format("Token token=%s",SecuDiskApplication.Token))
+                .addHeader("Content-Type", "application/json")
+                .get()
+                .build();
+        newCall(request, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callBack.error(IO_ERROR);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String data = request.toString();
+                    callBack.success(data);
+                } else {
+                    callBack.error(RESPONSE_ERROR);
+                }
+            }
+        });
+    }
+
+    public void getRootFolder(final CallBack callBack) {
+
+        getFilesByFolder(1, callBack);
     }
 }

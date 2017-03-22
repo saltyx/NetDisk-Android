@@ -9,8 +9,11 @@
     <string name="setting_ok">Ready to go</string>
 
     <string name="files">Files</string>
+    <string name="folder">Folder</string>
     <string name="photos">Photos</string>
     <string name="recent_files">Recent</string>
 
     <string name="about">Find SecuDisk</string>
+
+    <integer name="gridview_column">2</integer>
 </resources>

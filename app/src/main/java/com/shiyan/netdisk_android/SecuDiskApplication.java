@@ -35,6 +35,9 @@ import com.squareup.leakcanary.LeakCanary;
 
 public class SecuDiskApplication extends Application {
 
+    public static String Token;
+    public static String IP;
+    public static String Port;
     @Override
     public void onCreate() {
         super.onCreate();

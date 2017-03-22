@@ -30,6 +30,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.shiyan.netdisk_android.R;
+import com.shiyan.netdisk_android.SecuDiskApplication;
 import com.shiyan.netdisk_android.main.MainActivity;
 import com.shiyan.netdisk_android.setting.SettingActivity;
 import com.shiyan.netdisk_android.utils.SPHelper;
@@ -39,13 +40,12 @@ import butterknife.OnClick;
 
 public class WelcomeActivity extends AppCompatActivity {
 
-    private String isFirstKey = "IS_FIRST";
 
     @OnClick(R.id.button2) void goSetting() {
         SharedPreferences.Editor editor = SPHelper.getInstance(getApplication())
                 .getSP().edit();
-        editor.putBoolean(isFirstKey, false);
-        editor.commit();
+        editor.putBoolean(SPHelper.IS_FIRST_KEY, false);
+        editor.apply();
 
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
@@ -56,11 +56,27 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         Boolean isFirst = SPHelper.getInstance(getApplication())
-                .getSP().getBoolean(isFirstKey, true);
+                .getSP().getBoolean(SPHelper.IS_FIRST_KEY, true);
+        String IP = SPHelper.getInstance(getApplication())
+                .getSP().getString(SPHelper.IP_KEY, "null");
+        String PORT = SPHelper.getInstance(getApplication())
+                .getSP().getString(SPHelper.PORT_KEY, "null");
+        String Token = SPHelper.getInstance(getApplication())
+                .getSP().getString(SPHelper.TOKEN_KEY, "null");
+
+        if (IP.contentEquals("null") || PORT.contentEquals("null")
+                || Token.contentEquals("null")) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
+            finish();return;
+        }
         if (!isFirst) {
+            SecuDiskApplication.IP = IP;
+            SecuDiskApplication.Port = PORT;
+            SecuDiskApplication.Token = Token;
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-            finish();
+            finish();return;
         }
 
         ButterKnife.bind(this);

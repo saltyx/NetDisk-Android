@@ -24,6 +24,7 @@
 
 package com.shiyan.netdisk_android.main;
 
+import com.shiyan.netdisk_android.BasePresenter;
 import com.shiyan.netdisk_android.BaseView;
 
 /**
@@ -31,15 +32,13 @@ import com.shiyan.netdisk_android.BaseView;
  * Blog    https://saltyx.github.io
  */
 
-public class MainView implements BaseView<MainPresenter> {
+public interface MainContract {
 
-    private MainContract.Presenter mPresenter;
+    interface View extends BaseView <Presenter> {
 
-    @Override
-    public void setPresenter(MainPresenter presenter) {
-        this.mPresenter = presenter;
     }
 
+    interface Presenter extends BasePresenter {
 
-
+    }
 }

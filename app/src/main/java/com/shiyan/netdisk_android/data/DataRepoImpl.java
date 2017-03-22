@@ -22,24 +22,13 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.main;
-
-import com.shiyan.netdisk_android.BaseView;
+package com.shiyan.netdisk_android.data;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class MainView implements BaseView<MainPresenter> {
-
-    private MainContract.Presenter mPresenter;
-
-    @Override
-    public void setPresenter(MainPresenter presenter) {
-        this.mPresenter = presenter;
-    }
-
-
+public class DataRepoImpl implements DataSource {
 
 }

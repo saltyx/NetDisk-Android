@@ -22,24 +22,25 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.main;
+package com.shiyan.netdisk_android.utils;
 
-import com.shiyan.netdisk_android.BaseView;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class MainView implements BaseView<MainPresenter> {
+public class ActivityHelper {
 
-    private MainContract.Presenter mPresenter;
+    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
+                                      @NonNull Fragment fragment, @NonNull int frameId) {
 
-    @Override
-    public void setPresenter(MainPresenter presenter) {
-        this.mPresenter = presenter;
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(frameId, fragment);
+        transaction.commit();
     }
-
-
-
 }

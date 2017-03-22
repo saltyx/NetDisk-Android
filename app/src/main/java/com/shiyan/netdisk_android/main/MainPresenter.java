@@ -24,13 +24,28 @@
 
 package com.shiyan.netdisk_android.main;
 
-import com.shiyan.netdisk_android.BasePresenter;
+import com.shiyan.netdisk_android.data.DataRepoImpl;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class MainPresenter implements BasePresenter {
+public class MainPresenter implements MainContract.Presenter {
+
+
+    private DataRepoImpl mDataRepo;
+
+    private MainView mMainView;
+
+    public MainPresenter(DataRepoImpl mDataRepo, MainView mMainView) {
+        this.mDataRepo = mDataRepo;
+        this.mMainView = mMainView;
+
+        mMainView.setPresenter(this);
+    }
+
+
+
 
 }
