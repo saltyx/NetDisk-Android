@@ -48,7 +48,7 @@ public class DataRepoImpl implements DataSource {
         this.remoteDataSource = remoteDataSource;
     }
 
-    public DataRepoImpl getInstance(final LocalDataSourceImpl localDataSource,final RemoteDataSourceImpl remoteDataSource) {
+    public static DataRepoImpl getInstance(final LocalDataSourceImpl localDataSource,final RemoteDataSourceImpl remoteDataSource) {
         if (INSTANCE == null) {
             synchronized (DataRepoImpl.class) {
                 if (INSTANCE == null) {

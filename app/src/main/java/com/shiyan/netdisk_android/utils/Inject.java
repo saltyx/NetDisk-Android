@@ -22,29 +22,33 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.main;
+package com.shiyan.netdisk_android.utils;
 
-import com.shiyan.netdisk_android.BasePresenter;
-import com.shiyan.netdisk_android.BaseView;
-import com.shiyan.netdisk_android.model.UserFile;
+import android.app.Application;
 
-import java.util.List;
+import com.shiyan.netdisk_android.data.DataRepoImpl;
+import com.shiyan.netdisk_android.data.source.local.LocalDataSourceImpl;
+import com.shiyan.netdisk_android.data.source.remote.RemoteDataSourceImpl;
 
 /**
+ * the current class is intended to
+ * help create DataRepoImpl instance
+ * @author shiyan
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public interface MainContract {
+public class Inject {
 
-    interface View extends BaseView <Presenter> {
-        void showFiles(List<UserFile> files);
-        void showFolders(List<UserFile> folders);
-        void showByGrid();
-        void showByList();
+
+    /**
+     * Get the Data Repository
+     * @param application
+     * @return
+     */
+    public static DataRepoImpl provideDataRepo(Application application) {
+        return DataRepoImpl.getInstance(LocalDataSourceImpl.getInstance(application),
+                RemoteDataSourceImpl.getInstance());
     }
 
-    interface Presenter extends BasePresenter {
-        void set();
-    }
 }

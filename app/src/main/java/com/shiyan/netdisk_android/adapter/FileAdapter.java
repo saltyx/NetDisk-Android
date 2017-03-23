@@ -22,29 +22,53 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.main;
+package com.shiyan.netdisk_android.adapter;
 
-import com.shiyan.netdisk_android.BasePresenter;
-import com.shiyan.netdisk_android.BaseView;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.shiyan.netdisk_android.model.UserFile;
 
 import java.util.List;
 
 /**
+ *
+ * @author shiyan
+ *
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public interface MainContract {
+public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
 
-    interface View extends BaseView <Presenter> {
-        void showFiles(List<UserFile> files);
-        void showFolders(List<UserFile> folders);
-        void showByGrid();
-        void showByList();
+    List<UserFile> data;
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public ViewHolder(View item) {
+            super(item);
+        }
     }
 
-    interface Presenter extends BasePresenter {
-        void set();
+    public FileAdapter(List<UserFile> data) {
+        this.data = data;
+
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return data.size();
     }
 }

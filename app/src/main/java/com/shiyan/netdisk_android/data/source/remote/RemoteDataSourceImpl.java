@@ -53,7 +53,7 @@ public class RemoteDataSourceImpl implements DataSource {
         netHelper = NetHelper.getInstance() ;
     }
 
-    public RemoteDataSourceImpl getInstance() {
+    public static RemoteDataSourceImpl getInstance() {
         if (INSTANCE == null) {
             synchronized (RemoteDataSourceImpl.class) {
                 if (INSTANCE == null) {

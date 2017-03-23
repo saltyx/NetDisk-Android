@@ -27,6 +27,7 @@ package com.shiyan.netdisk_android.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,9 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.shiyan.netdisk_android.R;
+import com.shiyan.netdisk_android.model.UserFile;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,12 +77,12 @@ public class ContentFragment extends Fragment implements MainContract.View {
     }
 
     @Override
-    public void showFiles() {
-
+    public void showFiles(List<UserFile> files) {
+        //fileRecyclerView.setLayoutManager(new LinearLayoutManager());
     }
 
     @Override
-    public void showFolders() {
+    public void showFolders(List<UserFile> folders) {
 
     }
 

@@ -42,7 +42,7 @@ public class LocalDataSourceImpl implements DataSource {
         mDBHelper = new DBHelper(application);
     }
 
-    public LocalDataSourceImpl getInstance(Application application) {
+    public static LocalDataSourceImpl getInstance(Application application) {
         if (INSTANCE == null) {
             synchronized (LocalDataSourceImpl.class) {
                 if (INSTANCE == null) {
