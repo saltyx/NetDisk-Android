@@ -31,5 +31,6 @@ package com.shiyan.netdisk_android;
 
 public interface BasePresenter {
 
+    public void start();
 
 }

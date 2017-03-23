@@ -24,6 +24,8 @@
 
 package com.shiyan.netdisk_android.data.source.local;
 
+import android.app.Application;
+
 import com.shiyan.netdisk_android.data.DataSource;
 
 /**
@@ -33,4 +35,96 @@ import com.shiyan.netdisk_android.data.DataSource;
 
 public class LocalDataSourceImpl implements DataSource {
 
+    static LocalDataSourceImpl INSTANCE;
+    DBHelper mDBHelper;
+
+    private LocalDataSourceImpl(Application application) {
+        mDBHelper = new DBHelper(application);
+    }
+
+    public LocalDataSourceImpl getInstance(Application application) {
+        if (INSTANCE == null) {
+            synchronized (LocalDataSourceImpl.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new LocalDataSourceImpl(application);
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+    @Override
+    public void createFolder(String folderName, int fromFolder, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void deleteFolder(int id, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void updateFolder(int id, String newName, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void encryptFolder(int id, String passPhrase, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void decryptFolder(int id, String passPhrase, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void getFolder(int id, GetData callback) {
+
+    }
+
+    @Override
+    public void getFilesByFolder(int id, LoadData callback) {
+
+    }
+
+    @Override
+    public void encryptFile(int id, String passPhrase, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void decryptFile(int id, String passPhrase, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void copyFile(int id, int dstFolder, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void deleteFiles(int id, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void moveFile(int id, int dstFolder, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void updateFile(int id, String newName, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void shareFile(int id, ResultCallBack callBack) {
+
+    }
+
+    @Override
+    public void cancelShare(int id, ResultCallBack callBack) {
+
+    }
 }

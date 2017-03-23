@@ -35,10 +35,13 @@ import com.shiyan.netdisk_android.BaseView;
 public interface MainContract {
 
     interface View extends BaseView <Presenter> {
-
+        void showFiles();
+        void showFolders();
+        void showByGrid();
+        void showByList();
     }
 
     interface Presenter extends BasePresenter {
-
+        void set();
     }
 }

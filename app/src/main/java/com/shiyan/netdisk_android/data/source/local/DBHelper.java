@@ -54,7 +54,9 @@ public class DBHelper extends SQLiteOpenHelper {
                     DataPersistenceContract.FilesEntry.COLUMN_NAME_DOWNLOAD_LINK + TEXT_TYPE + COMMA_SEP +
                     DataPersistenceContract.FilesEntry.COLUMN_NAME_DOWNLOAD_TIMES + INT_TYPE + COMMA_SEP +
                     DataPersistenceContract.FilesEntry.COLUMN_NAME_CREATE_AT + TEXT_TYPE + COMMA_SEP +
-                    DataPersistenceContract.FilesEntry.COLUMN_NAME_UPDATE_AT + TEXT_TYPE +
+                    DataPersistenceContract.FilesEntry.COLUMN_NAME_UPDATE_AT + TEXT_TYPE + COMMA_SEP +
+                    DataPersistenceContract.FilesEntry.COLUMN_NAME_IV + TEXT_TYPE + COMMA_SEP +
+                    DataPersistenceContract.FilesEntry.COLUMN_NAME_SHA256 + TEXT_TYPE +
                     " )";
 
     public DBHelper(Context context) {

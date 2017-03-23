@@ -39,12 +39,19 @@ public class UserFile implements Parcelable {
     private String fileName;
     private int fileSize;
     private boolean isFolder;
+    private int fromFolder;
     private boolean isShared;
     private boolean isEncrypted;
-    private boolean downloadLink;
+    private String downloadLink;
     private int downloadTimes;
     private String createAt;
     private String updateAt;
+    private String sha256;
+    private String iv;
+
+    public UserFile() {
+
+    }
 
     public UserFile(Parcel in) {
 
@@ -70,5 +77,109 @@ public class UserFile implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public int getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(int fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
+    }
+
+    public int getFromFolder() {
+        return fromFolder;
+    }
+
+    public void setFromFolder(int fromFolder) {
+        this.fromFolder = fromFolder;
+    }
+
+    public boolean isShared() {
+        return isShared;
+    }
+
+    public void setShared(boolean shared) {
+        isShared = shared;
+    }
+
+    public boolean isEncrypted() {
+        return isEncrypted;
+    }
+
+    public void setEncrypted(boolean encrypted) {
+        isEncrypted = encrypted;
+    }
+
+    public String getDownloadLink() {
+        return downloadLink;
+    }
+
+    public void setDownloadLink(String downloadLink) {
+        this.downloadLink = downloadLink;
+    }
+
+    public int getDownloadTimes() {
+        return downloadTimes;
+    }
+
+    public void setDownloadTimes(int downloadTimes) {
+        this.downloadTimes = downloadTimes;
+    }
+
+    public String getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(String createAt) {
+        this.createAt = createAt;
+    }
+
+    public String getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(String updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public String getSha256() {
+        return sha256;
+    }
+
+    public void setSha256(String sha256) {
+        this.sha256 = sha256;
+    }
+
+    public String getIv() {
+        return iv;
+    }
+
+    public void setIv(String iv) {
+        this.iv = iv;
     }
 }

@@ -24,6 +24,8 @@
 
 package com.shiyan.netdisk_android.data;
 
+import android.support.annotation.Nullable;
+
 import java.util.List;
 
 /**
@@ -33,16 +35,36 @@ import java.util.List;
 
 public interface DataSource {
 
-    interface loadData <T> {
+    interface LoadData<T> {
         void onLoaded(List<T> data);
-        void onDataNotAvailable();
+        void onDataNotAvailable(@Nullable String msg);
     }
 
-    interface getData <T> {
+    interface GetData<T> {
         void onLoaded(T data);
-        void onDataNotAvailable();
+        void onDataNotAvailable(@Nullable String msg);
     }
 
+    interface ResultCallBack {
+        void onSuccess(@Nullable String success);
+        void onError(@Nullable String error);
+    }
 
+    void createFolder(String folderName, int fromFolder, ResultCallBack callBack);
+    void deleteFolder(int id, ResultCallBack callBack);
+    void updateFolder(int id, String newName, ResultCallBack callBack);
+    void encryptFolder(int id, String passPhrase, ResultCallBack callBack);
+    void decryptFolder(int id, String passPhrase, ResultCallBack callBack);
+    void getFolder(int id, GetData callback);
+    void getFilesByFolder(int id, LoadData callback);
+
+    void encryptFile(int id, String passPhrase, ResultCallBack callBack);
+    void decryptFile(int id, String passPhrase, ResultCallBack callBack);
+    void copyFile(int id, int dstFolder, ResultCallBack callBack);
+    void deleteFiles(int id, ResultCallBack callBack);
+    void moveFile(int id, int dstFolder, ResultCallBack callBack);
+    void updateFile(int id, String newName, ResultCallBack callBack);
+    void shareFile(int id, ResultCallBack callBack);
+    void cancelShare(int id, ResultCallBack callBack);
 
 }

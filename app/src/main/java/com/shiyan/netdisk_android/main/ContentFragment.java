@@ -27,18 +27,32 @@ package com.shiyan.netdisk_android.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.shiyan.netdisk_android.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ContentFragment extends Fragment implements MainContract.View {
 
-    private MainContract.Presenter mPresenter;
+    MainContract.Presenter mPresenter;
+
+    @BindView(R.id.folder_recyler_view)
+    RecyclerView folderRecyclerView;
+
+    @BindView(R.id.files_recycler_view)
+    RecyclerView fileRecyclerView;
+
+    @BindView(R.id.folder_grid_view)
+    GridView folderGridView;
 
     public ContentFragment() {
         // Required empty public constructor
@@ -48,13 +62,37 @@ public class ContentFragment extends Fragment implements MainContract.View {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_content, container, false);
+        View root = inflater.inflate(R.layout.fragment_content, container, false);
+        ButterKnife.bind(this, root);
+        return root;
     }
 
     @Override
     public void setPresenter(MainContract.Presenter presenter) {
         this.mPresenter = presenter;
     }
+
+    @Override
+    public void showFiles() {
+
+    }
+
+    @Override
+    public void showFolders() {
+
+    }
+
+    @Override
+    public void showByGrid() {
+
+    }
+
+    @Override
+    public void showByList() {
+
+    }
+
+
 
     public static ContentFragment newInstance() {
         return new ContentFragment();

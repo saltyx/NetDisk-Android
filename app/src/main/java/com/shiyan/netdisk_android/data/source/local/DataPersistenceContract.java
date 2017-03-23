@@ -49,6 +49,8 @@ public final class DataPersistenceContract {
         public static final String COLUMN_NAME_DOWNLOAD_TIMES = "download_times";
         public static final String COLUMN_NAME_CREATE_AT = "create_at";
         public static final String COLUMN_NAME_UPDATE_AT = "update_at";
+        public static final String COLUMN_NAME_IV = "iv";
+        public static final String COLUMN_NAME_SHA256 = "sha256";
 
     }
 }

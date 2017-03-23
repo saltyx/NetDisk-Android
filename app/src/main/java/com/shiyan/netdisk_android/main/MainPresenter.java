@@ -24,7 +24,18 @@
 
 package com.shiyan.netdisk_android.main;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.widget.Toast;
+
 import com.shiyan.netdisk_android.data.DataRepoImpl;
+import com.shiyan.netdisk_android.data.DataSource;
+import com.shiyan.netdisk_android.utils.CallBack;
+import com.shiyan.netdisk_android.utils.NetHelper;
+import com.shiyan.netdisk_android.utils.UserFeedBack;
+
+import java.util.List;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -34,18 +45,36 @@ import com.shiyan.netdisk_android.data.DataRepoImpl;
 public class MainPresenter implements MainContract.Presenter {
 
 
-    private DataRepoImpl mDataRepo;
+    DataRepoImpl mDataRepo;
 
-    private MainView mMainView;
+    MainContract.View mMainView;
 
-    public MainPresenter(DataRepoImpl mDataRepo, MainView mMainView) {
+    public MainPresenter(DataRepoImpl mDataRepo, MainContract.View mMainView) {
         this.mDataRepo = mDataRepo;
         this.mMainView = mMainView;
 
         mMainView.setPresenter(this);
     }
 
+    @Override
+    public void start() {
 
+    }
+
+    @Override
+    public void set() {
+        mDataRepo.getFilesByFolder(1, new DataSource.LoadData() {
+            @Override
+            public void onLoaded(List data) {
+
+            }
+
+            @Override
+            public void onDataNotAvailable(@Nullable String msg) {
+
+            }
+        });
+    }
 
 
 }
