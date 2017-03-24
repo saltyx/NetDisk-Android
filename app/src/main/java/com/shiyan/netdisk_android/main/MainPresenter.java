@@ -31,9 +31,13 @@ import android.widget.Toast;
 
 import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.data.DataSource;
+import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.CallBack;
 import com.shiyan.netdisk_android.utils.NetHelper;
+import com.shiyan.netdisk_android.utils.SerializeUserFile;
 import com.shiyan.netdisk_android.utils.UserFeedBack;
+
+import org.json.JSONException;
 
 import java.util.List;
 
@@ -58,20 +62,20 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void start() {
-
+        set();
     }
 
     @Override
     public void set() {
-        mDataRepo.getFilesByFolder(1, new DataSource.LoadData() {
+        mDataRepo.getFilesByFolder(1, new DataSource.GetData<String>() {
             @Override
-            public void onLoaded(List data) {
-
+            public void onLoaded(String data) {
+                mMainView.showFiles(data);
             }
 
             @Override
             public void onDataNotAvailable(@Nullable String msg) {
-
+                mMainView.userFeedBack(msg);
             }
         });
     }

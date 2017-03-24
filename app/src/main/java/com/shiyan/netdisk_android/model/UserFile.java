@@ -182,4 +182,12 @@ public class UserFile implements Parcelable {
     public void setIv(String iv) {
         this.iv = iv;
     }
+
+    @Override
+    public String toString() {
+        return "UserFile{" +
+                "id=" + id +
+                ", fileName='" + fileName + '\'' +
+                '}';
+    }
 }

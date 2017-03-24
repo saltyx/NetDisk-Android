@@ -132,7 +132,7 @@ public class NetHelper {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String data = request.toString();
+                    String data = response.body().string();
                     callBack.success(data);
                 } else {
                     callBack.error(RESPONSE_ERROR);

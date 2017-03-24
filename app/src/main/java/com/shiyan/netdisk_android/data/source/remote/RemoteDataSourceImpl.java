@@ -26,6 +26,7 @@ package com.shiyan.netdisk_android.data.source.remote;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.shiyan.netdisk_android.data.DataSource;
 import com.shiyan.netdisk_android.model.UserFile;
@@ -45,7 +46,8 @@ import java.util.List;
  */
 
 public class RemoteDataSourceImpl implements DataSource {
-
+    
+    final String TAG = getClass().getName();
     static RemoteDataSourceImpl INSTANCE;
     final NetHelper netHelper ;
 
@@ -94,22 +96,24 @@ public class RemoteDataSourceImpl implements DataSource {
 
     }
 
+    /**
+     * Get files by folder from the server
+     * @param id folder's id
+     * @param callback when data is ready, callback the json string
+     */
     @Override
-    public void getFilesByFolder(int id, final LoadData callback) {
+    public void getFilesByFolder(int id, final GetData callback) {
         netHelper.getFilesByFolder(id, new CallBack() {
             @Override
             public void success(@NonNull String data) {
-                List list = null;
                 try {
+                    Log.i(TAG, data);
                     JSONObject obj = new JSONObject(data);
-                    String array = obj.getString("info");
-                    callback.onLoaded(list = serializeData(array));
+                    String info = obj.getString("info");
+                    callback.onLoaded(info);
                 } catch (JSONException e) {
+                    e.printStackTrace();
                     callback.onDataNotAvailable(e.toString());
-                } finally {
-                    if (list != null) {
-                        list.clear();
-                    }
                 }
             }
 
@@ -160,41 +164,4 @@ public class RemoteDataSourceImpl implements DataSource {
 
     }
 
-    private List<UserFile> serializeData(String data) throws JSONException {
-        List<UserFile> list = new ArrayList<>();
-        JSONArray array = new JSONArray(data);
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject obj = array.getJSONObject(i);
-            int id = obj.getInt("id");
-            String fileName = obj.getString("file_name");
-            int fileSize = obj.getInt("file_size");
-            boolean isFolder = obj.getBoolean("is_folder");
-            int fromFolder = obj.getInt("from_folder");
-            boolean isShared = obj.getBoolean("is_shared");
-            boolean isEncrypted = obj.getBoolean("is_encrypted");
-            String downloadLink = obj.getString("download_link");
-            int downloadTimes = obj.getInt("download_times");
-            String createAt = obj.getString("create_at");
-            String updateAt = obj.getString("update_at");
-            String iv = obj.getString("iv");
-            String sha256 = obj.getString("sha256");
-
-            UserFile file = new UserFile();
-            file.setId(id);
-            file.setFileName(fileName);
-            file.setFileSize(fileSize);
-            file.setFolder(isFolder);
-            file.setFromFolder(fromFolder);
-            file.setShared(isShared);
-            file.setEncrypted(isEncrypted);
-            file.setDownloadLink(downloadLink);
-            file.setDownloadTimes(downloadTimes);
-            file.setCreateAt(createAt);
-            file.setUpdateAt(updateAt);
-            file.setIv(iv);
-            file.setSha256(sha256);
-            list.add(file);
-        }
-        return list;
-    }
 }

@@ -34,7 +34,10 @@ import android.view.MenuItem;
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.utils.ActivityHelper;
+import com.shiyan.netdisk_android.utils.IMMLeaks;
 import com.shiyan.netdisk_android.utils.Inject;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
 
         mPresenter = new MainPresenter(Inject.provideDataRepo(getApplication()), contentFragment);
 
+        mPresenter.start();
+
+        IMMLeaks.fixFocusedViewLeak(getApplication());
     }
 
     @Override

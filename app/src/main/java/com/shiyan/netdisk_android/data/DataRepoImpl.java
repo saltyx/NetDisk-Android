@@ -115,10 +115,10 @@ public class DataRepoImpl implements DataSource {
     /**
      * Get all the folders and files in the folder
      * @param id folder's id
-     * @param callback when the data is loaded, callback
+     * @param callback when the data is loaded, callback the json string
      */
     @Override
-    public void getFilesByFolder(int id, LoadData callback) {
+    public void getFilesByFolder(int id, GetData callback) {
         remoteDataSource.getFilesByFolder(id, callback);
     }
 

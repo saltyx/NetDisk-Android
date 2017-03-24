@@ -56,7 +56,7 @@ public interface DataSource {
     void encryptFolder(int id, String passPhrase, ResultCallBack callBack);
     void decryptFolder(int id, String passPhrase, ResultCallBack callBack);
     void getFolder(int id, GetData callback);
-    void getFilesByFolder(int id, LoadData callback);
+    void getFilesByFolder(int id, GetData callback);
 
     void encryptFile(int id, String passPhrase, ResultCallBack callBack);
     void decryptFile(int id, String passPhrase, ResultCallBack callBack);

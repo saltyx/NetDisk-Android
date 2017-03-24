@@ -26,16 +26,26 @@ package com.shiyan.netdisk_android.main;
 
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
 import com.shiyan.netdisk_android.R;
+import com.shiyan.netdisk_android.adapter.FileAdapter;
+import com.shiyan.netdisk_android.event.MessageEvent;
 import com.shiyan.netdisk_android.model.UserFile;
+import com.shiyan.netdisk_android.utils.SerializeUserFile;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
 
 import java.util.List;
 
@@ -46,7 +56,9 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class ContentFragment extends Fragment implements MainContract.View {
-
+    
+    final String TAG = getClass().getName();
+    
     MainContract.Presenter mPresenter;
 
     @BindView(R.id.folder_recyler_view)
@@ -71,14 +83,28 @@ public class ContentFragment extends Fragment implements MainContract.View {
         return root;
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
     @Override
     public void setPresenter(MainContract.Presenter presenter) {
         this.mPresenter = presenter;
     }
 
     @Override
-    public void showFiles(List<UserFile> files) {
-        //fileRecyclerView.setLayoutManager(new LinearLayoutManager());
+    public void showFiles(String filesJson) {
+        EventBus.getDefault().post(new MessageEvent(filesJson));
+        Log.i(TAG, String.valueOf(filesJson));
     }
 
     @Override
@@ -96,9 +122,26 @@ public class ContentFragment extends Fragment implements MainContract.View {
 
     }
 
-
+    @Override
+    public void userFeedBack(String msg) {
+        Snackbar.make(folderGridView, msg, Snackbar.LENGTH_INDEFINITE).show();
+    }
 
     public static ContentFragment newInstance() {
         return new ContentFragment();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateFiles(MessageEvent files) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        try {
+            FileAdapter adapter = new FileAdapter(SerializeUserFile.serialize(files.filesJson));
+            Log.i(TAG, String.valueOf(files.filesJson));
+            fileRecyclerView.setLayoutManager(linearLayoutManager);
+            fileRecyclerView.setAdapter(adapter);
+        } catch (JSONException e) {
+            userFeedBack(e.toString());
+        }
     }
 }

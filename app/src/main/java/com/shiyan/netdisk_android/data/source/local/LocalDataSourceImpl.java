@@ -84,7 +84,7 @@ public class LocalDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void getFilesByFolder(int id, LoadData callback) {
+    public void getFilesByFolder(int id, GetData callback) {
 
     }
 

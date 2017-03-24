@@ -25,12 +25,20 @@
 package com.shiyan.netdisk_android.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.model.UserFile;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  *
@@ -40,35 +48,45 @@ import java.util.List;
  * Blog    https://saltyx.github.io
  */
 
-public class FileAdapter extends RecyclerView.Adapter<FileAdapter.ViewHolder> {
+public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder> {
+
+    final String TAG = getClass().getName();
 
     List<UserFile> data;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class FileViewHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolder(View item) {
+        @BindView(R.id.file_name)
+        TextView fileName;
+
+        @BindView(R.id.file_image)
+        ImageView fileImage;
+
+        public FileViewHolder(View item) {
             super(item);
+            ButterKnife.bind(this,item);
         }
     }
 
     public FileAdapter(List<UserFile> data) {
         this.data = data;
-
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        return null;
+    public FileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        FileViewHolder mHolder = new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_file, parent, false));
+        return mHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-
+    public void onBindViewHolder(FileViewHolder holder, int position) {
+        Log.d(TAG, data.get(position).getFileName());
+        holder.fileName.setText(data.get(position).getFileName());
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return this.data == null ? 0 : this.data.size();
     }
 }

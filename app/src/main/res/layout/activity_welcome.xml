@@ -69,22 +69,21 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="141dp"
-        android:layout_height="61dp"
+        android:layout_width="157dp"
+        android:layout_height="75dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:background="?android:attr/colorBackgroundFloating"
         android:text="@string/welcome_button"
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Material.Button"
         android:textSize="24sp"
         android:theme="@android:style/Widget.Material.Button"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.502" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 </android.support.constraint.ConstraintLayout>

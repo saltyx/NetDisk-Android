@@ -22,10 +22,8 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.main;
+package com.shiyan.netdisk_android.event;
 
-import com.shiyan.netdisk_android.BasePresenter;
-import com.shiyan.netdisk_android.BaseView;
 import com.shiyan.netdisk_android.model.UserFile;
 
 import java.util.List;
@@ -35,17 +33,13 @@ import java.util.List;
  * Blog    https://saltyx.github.io
  */
 
-public interface MainContract {
+public class MessageEvent {
 
-    interface View extends BaseView <Presenter> {
-        void showFiles(String filesJson);
-        void showFolders(List<UserFile> folders);
-        void showByGrid();
-        void showByList();
-        void userFeedBack(String msg);
+    public final String filesJson;
+
+    public MessageEvent(String files) {
+        this.filesJson = files;
     }
 
-    interface Presenter extends BasePresenter {
-        void set();
-    }
+
 }
