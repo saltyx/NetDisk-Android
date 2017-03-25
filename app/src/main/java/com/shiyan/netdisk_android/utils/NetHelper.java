@@ -129,8 +129,7 @@ public class NetHelper {
 
     public void getFilesByFolder(int folderId, final CallBack callBack) {
 
-        buildRequest(String.format(Locale.US,FOLDER_BASE_URL.concat("%d"), SecuDiskApplication.IP,SecuDiskApplication.Port, folderId),
-                null, Method.GET, callBack);
+        buildRequest(buildBaseFolderUrl("%d",folderId), null, Method.GET, callBack);
     }
 
     public void getRootFolder(final CallBack callBack) {
@@ -145,14 +144,7 @@ public class NetHelper {
      * @throws JSONException
      */
     public void createFolder(int fromFolder, String folderName, final CallBack callBack) throws JSONException {
-        JSONObject folder = new JSONObject();
-        folder.put("folder_name", folderName);
-        folder.put("from_folder", fromFolder);
-        JSONObject data = new JSONObject();
-        data.put("folder", folder);
-
-        buildRequest(String.format(Locale.US, FOLDER_BASE_URL.concat("create"), SecuDiskApplication.IP, SecuDiskApplication.Port),
-                data.toString(), Method.POST, callBack);
+        buildRequest(buildBaseFolderUrl("create"), buildCreateFolderParam(fromFolder,folderName), Method.POST, callBack);
     }
 
     /**
@@ -162,13 +154,8 @@ public class NetHelper {
      * @throws JSONException
      */
     public void deleteFolder(int folderId, final CallBack callBack) throws JSONException {
-        JSONObject folder = new JSONObject();
-        folder.put("folder_id", folderId);
-        JSONObject data = new JSONObject();
-        data.put("folder", folder);
 
-        buildRequest(String.format(Locale.US, FOLDER_BASE_URL.concat("delete"), SecuDiskApplication.IP, SecuDiskApplication.Port),
-                data.toString(), Method.DELETE, callBack);
+        buildRequest(buildBaseFolderUrl("delete"),buildDeleteFolderParam(folderId), Method.DELETE, callBack);
     }
 
     /**
@@ -179,14 +166,7 @@ public class NetHelper {
      * @throws JSONException
      */
     public void updateFolder(int folderId, String newName, final CallBack callBack) throws JSONException {
-        JSONObject folder = new JSONObject();
-        folder.put("folder_id", folderId);
-        folder.put("new_name",newName);
-        JSONObject data = new JSONObject();
-        data.put("folder", folder);
-
-        buildRequest(String.format(Locale.US, FOLDER_BASE_URL.concat("update"), SecuDiskApplication.IP, SecuDiskApplication.Port),
-                data.toString(), Method.PUT, callBack);
+        buildRequest(buildBaseFolderUrl("update"),buildUpdateFolderParam(folderId,newName), Method.PUT, callBack);
     }
 
     /**
@@ -197,14 +177,8 @@ public class NetHelper {
      * @throws JSONException
      */
     public void encryptFolder(int folderId, String passPhrase, final CallBack callBack) throws JSONException {
-        JSONObject folder = new JSONObject();
-        folder.put("folder_id", folderId);
-        folder.put("pass_phrase",passPhrase);
-        JSONObject data = new JSONObject();
-        data.put("folder", folder);
 
-        buildRequest(String.format(Locale.US, FOLDER_BASE_URL.concat("encrypt"), SecuDiskApplication.IP, SecuDiskApplication.Port),
-                data.toString(),Method.POST, callBack);
+        buildRequest(buildBaseFolderUrl("encrypt"),buildEncryptFolderParam(folderId,passPhrase),Method.POST, callBack);
     }
 
     /**
@@ -215,18 +189,49 @@ public class NetHelper {
      * @throws JSONException
      */
     public void decryptFolder(int folderId, String passPhrase, final CallBack callBack) throws JSONException {
-        JSONObject folder = new JSONObject();
-        folder.put("folder_id", folderId);
-        folder.put("pass_phrase",passPhrase);
-        JSONObject data = new JSONObject();
-        data.put("folder", folder);
 
-        buildRequest(String.format(Locale.US, FOLDER_BASE_URL.concat("decrypt"), SecuDiskApplication.IP, SecuDiskApplication.Port),
-                data.toString(), Method.POST, callBack);
-
+        buildRequest(buildBaseFolderUrl("decrypt"),buildEncryptFolderParam(folderId, passPhrase), Method.POST, callBack);
     }
 
-    
+    /**
+     * copy file in the server
+     * @param id file'id
+     * @param dstFolderId folder'id
+     * @param callBack
+     * @throws JSONException
+     */
+    public void copyFile(int id, int dstFolderId, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("copy"), buildCopyFileParam(id, dstFolderId), Method.PUT, callBack);
+    }
+
+    public void moveFile(int id, int dstFolderId, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("move"), buildMoveFileParam(id, dstFolderId), Method.PUT, callBack);
+    }
+
+    public void deleteFile(int id, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("delete"), buildDeleteFileParam(id), Method.DELETE, callBack);
+    }
+
+    public void updateFile(int id, String newName, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("update"), buildUpdateFileParam(id, newName), Method.PUT, callBack);
+    }
+
+    public void EncryptFile(int id, String passPhrase, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("encrypt"), buildEncryptFileParam(id, passPhrase), Method.POST, callBack );
+    }
+
+    public void DecryptFile(int id, String passPhrase, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("decrypt"), buildDecryptFileParam(id, passPhrase), Method.POST, callBack);
+    }
+
+    public void ShareFile(int id, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("share"),buildShareFileParam(id), Method.POST,callBack);
+    }
+
+    public void CancelSharingFile(int id, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("share/cancel"), buildCancelSharingFileParam(id), Method.POST, callBack);
+    }
+
 
     private void buildRequest(String url, String data,Method method, final CallBack callBack) {
         Request.Builder base = new Request.Builder()
@@ -247,4 +252,110 @@ public class NetHelper {
         newCall(base.build(), callBack);
     }
 
+    private String buildCopyFileParam(int id, int dstFolderId) throws JSONException {
+        JSONObject file = new JSONObject();
+        file.put("id", id);
+        file.put("dst_folder_id",dstFolderId);
+        JSONObject data = new JSONObject();
+        data.put("file", file);
+
+        return data.toString();
+    }
+
+    private String buildMoveFileParam(int id, int dstFolderId) throws JSONException {
+        return buildCopyFileParam(id, dstFolderId);
+    }
+
+    private String buildDeleteFileParam(int id) throws JSONException {
+        JSONObject file = new JSONObject();
+        file.put("id", id);
+        JSONObject data = new JSONObject();
+        data.put("file", file);
+        return data.toString();
+    }
+
+    private String buildEncryptFileParam(int id, String passPhrase) throws JSONException {
+        JSONObject file = new JSONObject();
+        file.put("id", id);
+        file.put("pass_phrase", passPhrase);
+        JSONObject data = new JSONObject();
+        data.put("file", file);
+        return data.toString();
+    }
+
+    private String buildDecryptFileParam(int id, String passPhrase) throws JSONException {
+        return buildEncryptFileParam(id, passPhrase);
+    }
+
+    private String buildShareFileParam(int id) throws JSONException {
+        return buildDeleteFileParam(id);
+    }
+
+    private String buildCancelSharingFileParam(int id) throws JSONException {
+        return buildShareFileParam(id);
+    }
+
+    private String buildUpdateFileParam(int id, String newName) throws JSONException {
+        JSONObject file = new JSONObject();
+        file.put("id", id);
+        file.put("new_name", newName);
+        JSONObject data = new JSONObject();
+        data.put("file", file);
+        return data.toString();
+    }
+
+    private String buildCreateFolderParam(int fromFolder,String folderName) throws JSONException {
+        JSONObject folder = new JSONObject();
+        folder.put("folder_name", folderName);
+        folder.put("from_folder", fromFolder);
+        JSONObject data = new JSONObject();
+        data.put("folder", folder);
+        return data.toString();
+    }
+
+    private String buildDeleteFolderParam(int folderId) throws JSONException {
+        JSONObject folder = new JSONObject();
+        folder.put("folder_id", folderId);
+        JSONObject data = new JSONObject();
+        data.put("folder", folder);
+        return data.toString();
+    }
+
+    private String buildUpdateFolderParam(int folderId, String newName) throws JSONException {
+        JSONObject folder = new JSONObject();
+        folder.put("folder_id", folderId);
+        folder.put("new_name",newName);
+        JSONObject data = new JSONObject();
+        data.put("folder", folder);
+        return data.toString();
+    }
+
+    private String buildEncryptFolderParam(int folderId, String passPhrase) throws JSONException {
+        JSONObject folder = new JSONObject();
+        folder.put("folder_id", folderId);
+        folder.put("pass_phrase",passPhrase);
+        JSONObject data = new JSONObject();
+        data.put("folder", folder);
+        return data.toString();
+    }
+
+    private String buildDecryptFolderParam(int folderId, String passPhrase) throws JSONException {
+        return buildEncryptFolderParam(folderId, passPhrase);
+    }
+
+    private String buildBaseFileUrl(String param, int... id) {
+        return buildBaseUrl(FILE_BASE_URL, param, id);
+    }
+
+    private String buildBaseFolderUrl(String param, int... id) {
+        return buildBaseUrl(FOLDER_BASE_URL, param, id);
+    }
+
+    private String buildBaseUrl(String base, String param, int... id) {
+        if (id.length == 0) {
+            return String.format(Locale.US, base.concat(param), SecuDiskApplication.IP, SecuDiskApplication.Port);
+        }
+
+        return String.format(Locale.US, base.concat(param), SecuDiskApplication.IP, SecuDiskApplication.Port, id[0]);
+    }
 }
