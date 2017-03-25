@@ -22,32 +22,17 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.main;
-
-import com.shiyan.netdisk_android.BasePresenter;
-import com.shiyan.netdisk_android.BaseView;
-import com.shiyan.netdisk_android.model.UserFile;
-
-import java.util.List;
+package com.shiyan.netdisk_android.event;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public interface MainContract {
+public class FolderMessageEvent {
+    public boolean toGrid;
 
-    interface View extends BaseView <Presenter> {
-        void showFiles(String filesJson);
-        void showFolders(List<UserFile> folders);
-        void showByGrid();
-        void showByList();
-        void toggle();
-        void userFeedBack(String msg);
-    }
-
-    interface Presenter extends BasePresenter {
-        void set();
-        void change();
+    public FolderMessageEvent(boolean toGrid) {
+        this.toGrid = toGrid;
     }
 }

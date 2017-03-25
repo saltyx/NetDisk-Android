@@ -28,16 +28,19 @@ package com.shiyan.netdisk_android.main;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.adapter.FileAdapter;
+import com.shiyan.netdisk_android.adapter.FolderAdapter;
+import com.shiyan.netdisk_android.adapter.GridSpaceItemDecoration;
+import com.shiyan.netdisk_android.event.FolderMessageEvent;
 import com.shiyan.netdisk_android.event.MessageEvent;
 import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.SerializeUserFile;
@@ -67,8 +70,9 @@ public class ContentFragment extends Fragment implements MainContract.View {
     @BindView(R.id.files_recycler_view)
     RecyclerView fileRecyclerView;
 
-    @BindView(R.id.folder_grid_view)
-    GridView folderGridView;
+    List<UserFile> data;
+
+    boolean isGrid;
 
     public ContentFragment() {
         // Required empty public constructor
@@ -114,17 +118,27 @@ public class ContentFragment extends Fragment implements MainContract.View {
 
     @Override
     public void showByGrid() {
-
+        EventBus.getDefault().post(new FolderMessageEvent(true));
     }
 
     @Override
     public void showByList() {
+        EventBus.getDefault().post(new FolderMessageEvent(false));
 
     }
 
     @Override
+    public void toggle() {
+        if (isGrid) {
+            showByList();
+        } else {
+            showByGrid();
+        }
+    }
+
+    @Override
     public void userFeedBack(String msg) {
-        Snackbar.make(folderGridView, msg, Snackbar.LENGTH_INDEFINITE).show();
+        Snackbar.make(folderRecyclerView, msg, Snackbar.LENGTH_INDEFINITE).show();
     }
 
     public static ContentFragment newInstance() {
@@ -136,12 +150,48 @@ public class ContentFragment extends Fragment implements MainContract.View {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         try {
-            FileAdapter adapter = new FileAdapter(SerializeUserFile.serialize(files.filesJson));
+            data = SerializeUserFile.serialize(files.filesJson);
+            FileAdapter adapter = new FileAdapter(data);
             Log.i(TAG, String.valueOf(files.filesJson));
             fileRecyclerView.setLayoutManager(linearLayoutManager);
             fileRecyclerView.setAdapter(adapter);
         } catch (JSONException e) {
             userFeedBack(e.toString());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showFolder(MessageEvent folders) {
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+        try {
+            isGrid = true;
+            FolderAdapter adapter = new FolderAdapter(data = SerializeUserFile.serializeFolder(folders.filesJson));
+            folderRecyclerView.setLayoutManager(layoutManager);
+            folderRecyclerView.setAdapter(adapter);
+            folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
+        } catch (JSONException e) {
+            userFeedBack(e.toString());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void changeLayout(FolderMessageEvent event) {
+
+        FolderAdapter adapter = new FolderAdapter(data);
+
+        if (event.toGrid) {
+            GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+            isGrid = true;
+            folderRecyclerView.setLayoutManager(layoutManager);
+            folderRecyclerView.setAdapter(adapter);
+            //folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
+        } else {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            isGrid = false;
+            folderRecyclerView.setLayoutManager(linearLayoutManager);
+            folderRecyclerView.setAdapter(adapter);
+
         }
     }
 }

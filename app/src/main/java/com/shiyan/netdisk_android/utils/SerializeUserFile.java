@@ -77,4 +77,16 @@ public class SerializeUserFile {
         }
         return list;
     }
+
+    public static List<UserFile> serializeFolder(String data) throws JSONException {
+        List<UserFile> list = serialize(data);
+        List<UserFile> result = new ArrayList<>();
+        for (UserFile file:list) {
+            if (file.isFolder()) {
+                result.add(file);
+            }
+        }
+        list.clear();
+        return result;
+    }
 }

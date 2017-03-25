@@ -22,66 +22,59 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.main;
+package com.shiyan.netdisk_android.adapter;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.widget.Toast;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.shiyan.netdisk_android.data.DataRepoImpl;
-import com.shiyan.netdisk_android.data.DataSource;
+import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.model.UserFile;
-import com.shiyan.netdisk_android.utils.CallBack;
-import com.shiyan.netdisk_android.utils.NetHelper;
-import com.shiyan.netdisk_android.utils.SerializeUserFile;
-import com.shiyan.netdisk_android.utils.UserFeedBack;
-
-import org.json.JSONException;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class MainPresenter implements MainContract.Presenter {
+public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHolder> {
 
+    static class GridViewHolder extends RecyclerView.ViewHolder {
 
-    DataRepoImpl mDataRepo;
+        @BindView(R.id.folder_name)
+        TextView folderName;
 
-    MainContract.View mMainView;
+        public GridViewHolder(View item) {
+            super(item);
+            ButterKnife.bind(this, item);
+        }
+    }
 
-    public MainPresenter(DataRepoImpl mDataRepo, MainContract.View mMainView) {
-        this.mDataRepo = mDataRepo;
-        this.mMainView = mMainView;
+    private List<UserFile> data;
 
-        mMainView.setPresenter(this);
+    public FolderAdapter(List<UserFile> data) {
+        this.data = data;
     }
 
     @Override
-    public void start() {
-        set();
+    public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_folder, parent, false);
+        return new GridViewHolder(root);
     }
 
     @Override
-    public void set() {
-        mDataRepo.getFilesByFolder(1, new DataSource.GetData<String>() {
-            @Override
-            public void onLoaded(String data) {
-                mMainView.showFiles(data);
-            }
-
-            @Override
-            public void onDataNotAvailable(@Nullable String msg) {
-                mMainView.userFeedBack(msg);
-            }
-        });
+    public void onBindViewHolder(GridViewHolder holder, int position) {
+        holder.folderName.setText(data.get(position).getFileName());
     }
 
     @Override
-    public void change() {
-        mMainView.toggle();
+    public int getItemCount() {
+        return data == null ? 0 : data.size();
     }
 }

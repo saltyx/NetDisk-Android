@@ -22,32 +22,28 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.main;
+package com.shiyan.netdisk_android.adapter;
 
-import com.shiyan.netdisk_android.BasePresenter;
-import com.shiyan.netdisk_android.BaseView;
-import com.shiyan.netdisk_android.model.UserFile;
-
-import java.util.List;
+import android.graphics.Rect;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public interface MainContract {
+public class GridSpaceItemDecoration extends RecyclerView.ItemDecoration {
 
-    interface View extends BaseView <Presenter> {
-        void showFiles(String filesJson);
-        void showFolders(List<UserFile> folders);
-        void showByGrid();
-        void showByList();
-        void toggle();
-        void userFeedBack(String msg);
+    private int space;
+
+    public GridSpaceItemDecoration(int space) {
+        this.space = space;
     }
 
-    interface Presenter extends BasePresenter {
-        void set();
-        void change();
+    @Override
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+
+        outRect.set(0,0,0,space);
     }
 }

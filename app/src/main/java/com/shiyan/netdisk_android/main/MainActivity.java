@@ -30,6 +30,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.data.DataRepoImpl;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     SearchView searchView;
     MainPresenter mPresenter;
+    Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
+        mMenu = menu;
         getMenuInflater().inflate(R.menu.main_toolbar_menus, menu);
         final MenuItem actionMenuItem = menu.findItem(R.id.action_search);
 
@@ -100,6 +102,40 @@ public class MainActivity extends AppCompatActivity {
         });
 
         return true;
+    }
 
+    private void showGrid() {
+        for (int i = 0; i < mMenu.size(); i++) {
+            if (mMenu.getItem(i).getItemId() == R.id.change_to_grid) {
+                mMenu.getItem(i).setVisible(false);
+            } else if (mMenu.getItem(i).getItemId() == R.id.change_to_list) {
+                mMenu.getItem(i).setVisible(true);
+            }
+        }
+    }
+
+    private void showList() {
+        for (int i = 0; i < mMenu.size(); i++) {
+            if (mMenu.getItem(i).getItemId() == R.id.change_to_grid) {
+                mMenu.getItem(i).setVisible(true);
+            } else if (mMenu.getItem(i).getItemId() == R.id.change_to_list) {
+                mMenu.getItem(i).setVisible(false);
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.change_to_grid:
+                showGrid();mPresenter.change();
+                return true;
+            case R.id.change_to_list:
+                showList();mPresenter.change();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

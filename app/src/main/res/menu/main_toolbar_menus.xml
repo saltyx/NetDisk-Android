@@ -32,6 +32,19 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:title="Search"/>
     <item
+        android:id="@+id/change_to_grid"
+        android:icon="@drawable/ic_view_module_black_24dp"
+        android:title="showAsGrid"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/change_to_list"
+        android:icon="@drawable/ic_view_list_black_24dp"
+        android:title="showAsList"
+        app:showAsAction="always"
+        android:visible="false"
+        />
+    <item
         android:id="@+id/about"
         android:title="@string/about"/>
 </menu>
