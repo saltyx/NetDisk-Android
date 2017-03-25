@@ -61,27 +61,28 @@ public class SettingActivity extends AppCompatActivity {
         } else {
             Snackbar.make(ok, "Connecting...",Snackbar.LENGTH_INDEFINITE).show();
             try {
-                NetHelper.getInstance().login(new NetHelper.LoginModel(ip.toString(), port.toString(), username.toString(), password.toString()), new CallBack() {
-                    @Override
-                    public void success(@NonNull String token) {
-                        Snackbar.make(ok, String.format("Connected!\n%s",token),Snackbar.LENGTH_INDEFINITE).show();
-                        SharedPreferences.Editor editor = SPHelper.getInstance(getApplication()).getSP().edit();
-                        editor.putString(SPHelper.IP_KEY, ip.toString());
-                        editor.putString(SPHelper.PORT_KEY, port.toString());
-                        editor.putString(SPHelper.TOKEN_KEY, token);
-                        editor.apply();
-                        SecuDiskApplication.Token = token;
-                        SecuDiskApplication.IP = ip.toString();
-                        SecuDiskApplication.Port = port.toString();
-                        Intent intent = new Intent(SettingActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    }
+                NetHelper.getInstance().login(new NetHelper.LoginModel(ip.toString(), port.toString(), username.toString(), password.toString()),
+                        new CallBack() {
+                            @Override
+                            public void success(@NonNull String token) {
+                                Snackbar.make(ok, String.format("Connected!\n%s",token),Snackbar.LENGTH_INDEFINITE).show();
+                                SharedPreferences.Editor editor = SPHelper.getInstance(getApplication()).getSP().edit();
+                                editor.putString(SPHelper.IP_KEY, ip.toString());
+                                editor.putString(SPHelper.PORT_KEY, port.toString());
+                                editor.putString(SPHelper.TOKEN_KEY, token);
+                                editor.apply();
+                                SecuDiskApplication.Token = token;
+                                SecuDiskApplication.IP = ip.toString();
+                                SecuDiskApplication.Port = port.toString();
+                                Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
 
-                    @Override
-                    public void error(@Nullable String error) {
-                        Snackbar.make(ok, "Error!",Snackbar.LENGTH_SHORT).show();
-                    }
-                });
+                            @Override
+                            public void error(@Nullable String error) {
+                                Snackbar.make(ok, "Error!",Snackbar.LENGTH_SHORT).show();
+                            }
+                        });
             } catch (JSONException e) {
                 Snackbar.make(ok, e.toString(),Snackbar.LENGTH_SHORT).show();
             } catch (IllegalArgumentException ee) {

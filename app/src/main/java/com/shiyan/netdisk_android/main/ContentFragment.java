@@ -58,7 +58,7 @@ import butterknife.ButterKnife;
 public class ContentFragment extends Fragment implements MainContract.View {
     
     final String TAG = getClass().getName();
-    
+
     MainContract.Presenter mPresenter;
 
     @BindView(R.id.folder_recyler_view)
