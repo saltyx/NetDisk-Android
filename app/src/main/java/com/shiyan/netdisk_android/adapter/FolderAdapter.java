@@ -77,6 +77,10 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
         this.mActivity = activity;
     }
 
+    public void changeData(List<UserFile> data) {
+        this.data = data;
+    }
+
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_folder, parent, false);

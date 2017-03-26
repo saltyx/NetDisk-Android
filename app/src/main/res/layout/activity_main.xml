@@ -22,7 +22,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="@string/files"></android.support.v7.widget.Toolbar>
+            app:title="@string/files"/>
 
         <FrameLayout
             android:id="@+id/content"

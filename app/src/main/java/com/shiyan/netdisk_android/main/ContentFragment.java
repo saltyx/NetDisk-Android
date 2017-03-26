@@ -25,9 +25,11 @@
 package com.shiyan.netdisk_android.main;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -58,7 +60,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ContentFragment extends Fragment implements MainContract.View {
+public class ContentFragment extends Fragment implements MainContract.View , SwipeRefreshLayout.OnRefreshListener {
     
     final String TAG = getClass().getName();
 
@@ -67,12 +69,23 @@ public class ContentFragment extends Fragment implements MainContract.View {
     @BindView(R.id.folder_recyler_view)
     RecyclerView folderRecyclerView;
 
+    FolderAdapter folderAdapter = null;
+    LinearLayoutManager linearLayoutManager = null;
+    GridLayoutManager gridLayoutManager = null;
+
     @BindView(R.id.files_recycler_view)
     RecyclerView fileRecyclerView;
+
+    FileAdapter fileAdapter = null;
+
+    @BindView(R.id.swipeRerfreshLayout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     List<UserFile> data;
 
     boolean isGrid;
+
+    boolean isRefresh;
 
     public ContentFragment() {
         // Required empty public constructor
@@ -84,6 +97,14 @@ public class ContentFragment extends Fragment implements MainContract.View {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_content, container, false);
         ButterKnife.bind(this, root);
+        mSwipeRefreshLayout.setDistanceToTriggerSync(300);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeColor(Color.WHITE);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
+        mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
+        folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
+
         return root;
     }
 
@@ -101,6 +122,14 @@ public class ContentFragment extends Fragment implements MainContract.View {
     }
 
     @Override
+    public void onRefresh() {
+        if (!isRefresh) {
+            isRefresh = true;
+            mPresenter.set();
+        }
+    }
+
+    @Override
     public void setPresenter(MainContract.Presenter presenter) {
         this.mPresenter = presenter;
     }
@@ -108,6 +137,8 @@ public class ContentFragment extends Fragment implements MainContract.View {
     @Override
     public void showFiles(String filesJson) {
         EventBus.getDefault().post(new MessageEvent(filesJson));
+        mSwipeRefreshLayout.setRefreshing(false);
+        isRefresh = false;
         Log.i(TAG, String.valueOf(filesJson));
     }
 
@@ -147,14 +178,22 @@ public class ContentFragment extends Fragment implements MainContract.View {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateFiles(MessageEvent files) {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        if (linearLayoutManager == null) {
+            linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        }
+
         try {
             data = SerializeUserFile.serialize(files.filesJson);
-            FileAdapter adapter = new FileAdapter(data);
-            Log.i(TAG, String.valueOf(files.filesJson));
-            fileRecyclerView.setLayoutManager(linearLayoutManager);
-            fileRecyclerView.setAdapter(adapter);
+            if (fileAdapter == null) {
+                fileAdapter = new FileAdapter(data);
+                Log.i(TAG, String.valueOf(files.filesJson));
+                fileRecyclerView.setLayoutManager(linearLayoutManager);
+                fileRecyclerView.setAdapter(fileAdapter);
+            } else {
+                fileAdapter.changeData(data);
+            }
+
         } catch (JSONException e) {
             userFeedBack(e.toString());
         }
@@ -162,14 +201,20 @@ public class ContentFragment extends Fragment implements MainContract.View {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void showFolder(MessageEvent folders) {
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+        if (gridLayoutManager == null) {
+            gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        }
         try {
             isGrid = true;
-            FolderAdapter adapter = new FolderAdapter(data = SerializeUserFile.serializeFolder(folders.filesJson),
-                    getActivity());
-            folderRecyclerView.setLayoutManager(layoutManager);
-            folderRecyclerView.setAdapter(adapter);
-            folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
+            data = SerializeUserFile.serializeFolder(folders.filesJson);
+            if (folderAdapter == null) {
+                folderAdapter = new FolderAdapter(data,
+                        getActivity());
+                folderRecyclerView.setLayoutManager(gridLayoutManager);
+                folderRecyclerView.setAdapter(folderAdapter);
+            } else {
+                folderAdapter.changeData(data);
+            }
         } catch (JSONException e) {
             userFeedBack(e.toString());
         }
@@ -177,21 +222,18 @@ public class ContentFragment extends Fragment implements MainContract.View {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void changeLayout(FolderMessageEvent event) {
-
-        FolderAdapter adapter = new FolderAdapter(data,getActivity());
+        if (folderAdapter == null) {
+            folderAdapter = new FolderAdapter(data, getActivity());
+        }
 
         if (event.toGrid) {
-            GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
             isGrid = true;
-            folderRecyclerView.setLayoutManager(layoutManager);
-            folderRecyclerView.setAdapter(adapter);
-            //folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
+            folderRecyclerView.setLayoutManager(gridLayoutManager);
+            folderRecyclerView.setAdapter(folderAdapter);
         } else {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             isGrid = false;
             folderRecyclerView.setLayoutManager(linearLayoutManager);
-            folderRecyclerView.setAdapter(adapter);
+            folderRecyclerView.setAdapter(folderAdapter);
 
         }
     }

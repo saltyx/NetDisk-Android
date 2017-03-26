@@ -28,6 +28,7 @@
     android:layout_height="match_parent"
     tools:context="com.shiyan.netdisk_android.main.ContentFragment">
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRerfreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <RelativeLayout

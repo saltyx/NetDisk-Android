@@ -72,6 +72,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder
         this.data = data;
     }
 
+    public void changeData(List<UserFile> data) {
+        this.data = data;
+        notifyDataSetChanged();
+    }
+
     @Override
     public FileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         FileViewHolder mHolder = new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(
