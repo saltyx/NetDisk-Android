@@ -195,4 +195,6 @@ public class ContentFragment extends Fragment implements MainContract.View {
 
         }
     }
+
+
 }

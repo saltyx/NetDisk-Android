@@ -25,6 +25,10 @@
 package com.shiyan.netdisk_android.dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.os.Bundle;
+import android.view.WindowManager;
+
+import com.shiyan.netdisk_android.R;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -39,5 +43,19 @@ public class AttachDialogFragment extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mContext = context;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        int dialogHeight = (int) (mContext.getResources().getDisplayMetrics().heightPixels * 0.30);
+        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        getDialog().setCanceledOnTouchOutside(true);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.CustomDatePickerDialog);
     }
 }

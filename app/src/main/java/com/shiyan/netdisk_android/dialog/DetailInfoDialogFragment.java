@@ -26,7 +26,9 @@ package com.shiyan.netdisk_android.dialog;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,12 +36,18 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.model.UserFile;
+import com.shiyan.netdisk_android.utils.CallBack;
+import com.shiyan.netdisk_android.utils.NetHelper;
+
+import org.json.JSONException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -55,8 +63,25 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
     @BindView(R.id.name)
     TextView name;
 
-    @BindView(R.id.delete)
-    TextView delete;
+    @OnClick(R.id.delete) public void deleteFile() {
+        if (file != null) {
+            try {
+                NetHelper.getInstance().deleteFile(file.getId(), new CallBack() {
+                    @Override
+                    public void success(@NonNull String data) {
+                        userFeedBack("success!");
+                    }
+
+                    @Override
+                    public void error(@Nullable String error) {
+                        userFeedBack(error);
+                    }
+                });
+            } catch (JSONException e) {
+                userFeedBack("JSON EXCEPTION");
+            }
+        }
+    }
 
     @BindView(R.id.lock)
     TextView lock;
@@ -94,5 +119,10 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
             name.setText(file.getFileName());
         }
         return root;
+    }
+
+
+    private void userFeedBack(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 }
