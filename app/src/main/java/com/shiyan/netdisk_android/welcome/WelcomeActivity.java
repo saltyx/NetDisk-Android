@@ -64,12 +64,6 @@ public class WelcomeActivity extends AppCompatActivity {
         String Token = SPHelper.getInstance(getApplication())
                 .getSP().getString(SPHelper.TOKEN_KEY, "null");
 
-        if (IP.contentEquals("null") || PORT.contentEquals("null")
-                || Token.contentEquals("null")) {
-            Intent intent = new Intent(this, SettingActivity.class);
-            startActivity(intent);
-            finish();return;
-        }
         if (!isFirst) {
             SecuDiskApplication.IP = IP;
             SecuDiskApplication.Port = PORT;
@@ -78,7 +72,12 @@ public class WelcomeActivity extends AppCompatActivity {
             startActivity(intent);
             finish();return;
         }
-
+        if (IP.contentEquals("null") || PORT.contentEquals("null")
+                || Token.contentEquals("null")) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
+            finish();return;
+        }
         ButterKnife.bind(this);
 
     }

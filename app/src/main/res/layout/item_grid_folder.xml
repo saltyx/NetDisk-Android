@@ -23,64 +23,44 @@
   ~ SOFTWARE.
   -->
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
+    android:layout_height="50dp"
     android:background="@color/cardview_light_background"
     android:clickable="true"
+    android:layout_marginLeft="4sp"
+    android:layout_marginRight="4sp"
     android:foreground="?attr/selectableItemBackground"
-    android:orientation="vertical"
-    tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="25dp">
+    android:orientation="horizontal"
+    >
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="45dp"
-        android:layout_height="39dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/sym_contact_card"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_folder_black_24dp"
+        android:layout_weight="3"
+        />
 
     <TextView
         android:id="@+id/folder_name"
-        android:layout_width="209dp"
-        android:layout_height="41dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
-        android:gravity="left|center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_horizontal|center_vertical"
         android:singleLine="true"
         android:text="TextView"
         android:textAlignment="gravity"
         android:textColor="@color/primary"
-        android:textSize="24sp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toRightOf="@+id/imageView"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="14sp"
+        />
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="50dp"
-        android:layout_height="37dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="3dp"
+        android:id="@+id/show_more"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:clickable="true"
+        android:layout_weight="3"
         android:foreground="?attr/selectableItemBackground"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toRightOf="@+id/folder_name"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_settings_black_24dp"
-        tools:layout_editor_absoluteX="299dp" />
-</android.support.constraint.ConstraintLayout>
+        android:src="@drawable/ic_settings_black_24dp" />
+</LinearLayout>

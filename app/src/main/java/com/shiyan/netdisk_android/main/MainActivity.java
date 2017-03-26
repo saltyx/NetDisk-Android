@@ -33,13 +33,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.shiyan.netdisk_android.R;
-import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.utils.ActivityHelper;
 import com.shiyan.netdisk_android.utils.IMMLeaks;
 import com.shiyan.netdisk_android.utils.Inject;
-
-import org.greenrobot.eventbus.EventBus;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

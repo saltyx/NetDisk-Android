@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2017 石岩
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="34dp"
+            android:layout_height="43dp"
+            app:srcCompat="@drawable/ic_folder_black_24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="158dp"
+            android:layout_height="27dp"
+            android:gravity="right|center_vertical"
+            android:text="TextView"
+            android:textAlignment="gravity"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toRightOf="@+id/imageView3"
+            android:layout_marginLeft="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="34dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="14dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3"
+            app:srcCompat="@drawable/ic_delete_black_24dp" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="34dp"
+            android:layout_height="43dp"
+            app:srcCompat="@drawable/ic_lock_black_24dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="29dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView6"
+            app:srcCompat="@drawable/ic_build_black_24dp" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="34dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7"
+            app:srcCompat="@drawable/ic_send_black_24dp" />
+
+        <TextView
+            android:id="@+id/delete"
+            android:layout_width="158dp"
+            android:layout_height="27dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="31dp"
+            android:gravity="right|center_vertical"
+            android:text="Delete"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toRightOf="@+id/imageView5"
+            app:layout_constraintTop_toBottomOf="@+id/name" />
+
+        <TextView
+            android:id="@+id/lock"
+            android:layout_width="158dp"
+            android:layout_height="27dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="22dp"
+            android:gravity="right|center_vertical"
+            android:text="Encrypt/Decrypt"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toRightOf="@+id/imageView6"
+            app:layout_constraintTop_toBottomOf="@+id/delete" />
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="123dp"
+            app:layout_constraintHorizontal_bias="0.361"
+            app:layout_constraintLeft_toRightOf="@+id/lock"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/rename"
+            android:layout_width="158dp"
+            android:layout_height="27dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="24dp"
+            android:gravity="right|center_vertical"
+            android:text="Rename"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toRightOf="@+id/imageView7"
+            app:layout_constraintTop_toBottomOf="@+id/lock" />
+
+        <TextView
+            android:id="@+id/share"
+            android:layout_width="158dp"
+            android:layout_height="27dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="25dp"
+            android:gravity="right|center_vertical"
+            android:text="Share"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toRightOf="@+id/imageView8"
+            app:layout_constraintTop_toBottomOf="@+id/rename" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            app:srcCompat="@color/divider" />
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="115dp"
+            app:layout_constraintHorizontal_bias="0.569"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@color/divider" />
+
+        <ImageView
+            android:id="@+id/imageView12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="167dp"
+            app:layout_constraintHorizontal_bias="0.747"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@color/divider" />
+
+        <ImageView
+            android:id="@+id/imageView13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="209dp"
+            app:layout_constraintHorizontal_bias="0.825"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@color/divider" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

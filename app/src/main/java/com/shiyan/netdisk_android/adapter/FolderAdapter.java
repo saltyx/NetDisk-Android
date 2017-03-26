@@ -28,15 +28,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shiyan.netdisk_android.R;
+import com.shiyan.netdisk_android.dialog.DetailInfoDialogFragment;
 import com.shiyan.netdisk_android.model.UserFile;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -49,6 +52,15 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
 
         @BindView(R.id.folder_name)
         TextView folderName;
+
+        @BindView(R.id.show_more)
+        ImageView more;
+
+        @OnClick void onMoreClick() {
+            DetailInfoDialogFragment.newInstance(file);
+        }
+
+        UserFile file;
 
         public GridViewHolder(View item) {
             super(item);
@@ -70,7 +82,9 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
 
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
-        holder.folderName.setText(data.get(position).getFileName());
+        String folderName = data.get(position).getFileName();
+        holder.folderName.setText(folderName.substring(0,folderName.length() > 5 ? 5 : folderName.length()));
+        holder.file = data.get(position);
     }
 
     @Override

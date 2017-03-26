@@ -24,6 +24,7 @@
 
 package com.shiyan.netdisk_android.model;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -34,6 +35,19 @@ import android.os.Parcelable;
 
 public class UserFile implements Parcelable {
 
+    public static final String KEY_ID = "id";
+    public static final String KEY_FILENAME = "filename";
+    public static final String KEY_FILESIZE = "filesize";
+    public static final String KEY_IS_FOLDER = "isFolder";
+    public static final String KEY_FROM_FOLDER = "fromFolder";
+    public static final String KEY_IS_ENCRYPTED = "isEncrypted";
+    public static final String KEY_IS_SHARED = "isShared";
+    public static final String KEY_DOWNLOAD_LINK = "downloadLink";
+    public static final String KEY_DOWNLOAD_TIME = "downloadTime";
+    public static final String KEY_CREATED_AT = "createAt";
+    public static final String KEY_UPDATED_AT = "updateAt";
+    public static final String KEY_SHA256 = "sha256";
+    public static final String KEY_IV = "iv";
 
     private int id;
     private String fileName;
@@ -54,7 +68,20 @@ public class UserFile implements Parcelable {
     }
 
     public UserFile(Parcel in) {
-
+        Bundle bundle = in.readBundle();
+        id = bundle.getInt(KEY_ID);
+        fileName = bundle.getString(KEY_FILENAME);
+        fileSize = bundle.getInt(KEY_FILESIZE);
+        isFolder = bundle.getBoolean(KEY_IS_FOLDER);
+        fromFolder = bundle.getInt(KEY_FROM_FOLDER);
+        isShared = bundle.getBoolean(KEY_IS_SHARED);
+        isEncrypted = bundle.getBoolean(KEY_IS_ENCRYPTED);
+        downloadLink = bundle.getString(KEY_DOWNLOAD_LINK);
+        downloadTimes = bundle.getInt(KEY_DOWNLOAD_TIME);
+        createAt = bundle.getString(KEY_CREATED_AT);
+        updateAt = bundle.getString(KEY_UPDATED_AT);
+        sha256 = bundle.getString(KEY_SHA256);
+        iv = bundle.getString(KEY_IV);
     }
 
     public static final Parcelable.Creator<UserFile> CREATOR = new Parcelable.Creator<UserFile>(){
@@ -76,7 +103,21 @@ public class UserFile implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        Bundle bundle = new Bundle();
+        bundle.putInt(KEY_ID, id);
+        bundle.putString(KEY_FILENAME, fileName);
+        bundle.putInt(KEY_FILESIZE, fileSize);
+        bundle.putBoolean(KEY_IS_FOLDER, isFolder);
+        bundle.putInt(KEY_FROM_FOLDER, fromFolder);
+        bundle.putBoolean(KEY_IS_ENCRYPTED, isEncrypted);
+        bundle.putBoolean(KEY_IS_SHARED, isShared);
+        bundle.putString(KEY_DOWNLOAD_LINK, downloadLink);
+        bundle.putInt(KEY_DOWNLOAD_TIME, downloadTimes);
+        bundle.putString(KEY_CREATED_AT, createAt);
+        bundle.putString(KEY_UPDATED_AT, updateAt);
+        bundle.putString(KEY_SHA256, sha256);
+        bundle.putString(KEY_IV, iv);
+        dest.writeBundle(bundle);
     }
 
     public int getId() {
