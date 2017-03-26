@@ -24,6 +24,8 @@
 
 package com.shiyan.netdisk_android.adapter;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,31 +55,32 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
         @BindView(R.id.folder_name)
         TextView folderName;
 
-        @BindView(R.id.show_more)
-        ImageView more;
-
-        @OnClick void onMoreClick() {
-            DetailInfoDialogFragment.newInstance(file);
+        @OnClick(R.id.show_more) void onMoreClick() {
+            DetailInfoDialogFragment.newInstance(file).show(mActivity.getFragmentManager(),"TAG");
         }
 
         UserFile file;
+        Activity mActivity;
 
-        public GridViewHolder(View item) {
+        public GridViewHolder(View item, Activity activity) {
             super(item);
+            this.mActivity = activity;
             ButterKnife.bind(this, item);
         }
     }
 
     private List<UserFile> data;
+    private Activity mActivity;
 
-    public FolderAdapter(List<UserFile> data) {
+    public FolderAdapter(List<UserFile> data, Activity activity) {
         this.data = data;
+        this.mActivity = activity;
     }
 
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_folder, parent, false);
-        return new GridViewHolder(root);
+        return new GridViewHolder(root, mActivity);
     }
 
     @Override

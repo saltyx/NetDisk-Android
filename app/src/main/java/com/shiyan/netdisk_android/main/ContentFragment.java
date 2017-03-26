@@ -165,7 +165,8 @@ public class ContentFragment extends Fragment implements MainContract.View {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         try {
             isGrid = true;
-            FolderAdapter adapter = new FolderAdapter(data = SerializeUserFile.serializeFolder(folders.filesJson));
+            FolderAdapter adapter = new FolderAdapter(data = SerializeUserFile.serializeFolder(folders.filesJson),
+                    getActivity());
             folderRecyclerView.setLayoutManager(layoutManager);
             folderRecyclerView.setAdapter(adapter);
             folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
@@ -177,7 +178,7 @@ public class ContentFragment extends Fragment implements MainContract.View {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void changeLayout(FolderMessageEvent event) {
 
-        FolderAdapter adapter = new FolderAdapter(data);
+        FolderAdapter adapter = new FolderAdapter(data,getActivity());
 
         if (event.toGrid) {
             GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);

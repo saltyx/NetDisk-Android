@@ -24,13 +24,15 @@
 
 package com.shiyan.netdisk_android;
 
+import java.lang.ref.Reference;
+
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public interface BasePresenter {
+public interface BasePresenter<T> {
 
-    public void start();
+    void start();
 
 }

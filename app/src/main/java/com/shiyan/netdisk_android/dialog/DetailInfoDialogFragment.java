@@ -82,6 +82,10 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
         params.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.horizontalMargin = 0;
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getDialog().getWindow().setAttributes(params);
         View root = inflater.inflate(R.layout.fragment_detail_info_dialog, container);
         ButterKnife.bind(this, root);
 
