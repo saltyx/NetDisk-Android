@@ -22,40 +22,19 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.main;
-
-import com.shiyan.netdisk_android.BasePresenter;
-import com.shiyan.netdisk_android.BaseView;
-import com.shiyan.netdisk_android.model.UserFile;
-
-import java.util.List;
+package com.shiyan.netdisk_android.event;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public interface MainContract {
+public class UserFeedBackEvent {
+    public String message;
+    public int type;
 
-    int FEED_BACK_TOAST_SHORT = 1;
-    int FEED_BACK_TOAST_LONG = 2;
-    int FEED_BACK_SNACKBAR_SHORT = 3;
-    int FEED_BACK_SNACKBAR_LONG = 4;
-    int FEED_BACK_SNACKBAR_INDEFINITE = 5;
-
-    interface View extends BaseView <Presenter> {
-        void showFiles(String filesJson);
-        void showFolders(List<UserFile> folders);
-        void showByGrid();
-        void showByList();
-        void toggle();
-        void userFeedBack(String msg, int type);
-        void remove(int fileId, boolean isFolder);
-    }
-
-    interface Presenter extends BasePresenter {
-        void set();
-        void change();
-        void delete(UserFile file);
+    public UserFeedBackEvent(String message, int type) {
+        this.message = message;
+        this.type = type;
     }
 }

@@ -38,11 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shiyan.netdisk_android.R;
-import com.shiyan.netdisk_android.event.DeleteEvent;
 import com.shiyan.netdisk_android.model.UserFile;
-
-import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

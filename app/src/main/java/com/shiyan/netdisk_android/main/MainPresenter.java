@@ -26,19 +26,10 @@ package com.shiyan.netdisk_android.main;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.widget.Toast;
 
 import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.data.DataSource;
-import com.shiyan.netdisk_android.event.DeleteEvent;
 import com.shiyan.netdisk_android.model.UserFile;
-import com.shiyan.netdisk_android.utils.CallBack;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONException;
-
-import java.util.List;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -74,7 +65,7 @@ public class MainPresenter implements MainContract.Presenter {
 
             @Override
             public void onDataNotAvailable(@Nullable String msg) {
-                mMainView.userFeedBack(msg);
+                mMainView.userFeedBack(msg, MainContract.FEED_BACK_SNACKBAR_INDEFINITE);
             }
         });
     }
@@ -91,13 +82,13 @@ public class MainPresenter implements MainContract.Presenter {
         final DataSource.ResultCallBack callBack = new DataSource.ResultCallBack() {
             @Override
             public void onSuccess(@Nullable String success) {
+                mMainView.userFeedBack("delete success!",MainContract.FEED_BACK_TOAST_SHORT);
                 mMainView.remove(file.getId(),file.isFolder());
-                mMainView.userFeedBack("delete success!");
             }
 
             @Override
             public void onError(@Nullable String error) {
-                mMainView.userFeedBack(error);
+                mMainView.userFeedBack(error, MainContract.FEED_BACK_SNACKBAR_INDEFINITE);
             }
         };
 

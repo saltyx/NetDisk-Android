@@ -37,6 +37,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.adapter.FileAdapter;
@@ -46,6 +47,7 @@ import com.shiyan.netdisk_android.dialog.DetailInfoDialogFragment;
 import com.shiyan.netdisk_android.event.DeleteEvent;
 import com.shiyan.netdisk_android.event.FolderMessageEvent;
 import com.shiyan.netdisk_android.event.MessageEvent;
+import com.shiyan.netdisk_android.event.UserFeedBackEvent;
 import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.SerializeUserFile;
 
@@ -59,14 +61,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.shiyan.netdisk_android.main.MainContract.FEED_BACK_SNACKBAR_INDEFINITE;
+import static com.shiyan.netdisk_android.main.MainContract.FEED_BACK_SNACKBAR_LONG;
+import static com.shiyan.netdisk_android.main.MainContract.FEED_BACK_SNACKBAR_SHORT;
+import static com.shiyan.netdisk_android.main.MainContract.FEED_BACK_TOAST_LONG;
+import static com.shiyan.netdisk_android.main.MainContract.FEED_BACK_TOAST_SHORT;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ContentFragment extends Fragment implements MainContract.View , SwipeRefreshLayout.OnRefreshListener {
-
-    enum FeedBackType{
-        TOAST, SNACK_BAR
-    }
 
     final String TAG = getClass().getName();
 
@@ -125,8 +129,8 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
     @Override
     public void onStop() {
-        super.onStop();
         EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -178,8 +182,8 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     }
 
     @Override
-    public void userFeedBack(String msg) {
-        Snackbar.make(folderRecyclerView, msg, Snackbar.LENGTH_INDEFINITE).show();
+    public void userFeedBack(String msg, int type) {
+        EventBus.getDefault().post(new UserFeedBackEvent(msg, type));
     }
 
     public static ContentFragment newInstance() {
@@ -205,7 +209,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
             }
 
         } catch (JSONException e) {
-            userFeedBack(e.toString());
+            userFeedBack(e.toString(), FEED_BACK_SNACKBAR_INDEFINITE);
         }
     }
 
@@ -234,6 +238,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                                         public void onClick(UserFile file) {
                                             mPresenter.delete(file);
                                             dialog.dismiss();
+//                                            userFeedBack("delete success!",MainContract.FEED_BACK_TOAST_SHORT);
                                         }
                                     }).show(getActivity().getFragmentManager(),TAG);
                                 }
@@ -246,7 +251,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                 folderAdapter.changeData(data);
             }
         } catch (JSONException e) {
-            userFeedBack(e.toString());
+            userFeedBack(e.toString(),FEED_BACK_SNACKBAR_INDEFINITE);
         }
     }
 
@@ -263,6 +268,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                             public void onClick(UserFile file) {
                                 mPresenter.delete(file);
                                 dialog.dismiss();
+//                                userFeedBack("delete success!",MainContract.FEED_BACK_TOAST_SHORT);
                             }
                         }).show(getActivity().getFragmentManager(),TAG);
                     }
@@ -293,5 +299,28 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         }
     }
 
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void feedback(UserFeedBackEvent event) {
+        final String msg = event.message;
+        Log.i(TAG, msg);
+        switch (event.type) {
+            case FEED_BACK_TOAST_SHORT:
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                break;
+            case FEED_BACK_TOAST_LONG:
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+                break;
+            case FEED_BACK_SNACKBAR_SHORT:
+                Snackbar.make(folderRecyclerView, msg, Snackbar.LENGTH_SHORT).show();
+                break;
+            case FEED_BACK_SNACKBAR_LONG:
+                Snackbar.make(folderRecyclerView, msg, Snackbar.LENGTH_LONG).show();
+                break;
+            case FEED_BACK_SNACKBAR_INDEFINITE:
+                Snackbar.make(folderRecyclerView, msg, Snackbar.LENGTH_INDEFINITE).show();
+                break;
+            default:
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+        }
+    }
 }
