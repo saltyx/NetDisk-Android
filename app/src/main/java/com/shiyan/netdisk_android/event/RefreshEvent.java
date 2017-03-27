@@ -22,47 +22,18 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.main;
-
-import com.shiyan.netdisk_android.BasePresenter;
-import com.shiyan.netdisk_android.BaseView;
-import com.shiyan.netdisk_android.model.UserFile;
-
-import java.util.List;
+package com.shiyan.netdisk_android.event;
 
 /**
+ * for the SwipeRefreshLayout
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public interface MainContract {
+public class RefreshEvent {
+    public boolean refresh;
 
-    int FEED_BACK_TOAST_SHORT = 1;
-    int FEED_BACK_TOAST_LONG = 2;
-    int FEED_BACK_SNACKBAR_SHORT = 3;
-    int FEED_BACK_SNACKBAR_LONG = 4;
-    int FEED_BACK_SNACKBAR_INDEFINITE = 5;
-
-    interface View extends BaseView <Presenter> {
-        void showFiles(String filesJson);
-        void showFolders(List<UserFile> folders);
-        void showByGrid();
-        void showByList();
-        void toggle();
-        void userFeedBack(String msg, int type);
-        void remove(int fileId, boolean isFolder);
-        void rename(int id, String newName, boolean isFolder);
-        void encrypt(int id);
-        void decrypt(int id);
-        void refresh(boolean refresh);
-    }
-
-    interface Presenter extends BasePresenter {
-        void set();
-        void change();
-        void delete(UserFile file);
-        void rename(UserFile file);
-        void shareOrCancel(UserFile file);
-        void encryptOrDecrypt(UserFile file, String passPhrase);
+    public RefreshEvent(boolean refresh) {
+        this.refresh = refresh;
     }
 }
