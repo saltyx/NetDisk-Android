@@ -216,20 +216,20 @@ public class NetHelper {
         buildRequest(buildBaseFileUrl("update"), buildUpdateFileParam(id, newName), Method.PUT, callBack);
     }
 
-    public void EncryptFile(int id, String passPhrase, final CallBack callBack) throws JSONException {
+    public void encryptFile(int id, String passPhrase, final CallBack callBack) throws JSONException {
         buildRequest(buildBaseFileUrl("encrypt"), buildEncryptFileParam(id, passPhrase), Method.POST, callBack );
     }
 
-    public void DecryptFile(int id, String passPhrase, final CallBack callBack) throws JSONException {
+    public void decryptFile(int id, String passPhrase, final CallBack callBack) throws JSONException {
         buildRequest(buildBaseFileUrl("decrypt"), buildDecryptFileParam(id, passPhrase), Method.POST, callBack);
     }
 
-    public void ShareFile(int id, final CallBack callBack) throws JSONException {
-        buildRequest(buildBaseFileUrl("share"),buildShareFileParam(id), Method.POST,callBack);
+    public void shareFile(int id, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("shareOrCancel"),buildShareFileParam(id), Method.POST,callBack);
     }
 
-    public void CancelSharingFile(int id, final CallBack callBack) throws JSONException {
-        buildRequest(buildBaseFileUrl("share/cancel"), buildCancelSharingFileParam(id), Method.POST, callBack);
+    public void cancelSharingFile(int id, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("shareOrCancel/cancel"), buildCancelSharingFileParam(id), Method.POST, callBack);
     }
 
 

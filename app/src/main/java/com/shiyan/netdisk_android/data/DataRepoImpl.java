@@ -67,7 +67,7 @@ public class DataRepoImpl implements DataSource {
      */
     @Override
     public void createFolder(String folderName, int fromFolder, ResultCallBack callBack) {
-
+        remoteDataSource.createFolder(folderName, fromFolder, callBack);
     }
 
     @Override
@@ -79,11 +79,11 @@ public class DataRepoImpl implements DataSource {
      * Update the folder's name
      * @param id folder's id
      * @param newName new filename
-     * @param callBack
+     * @param callBack callback when the server responses
      */
     @Override
     public void updateFolder(int id, String newName, ResultCallBack callBack) {
-
+        remoteDataSource.updateFolder(id, newName, callBack);
     }
 
     /**
@@ -94,12 +94,12 @@ public class DataRepoImpl implements DataSource {
      */
     @Override
     public void encryptFolder(int id, String passPhrase, ResultCallBack callBack) {
-
+        remoteDataSource.encryptFolder(id, passPhrase, callBack);
     }
 
     @Override
     public void decryptFolder(int id, String passPhrase, ResultCallBack callBack) {
-
+        remoteDataSource.decryptFolder(id, passPhrase, callBack);
     }
 
     /**
@@ -109,7 +109,7 @@ public class DataRepoImpl implements DataSource {
      */
     @Override
     public void getFolder(int id, GetData callback) {
-
+        remoteDataSource.getFolder(id, callback);
     }
 
     /**
@@ -130,7 +130,7 @@ public class DataRepoImpl implements DataSource {
      */
     @Override
     public void encryptFile(int id, String passPhrase, ResultCallBack callBack) {
-
+        remoteDataSource.encryptFile(id, passPhrase, callBack);
     }
 
     /**
@@ -141,7 +141,7 @@ public class DataRepoImpl implements DataSource {
      */
     @Override
     public void decryptFile(int id, String passPhrase, ResultCallBack callBack) {
-
+        remoteDataSource.decryptFile(id, passPhrase, callBack);
     }
 
     @Override
@@ -161,16 +161,16 @@ public class DataRepoImpl implements DataSource {
 
     @Override
     public void updateFile(int id, String newName, ResultCallBack callBack) {
-
+        remoteDataSource.updateFile(id, newName, callBack);
     }
 
     @Override
     public void shareFile(int id, ResultCallBack callBack) {
-
+        remoteDataSource.shareFile(id, callBack);
     }
 
     @Override
     public void cancelShare(int id, ResultCallBack callBack) {
-
+        remoteDataSource.cancelShare(id, callBack);
     }
 }

@@ -35,6 +35,8 @@ import java.util.List;
 
 public interface DataSource {
 
+    String JSON_EXCEPTION = "JSON_EXCEPTION";
+
     interface LoadData<T> {
         void onLoaded(List<T> data);
         void onDataNotAvailable(@Nullable String msg);
