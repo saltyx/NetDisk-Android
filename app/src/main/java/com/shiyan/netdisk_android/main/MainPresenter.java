@@ -30,7 +30,6 @@ import android.support.annotation.Nullable;
 import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.data.DataSource;
 import com.shiyan.netdisk_android.model.UserFile;
-import com.squareup.haha.perflib.Main;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -66,7 +65,8 @@ public class MainPresenter implements MainContract.Presenter {
 
             @Override
             public void onDataNotAvailable(@Nullable String msg) {
-                mMainView.userFeedBack(msg, MainContract.FEED_BACK_SNACKBAR_INDEFINITE);
+                mMainView.userFeedBack(msg, MainContract.FEED_BACK_SNACKBAR_LONG);
+                mMainView.refresh(false);
             }
         });
     }
@@ -87,7 +87,7 @@ public class MainPresenter implements MainContract.Presenter {
 
             @Override
             public void onError(@Nullable String error) {
-                mMainView.userFeedBack(error, MainContract.FEED_BACK_SNACKBAR_INDEFINITE);
+                mMainView.userFeedBack(error, MainContract.FEED_BACK_SNACKBAR_LONG);
             }
         };
 
@@ -107,7 +107,7 @@ public class MainPresenter implements MainContract.Presenter {
             }
 
             @Override public void onError(@Nullable String error) {
-                mMainView.userFeedBack(error, MainContract.FEED_BACK_SNACKBAR_INDEFINITE);
+                mMainView.userFeedBack(error, MainContract.FEED_BACK_SNACKBAR_LONG);
             }
         };
         if (file.isFolder()) {
@@ -151,7 +151,7 @@ public class MainPresenter implements MainContract.Presenter {
             }
 
             @Override public void onError(@Nullable String error) {
-                mMainView.userFeedBack(error, MainContract.FEED_BACK_SNACKBAR_INDEFINITE);
+                mMainView.userFeedBack(error, MainContract.FEED_BACK_SNACKBAR_LONG);
             }
         };
         if (file.isFolder()) {

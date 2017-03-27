@@ -49,6 +49,7 @@ import com.shiyan.netdisk_android.event.DeleteEvent;
 import com.shiyan.netdisk_android.event.EncryptOrDecryptEvent;
 import com.shiyan.netdisk_android.event.FolderMessageEvent;
 import com.shiyan.netdisk_android.event.MessageEvent;
+import com.shiyan.netdisk_android.event.RefreshEvent;
 import com.shiyan.netdisk_android.event.RenameEvent;
 import com.shiyan.netdisk_android.event.UserFeedBackEvent;
 import com.shiyan.netdisk_android.model.UserFile;
@@ -83,8 +84,6 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     RecyclerView folderRecyclerView;
 
     FolderAdapter folderAdapter = null;
-    LinearLayoutManager linearLayoutManager = null;
-    GridLayoutManager gridLayoutManager = null;
 
     @BindView(R.id.files_recycler_view)
     RecyclerView fileRecyclerView;
@@ -114,7 +113,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         mSwipeRefreshLayout.setColorSchemeResources(R.color.accent);
         mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
+        mSwipeRefreshLayout.setRefreshing(true);
         folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
 
         Log.i(TAG, "onCreateView: Running");
@@ -185,17 +184,24 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         return new ContentFragment();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN) public void updateFiles(MessageEvent files) {
-        if (linearLayoutManager == null) {
-            linearLayoutManager = new LinearLayoutManager(getContext());
-            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        }
+    @Override public void refresh(boolean refresh) {
+        EventBus.getDefault().post(new RefreshEvent(refresh));
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN) public void setRefresh(RefreshEvent event) {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(event.refresh);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) public void updateFiles(MessageEvent files) {
         try {
             data = SerializeUserFile.serialize(files.filesJson);
             if (fileAdapter == null) {
                 fileAdapter = new FileAdapter(data);
                 Log.i(TAG, String.valueOf(files.filesJson));
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+                linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 fileRecyclerView.setLayoutManager(linearLayoutManager);
                 fileRecyclerView.setAdapter(fileAdapter);
             } else {
@@ -213,9 +219,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         }
 
         isRefresh = false;
-        if (gridLayoutManager == null) {
-            gridLayoutManager = new GridLayoutManager(getContext(), 2);
-        }
+
         try {
             isGrid = true;
             data = SerializeUserFile.serializeFolder(folders.filesJson);
@@ -257,7 +261,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                             }
                         });
 
-                folderRecyclerView.setLayoutManager(gridLayoutManager);
+                folderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
                 folderRecyclerView.setAdapter(folderAdapter);
             } else {
                 folderAdapter.changeData(data);
@@ -305,10 +309,12 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
         if (event.toGrid) {
             isGrid = true;
-            folderRecyclerView.setLayoutManager(gridLayoutManager);
+            folderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
             folderRecyclerView.setAdapter(folderAdapter);
         } else {
             isGrid = false;
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             folderRecyclerView.setLayoutManager(linearLayoutManager);
             folderRecyclerView.setAdapter(folderAdapter);
 
