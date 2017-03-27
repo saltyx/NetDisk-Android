@@ -44,9 +44,12 @@ import com.shiyan.netdisk_android.adapter.FileAdapter;
 import com.shiyan.netdisk_android.adapter.FolderAdapter;
 import com.shiyan.netdisk_android.adapter.GridSpaceItemDecoration;
 import com.shiyan.netdisk_android.dialog.DetailInfoDialogFragment;
+import com.shiyan.netdisk_android.dialog.WithOneInputDialogFragment;
 import com.shiyan.netdisk_android.event.DeleteEvent;
+import com.shiyan.netdisk_android.event.EncryptOrDecryptEvent;
 import com.shiyan.netdisk_android.event.FolderMessageEvent;
 import com.shiyan.netdisk_android.event.MessageEvent;
+import com.shiyan.netdisk_android.event.RenameEvent;
 import com.shiyan.netdisk_android.event.UserFeedBackEvent;
 import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.SerializeUserFile;
@@ -101,8 +104,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         // Required empty public constructor
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_content, container, false);
@@ -121,59 +123,53 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     }
 
 
-    @Override
-    public void onStart() {
+    @Override public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
     }
 
-    @Override
-    public void onStop() {
+    @Override public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
-    @Override
-    public void onRefresh() {
+    @Override public void onRefresh() {
         if (!isRefresh) {
             isRefresh = true;
             mPresenter.set();
         }
     }
 
-    @Override
-    public void setPresenter(MainContract.Presenter presenter) {
+    @Override public void setPresenter(MainContract.Presenter presenter) {
         this.mPresenter = presenter;
     }
 
-    @Override
-    public void showFiles(String filesJson) {
+    @Override public void showFiles(String filesJson) {
         EventBus.getDefault().post(new MessageEvent(filesJson));
     }
 
-    @Override
-    public void showFolders(List<UserFile> folders) {
+    @Override public void showFolders(List<UserFile> folders) {
 
     }
 
-    @Override
-    public void showByGrid() {
+    @Override public void showByGrid() {
         EventBus.getDefault().post(new FolderMessageEvent(true));
     }
 
-    @Override
-    public void showByList() {
+    @Override public void showByList() {
         EventBus.getDefault().post(new FolderMessageEvent(false));
 
     }
 
-    @Override
-    public void remove(int fileId,boolean isFolder) {
+    @Override public void remove(int fileId,boolean isFolder) {
         EventBus.getDefault().post(new DeleteEvent(fileId, isFolder));
     }
 
-    @Override
-    public void toggle() {
+    @Override public void rename(int id, String newName, boolean isFolder) {
+        EventBus.getDefault().post(new RenameEvent(newName, id, isFolder));
+    }
+
+    @Override public void toggle() {
         if (isGrid) {
             showByList();
         } else {
@@ -181,8 +177,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         }
     }
 
-    @Override
-    public void userFeedBack(String msg, int type) {
+    @Override public void userFeedBack(String msg, int type) {
         EventBus.getDefault().post(new UserFeedBackEvent(msg, type));
     }
 
@@ -190,8 +185,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         return new ContentFragment();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateFiles(MessageEvent files) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void updateFiles(MessageEvent files) {
         if (linearLayoutManager == null) {
             linearLayoutManager = new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -213,8 +207,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void showFolder(MessageEvent folders) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void showFolder(MessageEvent folders) {
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -235,10 +228,29 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                                     final DetailInfoDialogFragment dialog = DetailInfoDialogFragment.newInstance(file);
                                     dialog.setCallBack(new DetailInfoDialogFragment.OnMoreCallBack() {
                                         @Override
-                                        public void onClick(UserFile file) {
+                                        public void onDeletedClick(UserFile file) {
                                             mPresenter.delete(file);
                                             dialog.dismiss();
-//                                            userFeedBack("delete success!",MainContract.FEED_BACK_TOAST_SHORT);
+                                        }
+
+                                        @Override
+                                        public void onRenameClick(UserFile file) {
+                                            buildDialogForRename(file);
+                                            dialog.dismiss();
+
+                                        }
+
+                                        @Override
+                                        public void onEncryptOrDecryptClick(UserFile file) {
+                                            buildDialogForEncryptOrDecrypt(file);
+                                            dialog.dismiss();
+                                        }
+
+                                        @Override
+                                        public void onShareClick(UserFile file) {
+                                            file.setShared(!file.isShared());//取否
+                                            mPresenter.shareOrCancel(file);
+                                            dialog.dismiss();
                                         }
                                     }).show(getActivity().getFragmentManager(),TAG);
                                 }
@@ -255,8 +267,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void changeLayout(FolderMessageEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void changeLayout(FolderMessageEvent event) {
         if (folderAdapter == null) {
             folderAdapter = new FolderAdapter(data, new FolderAdapter.CallBack() {
                 @Override
@@ -265,10 +276,26 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                         final DetailInfoDialogFragment dialog = DetailInfoDialogFragment.newInstance(file);
                         dialog.setCallBack(new DetailInfoDialogFragment.OnMoreCallBack() {
                             @Override
-                            public void onClick(UserFile file) {
+                            public void onDeletedClick(UserFile file) {
                                 mPresenter.delete(file);
                                 dialog.dismiss();
-//                                userFeedBack("delete success!",MainContract.FEED_BACK_TOAST_SHORT);
+                            }
+
+                            @Override
+                            public void onRenameClick(UserFile file) {
+                                buildDialogForRename(file);
+                                dialog.dismiss();
+                            }
+
+                            @Override
+                            public void onEncryptOrDecryptClick(UserFile file) {
+                                buildDialogForEncryptOrDecrypt(file);
+                                dialog.dismiss();
+                            }
+
+                            @Override
+                            public void onShareClick(UserFile file) {
+
                             }
                         }).show(getActivity().getFragmentManager(),TAG);
                     }
@@ -288,8 +315,15 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void removeItem(DeleteEvent event) {
+    @Override public void encrypt(int id) {
+        EventBus.getDefault().post(new EncryptOrDecryptEvent(id, true));
+    }
+
+    @Override public void decrypt(int id) {
+        EventBus.getDefault().post(new EncryptOrDecryptEvent(id, false));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) public void removeItem(DeleteEvent event) {
         if (event.isFolder) {
             if (folderAdapter == null) return;
             folderAdapter.remove(event.id);
@@ -299,8 +333,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void feedback(UserFeedBackEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN) public void feedback(UserFeedBackEvent event) {
         final String msg = event.message;
         Log.i(TAG, msg);
         switch (event.type) {
@@ -323,4 +356,55 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) public void renameItem(RenameEvent event) {
+        if (event.isFolder) {
+            folderAdapter.renameItem(event.id, event.newName);
+        } else {
+            fileAdapter.renameItem(event.id, event.newName);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) public void encryptItem(EncryptOrDecryptEvent event) {
+        if (event.encryptIt) {
+
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN) public void decryptItem(EncryptOrDecryptEvent event) {
+        if (!event.encryptIt) {
+
+        }
+    }
+    private void buildDialogForRename(final UserFile file) {
+        final WithOneInputDialogFragment dialog = WithOneInputDialogFragment.newInstance(file);
+        dialog.setCallBack(new WithOneInputDialogFragment.CallBack() {
+            @Override public void onOkClick(String text) {
+                file.setFileName(text);
+                mPresenter.rename(file);
+                dialog.dismiss();
+            }
+
+            @Override public void onCancelClick() {
+                dialog.dismiss();
+            }
+        }).show(getActivity().getFragmentManager(), TAG);
+    }
+
+    private void buildDialogForEncryptOrDecrypt(final UserFile file) {
+        final WithOneInputDialogFragment dialog = WithOneInputDialogFragment.newInstance(file);
+        String title = file.isEncrypted() ? "Decrypt " : "Encrypt ";
+        dialog.setTitle(title.concat(file.getFileName()))
+                .setCallBack(new WithOneInputDialogFragment.CallBack() {
+                    @Override public void onOkClick(String text) {
+                        mPresenter.encryptOrDecrypt(file, text);
+                        dialog.dismiss();
+                    }
+
+                    @Override public void onCancelClick() {
+                        dialog.dismiss();
+                    }
+                }).show(getActivity().getFragmentManager(), TAG);
+    }
+
 }

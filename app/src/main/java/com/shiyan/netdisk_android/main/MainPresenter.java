@@ -30,6 +30,7 @@ import android.support.annotation.Nullable;
 import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.data.DataSource;
 import com.shiyan.netdisk_android.model.UserFile;
+import com.squareup.haha.perflib.Main;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -75,10 +76,8 @@ public class MainPresenter implements MainContract.Presenter {
         mMainView.toggle();
     }
 
-
     @Override
     public void delete(@NonNull final UserFile file) {
-
         final DataSource.ResultCallBack callBack = new DataSource.ResultCallBack() {
             @Override
             public void onSuccess(@Nullable String success) {
@@ -96,6 +95,77 @@ public class MainPresenter implements MainContract.Presenter {
             mDataRepo.deleteFolder(file.getId(), callBack);
         } else {
             mDataRepo.deleteFiles(file.getId(), callBack);
+        }
+    }
+
+    @Override
+    public void rename(final UserFile file) {
+        final DataSource.ResultCallBack callback = new DataSource.ResultCallBack() {
+            @Override public void onSuccess(@Nullable String success) {
+                mMainView.userFeedBack("success", MainContract.FEED_BACK_TOAST_SHORT);
+                mMainView.rename(file.getId(), file.getFileName(), file.isFolder());
+            }
+
+            @Override public void onError(@Nullable String error) {
+                mMainView.userFeedBack(error, MainContract.FEED_BACK_SNACKBAR_INDEFINITE);
+            }
+        };
+        if (file.isFolder()) {
+            mDataRepo.updateFolder(file.getId(), file.getFileName(),callback);
+        } else {
+            mDataRepo.updateFile(file.getId(), file.getFileName(), callback);
+        }
+    }
+
+    @Override
+    public void shareOrCancel(UserFile file) {
+        final DataSource.ResultCallBack callback = new DataSource.ResultCallBack() {
+            @Override public void onSuccess(@Nullable String success) {
+
+            }
+
+            @Override public void onError(@Nullable String error) {
+
+            }
+        };
+        if (file.isFolder()) {
+            if (file.isShared()) {
+                mDataRepo.cancelShare(file.getId(), callback);
+            } else {
+                mDataRepo.shareFile(file.getId(), callback);
+            }
+        } else {
+            if (file.isShared()) {
+                mDataRepo.cancelShare(file.getId(), callback);
+            } else {
+                mDataRepo.shareFile(file.getId(), callback);
+            }
+        }
+    }
+
+    @Override
+    public void encryptOrDecrypt(UserFile file, String passPhrase) {
+        final DataSource.ResultCallBack callback = new DataSource.ResultCallBack() {
+            @Override public void onSuccess(@Nullable String success) {
+                mMainView.userFeedBack("success", MainContract.FEED_BACK_TOAST_SHORT);
+            }
+
+            @Override public void onError(@Nullable String error) {
+                mMainView.userFeedBack(error, MainContract.FEED_BACK_SNACKBAR_INDEFINITE);
+            }
+        };
+        if (file.isFolder()) {
+            if (file.isEncrypted()) {
+                mDataRepo.decryptFolder(file.getId(), passPhrase, callback);
+            } else {
+                mDataRepo.encryptFolder(file.getId(), passPhrase, callback);
+            }
+        } else {
+            if (file.isEncrypted()) {
+                mDataRepo.decryptFile(file.getId(), passPhrase, callback);
+            } else {
+                mDataRepo.encryptFile(file.getId(), passPhrase, callback);
+            }
         }
     }
 }

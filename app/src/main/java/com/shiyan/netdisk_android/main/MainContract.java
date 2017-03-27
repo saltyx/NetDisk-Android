@@ -51,11 +51,17 @@ public interface MainContract {
         void toggle();
         void userFeedBack(String msg, int type);
         void remove(int fileId, boolean isFolder);
+        void rename(int id, String newName, boolean isFolder);
+        void encrypt(int id);
+        void decrypt(int id);
     }
 
     interface Presenter extends BasePresenter {
         void set();
         void change();
         void delete(UserFile file);
+        void rename(UserFile file);
+        void shareOrCancel(UserFile file);
+        void encryptOrDecrypt(UserFile file, String passPhrase);
     }
 }
