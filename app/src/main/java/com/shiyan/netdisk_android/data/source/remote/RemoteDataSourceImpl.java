@@ -29,16 +29,11 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.shiyan.netdisk_android.data.DataSource;
-import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.CallBack;
 import com.shiyan.netdisk_android.utils.NetHelper;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -47,9 +42,9 @@ import java.util.List;
 
 public class RemoteDataSourceImpl implements DataSource {
     
-    final String TAG = getClass().getName();
-    static RemoteDataSourceImpl INSTANCE;
-    final NetHelper netHelper ;
+    private final String TAG = getClass().getName();
+    private static RemoteDataSourceImpl INSTANCE;
+    private final NetHelper netHelper ;
 
     private RemoteDataSourceImpl() {
         netHelper = NetHelper.getInstance() ;
@@ -67,8 +62,21 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void createFolder(String folderName, int fromFolder, ResultCallBack callBack) {
+    public void createFolder(String folderName, int fromFolder, final ResultCallBack callBack) {
+        try {
+            netHelper.createFolder(fromFolder, folderName, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+
+        } catch (JSONException e) {
+            callBack.onError(JSON_EXCEPTION);
+        }
     }
 
     @Override
@@ -86,28 +94,81 @@ public class RemoteDataSourceImpl implements DataSource {
                 }
             });
         }catch (JSONException e) {
-            callBack.onError("JSON_EXCEPTION");
+            callBack.onError(JSON_EXCEPTION);
         }
     }
 
     @Override
-    public void updateFolder(int id, String newName, ResultCallBack callBack) {
+    public void updateFolder(int id, String newName, final ResultCallBack callBack) {
+        try {
+            netHelper.updateFolder(id, newName, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+
+        } catch (JSONException e) {
+            callBack.onError(JSON_EXCEPTION);
+        }
+    }
+
+    /**
+     * encrypt all the files in the folder
+     * @param id folder's id
+     * @param passPhrase password
+     * @param callBack callback when the server responses
+     */
+    @Override
+    public void encryptFolder(int id, String passPhrase, final ResultCallBack callBack) {
+        try {
+
+            netHelper.encryptFolder(id, passPhrase, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
+
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+
+        } catch (JSONException e) {
+            callBack.onError(JSON_EXCEPTION);
+        }
     }
 
     @Override
-    public void encryptFolder(int id, String passPhrase, ResultCallBack callBack) {
+    public void decryptFolder(int id, String passPhrase, final ResultCallBack callBack) {
+        try {
+            netHelper.decryptFolder(id, passPhrase, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+        } catch (JSONException e) {
+            callBack.onError(JSON_EXCEPTION);
+        }
     }
 
-    @Override
-    public void decryptFolder(int id, String passPhrase, ResultCallBack callBack) {
+    @Override @SuppressWarnings("unchecked")
+    public void getFolder(int id, final GetData callback) {
+        netHelper.getFilesByFolder(id, new CallBack() {
+            @Override public void success(@NonNull String data) {
+                callback.onLoaded(data);
+            }
 
-    }
-
-    @Override
-    public void getFolder(int id, GetData callback) {
-
+            @Override public void error(@Nullable String error) {
+                callback.onDataNotAvailable(error);
+            }
+        });
     }
 
     /**
@@ -115,7 +176,7 @@ public class RemoteDataSourceImpl implements DataSource {
      * @param id folder's id
      * @param callback when data is ready, callback the json string
      */
-    @SuppressWarnings("uncheck")
+    @SuppressWarnings("unchecked")
     @Override
     public void getFilesByFolder(int id, final GetData callback) {
         netHelper.getFilesByFolder(id, new CallBack() {
@@ -140,43 +201,140 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void encryptFile(int id, String passPhrase, ResultCallBack callBack) {
+    public void encryptFile(int id, String passPhrase, final ResultCallBack callBack) {
+        try {
+            netHelper.encryptFile(id, passPhrase, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+        } catch (JSONException e) {
+            callBack.onError(JSON_EXCEPTION);
+        }
     }
 
     @Override
-    public void decryptFile(int id, String passPhrase, ResultCallBack callBack) {
+    public void decryptFile(int id, String passPhrase, final ResultCallBack callBack) {
+        try {
+            netHelper.decryptFile(id, passPhrase, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+
+        } catch (JSONException e) {
+            callBack.onError(JSON_EXCEPTION);
+        }
     }
 
     @Override
-    public void copyFile(int id, int dstFolder, ResultCallBack callBack) {
+    public void copyFile(int id, int dstFolder, final ResultCallBack callBack) {
+        try {
+            netHelper.copyFile(id, dstFolder, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+        } catch (JSONException e) {
+            callBack.onError(JSON_EXCEPTION);
+        }
     }
 
     @Override
-    public void deleteFiles(int id, ResultCallBack callBack) {
+    public void deleteFiles(int id, final ResultCallBack callBack) {
+        try {
+            netHelper.deleteFile(id, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+        } catch (JSONException e) {
+            callBack.onError(JSON_EXCEPTION);
+        }
     }
 
     @Override
-    public void moveFile(int id, int dstFolder, ResultCallBack callBack) {
+    public void moveFile(int id, int dstFolder, final ResultCallBack callBack) {
+        try {
+            netHelper.moveFile(id, dstFolder, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+        } catch (JSONException e){
+            callBack.onError(JSON_EXCEPTION);
+        }
     }
 
     @Override
-    public void updateFile(int id, String newName, ResultCallBack callBack) {
+    public void updateFile(int id, String newName, final ResultCallBack callBack) {
+        try {
+            netHelper.updateFile(id, newName, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+        } catch (JSONException e) {
+            callBack.onError(JSON_EXCEPTION);
+        }
     }
 
     @Override
-    public void shareFile(int id, ResultCallBack callBack) {
+    public void shareFile(int id, final ResultCallBack callBack) {
+        try {
+            netHelper.shareFile(id, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+        } catch (JSONException e) {
+            callBack.onError(JSON_EXCEPTION);
+        }
     }
 
     @Override
-    public void cancelShare(int id, ResultCallBack callBack) {
+    public void cancelShare(int id, final ResultCallBack callBack) {
+        try {
+            netHelper.cancelSharingFile(id, new CallBack() {
+                @Override public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+        } catch (JSONException e) {
+            callBack.onSuccess(JSON_EXCEPTION);
+        }
     }
 
 }
