@@ -53,7 +53,10 @@ public class WithOneInputDialogFragment extends DialogFragment {
 
     public static final String KEY = "USER_FILE";
 
-    private UserFile file;
+    private String mTitleText = null;
+    private String mOkButtonText = null;
+    private String mCancelButtonText = null;
+
     private CallBack callback;
 
     @BindView(R.id.dialog_title) TextView mTitle;
@@ -94,32 +97,31 @@ public class WithOneInputDialogFragment extends DialogFragment {
         ButterKnife.bind(this, root);
 
         if (getArguments() != null) {
-            file = getArguments().getParcelable(KEY);
+            UserFile file = getArguments().getParcelable(KEY);
             if (file != null) {
-                mTitle.setText("Rename ".concat(file.getFileName()));
+                mTitleText = mTitleText == null ? "Rename ".concat(file.getFileName()) : mTitleText;
+                mOkButtonText = mOkButtonText == null ? "OK" : mOkButtonText;
+                mCancelButtonText = mCancelButtonText == null ? "Cancel" : mCancelButtonText;
+                mOKButton.setText(mOkButtonText);
+                mCancelButton.setText(mCancelButtonText);
+                mTitle.setText(mTitleText);
             }
         }
         return root;
     }
 
     public WithOneInputDialogFragment setTitle(String title) {
-        if (mTitle != null) {
-            mTitle.setText(title);
-        }
+        mTitleText = title;
         return this;
     }
 
     public WithOneInputDialogFragment setOkText(String okText) {
-        if (mOKButton != null) {
-            mOKButton.setText(okText);
-        }
+        mOkButtonText = okText;
         return this;
     }
 
     public WithOneInputDialogFragment setCancelText(String cancelText) {
-        if (mCancelButton != null) {
-            mCancelButton.setText(cancelText);
-        }
+        mCancelButtonText = cancelText;
         return this;
     }
 
