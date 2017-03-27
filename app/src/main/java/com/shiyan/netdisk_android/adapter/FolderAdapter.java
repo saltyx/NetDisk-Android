@@ -54,7 +54,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
         @OnClick(R.id.show_more) void onMoreClick() {
 //            DetailInfoDialogFragment.newInstance(file).setCallBack(new DetailInfoDialogFragment.OnMoreCallBack() {
 //                @Override
-//                public void onClick(UserFile file) {
+//                public void onDeletedClick(UserFile file) {
 //
 //                }
 //            }).show(mActivity.getFragmentManager(),"TAG");
@@ -93,6 +93,16 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
         if (index != -1) {
             mData.remove(index);
             notifyDataSetChanged();
+        }
+    }
+
+    public void renameItem(int id, String newName) {
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).getId() == id) {
+                mData.get(i).setFileName(newName);
+                notifyDataSetChanged();
+                break;
+            }
         }
     }
 

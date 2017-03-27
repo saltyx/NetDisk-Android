@@ -90,11 +90,20 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder
         }
     }
 
+    public void renameItem(int id, String newName) {
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).getId() == id) {
+                data.get(i).setFileName(newName);
+                notifyDataSetChanged();
+                break;
+            }
+        }
+    }
+
     @Override
     public FileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        FileViewHolder mHolder = new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(
+        return  new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.item_file, parent, false));
-        return mHolder;
     }
 
     @Override
