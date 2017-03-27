@@ -72,7 +72,7 @@ public class DataRepoImpl implements DataSource {
 
     @Override
     public void deleteFolder(int id, ResultCallBack callBack) {
-
+        remoteDataSource.deleteFolder(id, callBack);
     }
 
     /**

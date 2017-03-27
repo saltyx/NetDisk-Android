@@ -77,6 +77,19 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder
         notifyDataSetChanged();
     }
 
+    public void remove(int fileId) {
+        int index = -1;
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).getId() == fileId) {
+                index = i; break;
+            }
+        }
+        if (index != -1) {
+            data.remove(index);
+            notifyDataSetChanged();
+        }
+    }
+
     @Override
     public FileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         FileViewHolder mHolder = new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(

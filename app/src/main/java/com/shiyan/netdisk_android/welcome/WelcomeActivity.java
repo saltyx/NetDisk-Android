@@ -65,6 +65,15 @@ public class WelcomeActivity extends AppCompatActivity {
                 .getSP().getString(SPHelper.TOKEN_KEY, "null");
 
         if (!isFirst) {
+            //如果不是第一次登录，检查配置
+            if (IP.contentEquals("null") || PORT.contentEquals("null")
+                    || Token.contentEquals("null")) {
+                //配置文件无效
+                Intent intent = new Intent(this, SettingActivity.class);
+                startActivity(intent);
+                finish();return;
+            }
+
             SecuDiskApplication.IP = IP;
             SecuDiskApplication.Port = PORT;
             SecuDiskApplication.Token = Token;
@@ -72,12 +81,7 @@ public class WelcomeActivity extends AppCompatActivity {
             startActivity(intent);
             finish();return;
         }
-        if (IP.contentEquals("null") || PORT.contentEquals("null")
-                || Token.contentEquals("null")) {
-            Intent intent = new Intent(this, SettingActivity.class);
-            startActivity(intent);
-            finish();return;
-        }
+
         ButterKnife.bind(this);
 
     }

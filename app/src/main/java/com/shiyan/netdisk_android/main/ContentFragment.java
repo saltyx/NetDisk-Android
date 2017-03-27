@@ -42,6 +42,8 @@ import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.adapter.FileAdapter;
 import com.shiyan.netdisk_android.adapter.FolderAdapter;
 import com.shiyan.netdisk_android.adapter.GridSpaceItemDecoration;
+import com.shiyan.netdisk_android.dialog.DetailInfoDialogFragment;
+import com.shiyan.netdisk_android.event.DeleteEvent;
 import com.shiyan.netdisk_android.event.FolderMessageEvent;
 import com.shiyan.netdisk_android.event.MessageEvent;
 import com.shiyan.netdisk_android.model.UserFile;
@@ -61,7 +63,11 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class ContentFragment extends Fragment implements MainContract.View , SwipeRefreshLayout.OnRefreshListener {
-    
+
+    enum FeedBackType{
+        TOAST, SNACK_BAR
+    }
+
     final String TAG = getClass().getName();
 
     MainContract.Presenter mPresenter;
@@ -105,6 +111,8 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
         folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
 
+        Log.i(TAG, "onCreateView: Running");
+        
         return root;
     }
 
@@ -137,9 +145,6 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     @Override
     public void showFiles(String filesJson) {
         EventBus.getDefault().post(new MessageEvent(filesJson));
-        mSwipeRefreshLayout.setRefreshing(false);
-        isRefresh = false;
-        Log.i(TAG, String.valueOf(filesJson));
     }
 
     @Override
@@ -156,6 +161,11 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     public void showByList() {
         EventBus.getDefault().post(new FolderMessageEvent(false));
 
+    }
+
+    @Override
+    public void remove(int fileId,boolean isFolder) {
+        EventBus.getDefault().post(new DeleteEvent(fileId, isFolder));
     }
 
     @Override
@@ -201,6 +211,11 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void showFolder(MessageEvent folders) {
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+
+        isRefresh = false;
         if (gridLayoutManager == null) {
             gridLayoutManager = new GridLayoutManager(getContext(), 2);
         }
@@ -209,7 +224,22 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
             data = SerializeUserFile.serializeFolder(folders.filesJson);
             if (folderAdapter == null) {
                 folderAdapter = new FolderAdapter(data,
-                        getActivity());
+                        new FolderAdapter.CallBack() {
+                            @Override
+                            public void onMoreClick(UserFile file) {
+                                if (file != null) {
+                                    final DetailInfoDialogFragment dialog = DetailInfoDialogFragment.newInstance(file);
+                                    dialog.setCallBack(new DetailInfoDialogFragment.OnMoreCallBack() {
+                                        @Override
+                                        public void onClick(UserFile file) {
+                                            mPresenter.delete(file);
+                                            dialog.dismiss();
+                                        }
+                                    }).show(getActivity().getFragmentManager(),TAG);
+                                }
+                            }
+                        });
+
                 folderRecyclerView.setLayoutManager(gridLayoutManager);
                 folderRecyclerView.setAdapter(folderAdapter);
             } else {
@@ -223,7 +253,21 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void changeLayout(FolderMessageEvent event) {
         if (folderAdapter == null) {
-            folderAdapter = new FolderAdapter(data, getActivity());
+            folderAdapter = new FolderAdapter(data, new FolderAdapter.CallBack() {
+                @Override
+                public void onMoreClick(UserFile file) {
+                    if (file != null) {
+                        final DetailInfoDialogFragment dialog = DetailInfoDialogFragment.newInstance(file);
+                        dialog.setCallBack(new DetailInfoDialogFragment.OnMoreCallBack() {
+                            @Override
+                            public void onClick(UserFile file) {
+                                mPresenter.delete(file);
+                                dialog.dismiss();
+                            }
+                        }).show(getActivity().getFragmentManager(),TAG);
+                    }
+                }
+            });
         }
 
         if (event.toGrid) {
@@ -235,6 +279,17 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
             folderRecyclerView.setLayoutManager(linearLayoutManager);
             folderRecyclerView.setAdapter(folderAdapter);
 
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void removeItem(DeleteEvent event) {
+        if (event.isFolder) {
+            if (folderAdapter == null) return;
+            folderAdapter.remove(event.id);
+        } else {
+            if (fileAdapter == null) return;
+            fileAdapter.remove(event.id);
         }
     }
 

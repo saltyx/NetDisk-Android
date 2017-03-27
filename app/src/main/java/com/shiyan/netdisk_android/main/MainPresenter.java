@@ -31,12 +31,11 @@ import android.widget.Toast;
 
 import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.data.DataSource;
+import com.shiyan.netdisk_android.event.DeleteEvent;
 import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.CallBack;
-import com.shiyan.netdisk_android.utils.NetHelper;
-import com.shiyan.netdisk_android.utils.SerializeUserFile;
-import com.shiyan.netdisk_android.utils.UserFeedBack;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 
 import java.util.List;
@@ -83,5 +82,29 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void change() {
         mMainView.toggle();
+    }
+
+
+    @Override
+    public void delete(@NonNull final UserFile file) {
+
+        final DataSource.ResultCallBack callBack = new DataSource.ResultCallBack() {
+            @Override
+            public void onSuccess(@Nullable String success) {
+                mMainView.remove(file.getId(),file.isFolder());
+                mMainView.userFeedBack("delete success!");
+            }
+
+            @Override
+            public void onError(@Nullable String error) {
+                mMainView.userFeedBack(error);
+            }
+        };
+
+        if (file.isFolder()) {
+            mDataRepo.deleteFolder(file.getId(), callBack);
+        } else {
+            mDataRepo.deleteFiles(file.getId(), callBack);
+        }
     }
 }

@@ -24,17 +24,13 @@
 
 package com.shiyan.netdisk_android.adapter;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shiyan.netdisk_android.R;
-import com.shiyan.netdisk_android.dialog.DetailInfoDialogFragment;
 import com.shiyan.netdisk_android.model.UserFile;
 
 import java.util.List;
@@ -56,46 +52,69 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
         TextView folderName;
 
         @OnClick(R.id.show_more) void onMoreClick() {
-            DetailInfoDialogFragment.newInstance(file).show(mActivity.getFragmentManager(),"TAG");
+//            DetailInfoDialogFragment.newInstance(file).setCallBack(new DetailInfoDialogFragment.OnMoreCallBack() {
+//                @Override
+//                public void onClick(UserFile file) {
+//
+//                }
+//            }).show(mActivity.getFragmentManager(),"TAG");
+            callback.onMoreClick(file);
         }
 
         UserFile file;
-        Activity mActivity;
+        CallBack callback;
 
-        public GridViewHolder(View item, Activity activity) {
+        public GridViewHolder(View item, CallBack callback) {
             super(item);
-            this.mActivity = activity;
+            this.callback = callback;
             ButterKnife.bind(this, item);
         }
     }
 
-    private List<UserFile> data;
-    private Activity mActivity;
+    private List<UserFile> mData;
+    private CallBack mCallback;
 
-    public FolderAdapter(List<UserFile> data, Activity activity) {
-        this.data = data;
-        this.mActivity = activity;
+    public FolderAdapter(List<UserFile> data, CallBack callback) {
+        this.mData = data;
+        this.mCallback = callback;
     }
 
     public void changeData(List<UserFile> data) {
-        this.data = data;
+        this.mData = data;
+    }
+
+    public void remove(int fileId) {
+        int index = -1;
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).getId() == fileId) {
+                index = i; break;
+            }
+        }
+        if (index != -1) {
+            mData.remove(index);
+            notifyDataSetChanged();
+        }
     }
 
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid_folder, parent, false);
-        return new GridViewHolder(root, mActivity);
+        return new GridViewHolder(root, mCallback);
     }
 
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
-        String folderName = data.get(position).getFileName();
+        String folderName = mData.get(position).getFileName();
         holder.folderName.setText(folderName.substring(0,folderName.length() > 5 ? 5 : folderName.length()));
-        holder.file = data.get(position);
+        holder.file = mData.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return data == null ? 0 : data.size();
+        return mData == null ? 0 : mData.size();
+    }
+
+    public interface CallBack {
+        void onMoreClick(UserFile file);
     }
 }

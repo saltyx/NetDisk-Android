@@ -24,11 +24,10 @@
 
 package com.shiyan.netdisk_android.dialog;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,10 +38,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shiyan.netdisk_android.R;
+import com.shiyan.netdisk_android.event.DeleteEvent;
 import com.shiyan.netdisk_android.model.UserFile;
-import com.shiyan.netdisk_android.utils.CallBack;
-import com.shiyan.netdisk_android.utils.NetHelper;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 
 import butterknife.BindView;
@@ -60,26 +59,16 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
 
     private UserFile file;
 
+    private OnMoreCallBack callback;
+
     @BindView(R.id.name)
     TextView name;
 
-    @OnClick(R.id.delete) public void deleteFile() {
-        if (file != null) {
-            try {
-                NetHelper.getInstance().deleteFile(file.getId(), new CallBack() {
-                    @Override
-                    public void success(@NonNull String data) {
-                        userFeedBack("success!");
-                    }
+    @OnClick(R.id.delete)
 
-                    @Override
-                    public void error(@Nullable String error) {
-                        userFeedBack(error);
-                    }
-                });
-            } catch (JSONException e) {
-                userFeedBack("JSON EXCEPTION");
-            }
+    public void deleteFile() {
+        if (file != null && callback != null) {
+            callback.onClick(file);
         }
     }
 
@@ -116,13 +105,29 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
 
         if (getArguments() != null) {
             this.file = getArguments().getParcelable(KEY_USER_FILE);
-            name.setText(file.getFileName());
+            if (file!=null) {
+                name.setText(file.getFileName());
+            }
         }
         return root;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callback = null;
+    }
+
+    public DetailInfoDialogFragment setCallBack(OnMoreCallBack callback) {
+        this.callback = callback;
+        return this;
+    }
 
     private void userFeedBack(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public interface OnMoreCallBack {
+        void onClick(UserFile file);
     }
 }

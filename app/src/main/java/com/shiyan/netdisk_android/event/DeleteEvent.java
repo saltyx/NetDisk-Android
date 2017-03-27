@@ -22,39 +22,18 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.dialog;
-import android.app.DialogFragment;
-import android.content.Context;
-import android.os.Bundle;
-import android.view.WindowManager;
-
-import com.shiyan.netdisk_android.R;
+package com.shiyan.netdisk_android.event;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class AttachDialogFragment extends DialogFragment {
-
-    public Context mContext;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.mContext = context;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        getDialog().setCanceledOnTouchOutside(true);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.CustomDatePickerDialog);
+public class DeleteEvent {
+    public int id;
+    public boolean isFolder;
+    public DeleteEvent(int id, boolean isFolder) {
+        this.id = id;
+        this.isFolder = isFolder;
     }
 }

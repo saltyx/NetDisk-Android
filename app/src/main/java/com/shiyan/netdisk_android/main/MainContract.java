@@ -44,10 +44,12 @@ public interface MainContract {
         void showByList();
         void toggle();
         void userFeedBack(String msg);
+        void remove(int fileId, boolean isFolder);
     }
 
     interface Presenter extends BasePresenter {
         void set();
         void change();
+        void delete(UserFile file);
     }
 }

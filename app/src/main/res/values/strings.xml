@@ -16,4 +16,5 @@
     <string name="about">Find SecuDisk</string>
 
     <integer name="gridview_column">2</integer>
+
 </resources>

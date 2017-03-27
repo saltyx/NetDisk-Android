@@ -72,8 +72,22 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void deleteFolder(int id, ResultCallBack callBack) {
+    public void deleteFolder(int id, final ResultCallBack callBack) {
+        try {
+            netHelper.deleteFolder(id, new CallBack() {
+                @Override
+                public void success(@NonNull String data) {
+                    callBack.onSuccess(data);
+                }
 
+                @Override
+                public void error(@Nullable String error) {
+                    callBack.onError(error);
+                }
+            });
+        }catch (JSONException e) {
+            callBack.onError("JSON_EXCEPTION");
+        }
     }
 
     @Override
@@ -101,6 +115,7 @@ public class RemoteDataSourceImpl implements DataSource {
      * @param id folder's id
      * @param callback when data is ready, callback the json string
      */
+    @SuppressWarnings("uncheck")
     @Override
     public void getFilesByFolder(int id, final GetData callback) {
         netHelper.getFilesByFolder(id, new CallBack() {
