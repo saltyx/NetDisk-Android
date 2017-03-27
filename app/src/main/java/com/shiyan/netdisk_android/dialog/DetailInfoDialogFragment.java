@@ -24,9 +24,7 @@
 
 package com.shiyan.netdisk_android.dialog;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,8 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.model.UserFile;
@@ -52,30 +50,38 @@ import butterknife.OnClick;
 public class DetailInfoDialogFragment extends AttachDialogFragment {
 
     public static final String KEY_USER_FILE = "USER_FILE";
-
     private UserFile file;
-
     private OnMoreCallBack callback;
 
-    @BindView(R.id.name)
-    TextView name;
+    @BindView(R.id.name) TextView name;
+    @BindView(R.id.lock) TextView lock;
+    @BindView(R.id.rename) TextView rename;
+    @BindView(R.id.share) TextView share;
+    @BindView(R.id.lock_switch) Switch lockSwitch;
 
-    @OnClick(R.id.delete)
-
-    public void deleteFile() {
+    @OnClick(R.id.delete) public void deleteFile() {
         if (file != null && callback != null) {
-            callback.onClick(file);
+            callback.onDeletedClick(file);
         }
     }
 
-    @BindView(R.id.lock)
-    TextView lock;
+    @OnClick(R.id.rename) public void renameFile() {
+        if (file != null && callback != null) {
+            callback.onRenameClick(file);
+        }
+    }
 
-    @BindView(R.id.rename)
-    TextView rename;
+    @OnClick(R.id.share) public void shareFile() {
+        if (file != null && callback != null) {
+            callback.onShareClick(file);
+        }
+    }
 
-    @BindView(R.id.share)
-    TextView share;
+    @OnClick (R.id.lock) public void encryptOrDecryptFile() {
+        if (file != null && callback != null) {
+            callback.onEncryptOrDecryptClick(file);
+        }
+    }
 
     public static DetailInfoDialogFragment newInstance(UserFile userFile) {
         Bundle bundle = new Bundle();
@@ -98,13 +104,15 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
         getDialog().getWindow().setAttributes(params);
         View root = inflater.inflate(R.layout.fragment_detail_info_dialog, container);
         ButterKnife.bind(this, root);
-
+        lockSwitch.setEnabled(false);
         if (getArguments() != null) {
             this.file = getArguments().getParcelable(KEY_USER_FILE);
             if (file!=null) {
                 name.setText(file.getFileName());
+                lockSwitch.setChecked(file.isEncrypted());
             }
         }
+
         return root;
     }
 
@@ -119,11 +127,10 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
         return this;
     }
 
-    private void userFeedBack(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
-
     public interface OnMoreCallBack {
-        void onClick(UserFile file);
+        void onDeletedClick(UserFile file);
+        void onRenameClick(UserFile file);
+        void onEncryptOrDecryptClick(UserFile file);
+        void onShareClick(UserFile file);
     }
 }

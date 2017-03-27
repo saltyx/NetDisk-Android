@@ -17,4 +17,8 @@
 
     <integer name="gridview_column">2</integer>
 
+    <string name="delete">delete</string>
+    <string name="share">share</string>
+    <string name="encryptOrDecrypt">encrypt or decrypt</string>
+    <string name="rename">rename</string>
 </resources>
