@@ -27,6 +27,7 @@ package com.shiyan.netdisk_android.main;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -37,6 +38,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.shiyan.netdisk_android.R;
@@ -64,6 +67,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.shiyan.netdisk_android.main.MainContract.FEED_BACK_SNACKBAR_INDEFINITE;
 import static com.shiyan.netdisk_android.main.MainContract.FEED_BACK_SNACKBAR_LONG;
@@ -79,25 +83,44 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     final String TAG = getClass().getName();
 
     MainContract.Presenter mPresenter;
+    FolderAdapter mFolderAdapter = null;
+    FileAdapter mFileAdapter = null;
+    Animation mFloatBtnShowAnimation = null;
+    Animation mFloatBtnHideAnimation = null;
+    Animation mFloatBtnShowTopAnimation = null;
+    Animation mFloatBtnHideTopAnimation = null;
+    Animation mFloatBtnRotateShowAnimation = null;
+    Animation mFloatBtnRotateHideAnimation = null;
 
-    @BindView(R.id.folder_recyler_view)
-    RecyclerView folderRecyclerView;
+    @BindView(R.id.folder_recyler_view) RecyclerView folderRecyclerView;
+    @BindView(R.id.files_recycler_view) RecyclerView fileRecyclerView;
+    @BindView(R.id.swipeRerfreshLayout) SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.float_plus) FloatingActionButton mFloatBtnPlus;
+    @BindView(R.id.upload) FloatingActionButton mFloatBtnUpload;
+    @BindView(R.id.create_folder) FloatingActionButton mFloatBtnCreateFolder;
 
-    FolderAdapter folderAdapter = null;
-
-    @BindView(R.id.files_recycler_view)
-    RecyclerView fileRecyclerView;
-
-    FileAdapter fileAdapter = null;
-
-    @BindView(R.id.swipeRerfreshLayout)
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    @OnClick(R.id.float_plus) void onPlusClick() {
+        if (!floatBtnOpen) {
+            mFloatBtnUpload.setVisibility(View.VISIBLE);
+            mFloatBtnCreateFolder.setVisibility(View.VISIBLE);
+            mFloatBtnPlus.startAnimation(mFloatBtnRotateShowAnimation);
+            mFloatBtnUpload.startAnimation(mFloatBtnShowAnimation);
+            mFloatBtnCreateFolder.startAnimation(mFloatBtnShowTopAnimation);
+            floatBtnOpen = true;
+        } else {
+            mFloatBtnPlus.setAnimation(mFloatBtnRotateHideAnimation);
+            mFloatBtnUpload.startAnimation(mFloatBtnHideAnimation);
+            mFloatBtnCreateFolder.startAnimation(mFloatBtnHideTopAnimation);
+            mFloatBtnUpload.setVisibility(View.GONE);
+            mFloatBtnCreateFolder.setVisibility(View.GONE);
+            floatBtnOpen = false;
+        }
+    }
 
     List<UserFile> data;
-
     boolean isGrid;
-
     boolean isRefresh;
+    boolean floatBtnOpen;
 
     public ContentFragment() {
         // Required empty public constructor
@@ -115,6 +138,17 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setRefreshing(true);
         folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
+
+        mFloatBtnShowAnimation = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.fab_show);
+        mFloatBtnRotateShowAnimation = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.fab_plus_rotate_show);
+        mFloatBtnHideAnimation = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.fab_hide);
+        mFloatBtnShowTopAnimation = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.fab_show_top);
+        mFloatBtnHideTopAnimation = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.fab_hide_top);
 
         Log.i(TAG, "onCreateView: Running");
         
@@ -197,15 +231,15 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     @Subscribe(threadMode = ThreadMode.MAIN) public void updateFiles(MessageEvent files) {
         try {
             data = SerializeUserFile.serialize(files.filesJson);
-            if (fileAdapter == null) {
-                fileAdapter = new FileAdapter(data);
+            if (mFileAdapter == null) {
+                mFileAdapter = new FileAdapter(data);
                 Log.i(TAG, String.valueOf(files.filesJson));
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 fileRecyclerView.setLayoutManager(linearLayoutManager);
-                fileRecyclerView.setAdapter(fileAdapter);
+                fileRecyclerView.setAdapter(mFileAdapter);
             } else {
-                fileAdapter.changeData(data);
+                mFileAdapter.changeData(data);
             }
 
         } catch (JSONException e) {
@@ -223,8 +257,8 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         try {
             isGrid = true;
             data = SerializeUserFile.serializeFolder(folders.filesJson);
-            if (folderAdapter == null) {
-                folderAdapter = new FolderAdapter(data,
+            if (mFolderAdapter == null) {
+                mFolderAdapter = new FolderAdapter(data,
                         new FolderAdapter.CallBack() {
                             @Override
                             public void onMoreClick(UserFile file) {
@@ -262,9 +296,9 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                         });
 
                 folderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-                folderRecyclerView.setAdapter(folderAdapter);
+                folderRecyclerView.setAdapter(mFolderAdapter);
             } else {
-                folderAdapter.changeData(data);
+                mFolderAdapter.changeData(data);
             }
         } catch (JSONException e) {
             userFeedBack(e.toString(),FEED_BACK_SNACKBAR_INDEFINITE);
@@ -272,8 +306,8 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN) public void changeLayout(FolderMessageEvent event) {
-        if (folderAdapter == null) {
-            folderAdapter = new FolderAdapter(data, new FolderAdapter.CallBack() {
+        if (mFolderAdapter == null) {
+            mFolderAdapter = new FolderAdapter(data, new FolderAdapter.CallBack() {
                 @Override
                 public void onMoreClick(UserFile file) {
                     if (file != null) {
@@ -310,13 +344,13 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         if (event.toGrid) {
             isGrid = true;
             folderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-            folderRecyclerView.setAdapter(folderAdapter);
+            folderRecyclerView.setAdapter(mFolderAdapter);
         } else {
             isGrid = false;
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             folderRecyclerView.setLayoutManager(linearLayoutManager);
-            folderRecyclerView.setAdapter(folderAdapter);
+            folderRecyclerView.setAdapter(mFolderAdapter);
 
         }
     }
@@ -331,11 +365,11 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
     @Subscribe(threadMode = ThreadMode.MAIN) public void removeItem(DeleteEvent event) {
         if (event.isFolder) {
-            if (folderAdapter == null) return;
-            folderAdapter.remove(event.id);
+            if (mFolderAdapter == null) return;
+            mFolderAdapter.remove(event.id);
         } else {
-            if (fileAdapter == null) return;
-            fileAdapter.remove(event.id);
+            if (mFileAdapter == null) return;
+            mFileAdapter.remove(event.id);
         }
     }
 
@@ -365,9 +399,9 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
     @Subscribe(threadMode = ThreadMode.MAIN) public void renameItem(RenameEvent event) {
         if (event.isFolder) {
-            folderAdapter.renameItem(event.id, event.newName);
+            mFolderAdapter.renameItem(event.id, event.newName);
         } else {
-            fileAdapter.renameItem(event.id, event.newName);
+            mFileAdapter.renameItem(event.id, event.newName);
         }
     }
 

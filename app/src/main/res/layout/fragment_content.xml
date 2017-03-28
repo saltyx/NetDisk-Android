@@ -23,10 +23,11 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.shiyan.netdisk_android.main.ContentFragment">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             tools:context="com.shiyan.netdisk_android.main.ContentFragment">
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRerfreshLayout"
         android:layout_width="match_parent"
@@ -53,8 +54,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="0dp"
-                    android:layout_marginLeft="8dp"
-                    android:gravity="left|center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:gravity="start|center_vertical"
                     android:text="@string/recent_files"
                     android:textAlignment="gravity"
                     android:textSize="18sp"
@@ -84,9 +85,9 @@
                     android:id="@+id/textView6"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="left|center_vertical"
-                    android:layout_marginLeft="8dp"
-                    android:gravity="left|center_vertical"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:gravity="start|center_vertical"
                     android:text="@string/folder"
                     android:textAlignment="gravity"
                     android:textSize="18sp"
@@ -100,6 +101,41 @@
                 android:layout_marginTop="10dp"
                 android:layout_below="@+id/cardView"
                 />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/create_folder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="28dp"
+                android:layout_marginBottom="28dp"
+                android:src="@drawable/ic_create_new_folder_black_24dp"
+                android:visibility="gone"
+                app:fabSize="mini"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="28dp"
+                android:layout_marginBottom="28dp"
+                android:src="@drawable/ic_cloud_upload_black_24dp"
+                android:visibility="gone"
+                app:fabSize="mini"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/float_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/ic_add_black_24dp"
+                app:fabSize="normal"/>
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
