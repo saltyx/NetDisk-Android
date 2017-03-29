@@ -27,6 +27,7 @@ package com.shiyan.netdisk_android.main;
 import com.shiyan.netdisk_android.BasePresenter;
 import com.shiyan.netdisk_android.BaseView;
 import com.shiyan.netdisk_android.model.UserFile;
+import com.vincent.filepicker.filter.entity.BaseFile;
 
 import java.util.List;
 
@@ -45,16 +46,18 @@ public interface MainContract {
 
     interface View extends BaseView <Presenter> {
         void showFiles(String filesJson);
-        void showFolders(List<UserFile> folders);
+        void showFolders(String folders);
         void showByGrid();
         void showByList();
         void toggle();
         void userFeedBack(String msg, int type);
-        void remove(int fileId, boolean isFolder);
-        void rename(int id, String newName, boolean isFolder);
-        void encrypt(int id);
-        void decrypt(int id);
+        void remove(UserFile file);
+        void rename(UserFile file);
+        void encrypt(UserFile file);
+        void decrypt(UserFile file);
         void refresh(boolean refresh);
+        void add(UserFile file);
+        void addFolder(UserFile file);
     }
 
     interface Presenter extends BasePresenter {
@@ -64,5 +67,7 @@ public interface MainContract {
         void rename(UserFile file);
         void shareOrCancel(UserFile file);
         void encryptOrDecrypt(UserFile file, String passPhrase);
+        void uploadCommonFile(List<BaseFile> file);
+        void createFolder(UserFile file);
     }
 }

@@ -22,21 +22,26 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.event;
+package com.shiyan.netdisk_android.utils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class RenameEvent {
-    public String newName;
-    public int id;
-    public boolean isFolder;
+public class Utils {
 
-    public RenameEvent(String newName, int id, boolean isFolder) {
-        this.newName = newName;
-        this.id = id;
-        this.isFolder = isFolder;
+    /**
+     * get current tile
+     * @return time
+     */
+    public static String getNowTime() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        Date curDate = new Date(System.currentTimeMillis());
+        return formatter.format(curDate);
     }
 }

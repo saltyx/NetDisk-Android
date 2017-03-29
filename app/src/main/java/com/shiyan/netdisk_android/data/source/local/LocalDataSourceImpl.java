@@ -27,6 +27,7 @@ package com.shiyan.netdisk_android.data.source.local;
 import android.app.Application;
 
 import com.shiyan.netdisk_android.data.DataSource;
+import com.shiyan.netdisk_android.model.UserFile;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -125,6 +126,10 @@ public class LocalDataSourceImpl implements DataSource {
 
     @Override
     public void cancelShare(int id, ResultCallBack callBack) {
+
+    }
+
+    @Override public void createFile(UserFile file, ResultCallBack callBack) {
 
     }
 }

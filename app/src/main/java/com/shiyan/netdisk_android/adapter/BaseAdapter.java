@@ -22,18 +22,21 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.event;
+package com.shiyan.netdisk_android.adapter;
+
+import com.shiyan.netdisk_android.model.UserFile;
+
+import java.util.List;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class DeleteEvent {
-    public int id;
-    public boolean isFolder;
-    public DeleteEvent(int id, boolean isFolder) {
-        this.id = id;
-        this.isFolder = isFolder;
-    }
+public interface BaseAdapter {
+
+    void changeData(List<UserFile> data);
+    void remove(UserFile file);
+    void renameItem(UserFile file);
+    void addItem(UserFile file);
 }

@@ -105,6 +105,13 @@ public class WithOneInputDialogFragment extends DialogFragment {
                 mOKButton.setText(mOkButtonText);
                 mCancelButton.setText(mCancelButtonText);
                 mTitle.setText(mTitleText);
+            } else {
+                mTitleText = mTitleText == null ? "Title" : mTitleText;
+                mOkButtonText = mOkButtonText == null ? "OK" : mOkButtonText;
+                mCancelButtonText = mCancelButtonText == null ? "Cancel" : mCancelButtonText;
+                mOKButton.setText(mOkButtonText);
+                mCancelButton.setText(mCancelButtonText);
+                mTitle.setText(mTitleText);
             }
         }
         return root;

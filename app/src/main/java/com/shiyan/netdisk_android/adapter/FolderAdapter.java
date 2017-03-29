@@ -44,7 +44,8 @@ import butterknife.OnClick;
  * Blog    https://saltyx.github.io
  */
 
-public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHolder> {
+public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHolder>
+                            implements BaseAdapter {
 
     static class GridViewHolder extends RecyclerView.ViewHolder {
 
@@ -52,12 +53,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
         TextView folderName;
 
         @OnClick(R.id.show_more) void onMoreClick() {
-//            DetailInfoDialogFragment.newInstance(file).setCallBack(new DetailInfoDialogFragment.OnMoreCallBack() {
-//                @Override
-//                public void onDeletedClick(UserFile file) {
-//
-//                }
-//            }).show(mActivity.getFragmentManager(),"TAG");
             callback.onMoreClick(file);
         }
 
@@ -79,11 +74,12 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
         this.mCallback = callback;
     }
 
-    public void changeData(List<UserFile> data) {
+    @Override public void changeData(List<UserFile> data) {
         this.mData = data;
     }
 
-    public void remove(int fileId) {
+    @Override public void remove(UserFile file) {
+        int fileId = file.getId();
         int index = -1;
         for (int i = 0; i < mData.size(); i++) {
             if (mData.get(i).getId() == fileId) {
@@ -96,7 +92,9 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
         }
     }
 
-    public void renameItem(int id, String newName) {
+    @Override public void renameItem(UserFile file) {
+        int id = file.getId();
+        String newName = file.getFileName();
         for (int i = 0; i < mData.size(); i++) {
             if (mData.get(i).getId() == id) {
                 mData.get(i).setFileName(newName);
@@ -104,6 +102,11 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
                 break;
             }
         }
+    }
+
+    @Override public void addItem(UserFile file) {
+        mData.add(file);
+        notifyDataSetChanged();
     }
 
     @Override

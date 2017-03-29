@@ -29,11 +29,14 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.shiyan.netdisk_android.data.DataSource;
+import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.CallBack;
 import com.shiyan.netdisk_android.utils.NetHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -337,4 +340,16 @@ public class RemoteDataSourceImpl implements DataSource {
         }
     }
 
+    @Override public void createFile(UserFile file, final ResultCallBack callBack) {
+
+        netHelper.uploadFile(new File(file.getRemark()), file.getFileSize(), file.getFromFolder(), new CallBack() {
+            @Override public void success(@NonNull String data) {
+                callBack.onSuccess(data);
+            }
+
+            @Override public void error(@Nullable String error) {
+                callBack.onError(error);
+            }
+        });
+    }
 }

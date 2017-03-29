@@ -48,7 +48,8 @@ import butterknife.ButterKnife;
  * Blog    https://saltyx.github.io
  */
 
-public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder> {
+public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder>
+                        implements BaseAdapter {
 
     final String TAG = getClass().getName();
 
@@ -72,12 +73,13 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder
         this.data = data;
     }
 
-    public void changeData(List<UserFile> data) {
+    @Override public void changeData(List<UserFile> data) {
         this.data = data;
         notifyDataSetChanged();
     }
 
-    public void remove(int fileId) {
+    @Override public void remove(UserFile file) {
+        int fileId = file.getId();
         int index = -1;
         for (int i = 0; i < data.size(); i++) {
             if (data.get(i).getId() == fileId) {
@@ -90,7 +92,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder
         }
     }
 
-    public void renameItem(int id, String newName) {
+    @Override public void renameItem(UserFile file) {
+        int id = file.getId();
+        String newName = file.getFileName();
+
         for (int i = 0; i < data.size(); i++) {
             if (data.get(i).getId() == id) {
                 data.get(i).setFileName(newName);
@@ -98,6 +103,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder
                 break;
             }
         }
+    }
+
+    @Override public void addItem(UserFile file) {
+        data.add(file);
+        notifyDataSetChanged();
     }
 
     @Override

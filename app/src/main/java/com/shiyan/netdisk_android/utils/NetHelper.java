@@ -30,6 +30,7 @@ import com.shiyan.netdisk_android.model.UserFile;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +38,7 @@ import java.util.Locale;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -134,6 +136,23 @@ public class NetHelper {
 
     public void getRootFolder(final CallBack callBack) {
         getFilesByFolder(1, callBack);
+    }
+
+    public void uploadFile(File file,long fileSize,int fromFolder,CallBack callBack) {
+        if (file == null) {
+            callBack.error("IllegalArgument");
+            return;
+        }
+        RequestBody body = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("filesize", String.valueOf(fileSize))
+                .addFormDataPart("file",file.getName(),RequestBody.create(null, file))
+                .build();
+        Request request = new Request.Builder()
+                .header("Authorization", String.format("Token token=%s",SecuDiskApplication.Token))
+                .url(buildBaseUploadUrl("%d",fromFolder))
+                .post(body).build();
+        newCall(request,callBack);
     }
 
     /**
@@ -341,6 +360,10 @@ public class NetHelper {
 
     private String buildDecryptFolderParam(int folderId, String passPhrase) throws JSONException {
         return buildEncryptFolderParam(folderId, passPhrase);
+    }
+
+    private String buildBaseUploadUrl(String param, int... id) {
+        return buildBaseUrl(UPLOAD_BASE_URL, param, id);
     }
 
     private String buildBaseFileUrl(String param, int... id) {

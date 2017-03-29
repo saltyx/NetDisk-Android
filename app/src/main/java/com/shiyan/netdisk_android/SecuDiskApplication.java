@@ -38,9 +38,11 @@ public class SecuDiskApplication extends Application {
     public static String Token;
     public static String IP;
     public static String Port;
+    public static int CurrentFolder;
     @Override
     public void onCreate() {
         super.onCreate();
+        CurrentFolder = 1;//root
         if (LeakCanary.isInAnalyzerProcess(this)) return;
         LeakCanary.install(this);
     }

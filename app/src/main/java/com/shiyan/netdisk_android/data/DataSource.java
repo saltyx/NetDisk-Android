@@ -26,6 +26,8 @@ package com.shiyan.netdisk_android.data;
 
 import android.support.annotation.Nullable;
 
+import com.shiyan.netdisk_android.model.UserFile;
+
 import java.util.List;
 
 /**
@@ -60,6 +62,7 @@ public interface DataSource {
     void getFolder(int id, GetData callback);
     void getFilesByFolder(int id, GetData callback);
 
+    void createFile(UserFile file, ResultCallBack callBack);
     void encryptFile(int id, String passPhrase, ResultCallBack callBack);
     void decryptFile(int id, String passPhrase, ResultCallBack callBack);
     void copyFile(int id, int dstFolder, ResultCallBack callBack);

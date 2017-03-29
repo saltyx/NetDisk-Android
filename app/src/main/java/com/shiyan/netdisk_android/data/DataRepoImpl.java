@@ -26,6 +26,7 @@ package com.shiyan.netdisk_android.data;
 
 import com.shiyan.netdisk_android.data.source.local.LocalDataSourceImpl;
 import com.shiyan.netdisk_android.data.source.remote.RemoteDataSourceImpl;
+import com.shiyan.netdisk_android.model.UserFile;
 
 /**
  * the current class is primarily intended to
@@ -172,5 +173,9 @@ public class DataRepoImpl implements DataSource {
     @Override
     public void cancelShare(int id, ResultCallBack callBack) {
         remoteDataSource.cancelShare(id, callBack);
+    }
+
+    @Override public void createFile(UserFile file, ResultCallBack callBack) {
+        remoteDataSource.createFile(file, callBack);
     }
 }

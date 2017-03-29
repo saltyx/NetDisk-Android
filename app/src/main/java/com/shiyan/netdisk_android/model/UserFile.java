@@ -35,23 +35,25 @@ import android.os.Parcelable;
 
 public class UserFile implements Parcelable {
 
-    public static final String KEY_ID = "id";
-    public static final String KEY_FILENAME = "filename";
-    public static final String KEY_FILESIZE = "filesize";
-    public static final String KEY_IS_FOLDER = "isFolder";
-    public static final String KEY_FROM_FOLDER = "fromFolder";
-    public static final String KEY_IS_ENCRYPTED = "isEncrypted";
-    public static final String KEY_IS_SHARED = "isShared";
-    public static final String KEY_DOWNLOAD_LINK = "downloadLink";
-    public static final String KEY_DOWNLOAD_TIME = "downloadTime";
-    public static final String KEY_CREATED_AT = "createAt";
-    public static final String KEY_UPDATED_AT = "updateAt";
-    public static final String KEY_SHA256 = "sha256";
-    public static final String KEY_IV = "iv";
+    private static final String KEY_ID = "id";
+    private static final String KEY_FILENAME = "filename";
+    private static final String KEY_FILESIZE = "filesize";
+    private static final String KEY_IS_FOLDER = "isFolder";
+    private static final String KEY_FROM_FOLDER = "fromFolder";
+    private static final String KEY_IS_ENCRYPTED = "isEncrypted";
+    private static final String KEY_IS_SHARED = "isShared";
+    private static final String KEY_DOWNLOAD_LINK = "downloadLink";
+    private static final String KEY_DOWNLOAD_TIME = "downloadTime";
+    private static final String KEY_CREATED_AT = "createAt";
+    private static final String KEY_UPDATED_AT = "updateAt";
+    private static final String KEY_SHA256 = "sha256";
+    private static final String KEY_IV = "iv";
+    private static final String KEY_PWD = "pwd";
+    private static final String KEY_REMARK = "remark";
 
     private int id;
     private String fileName;
-    private int fileSize;
+    private long fileSize;
     private boolean isFolder;
     private int fromFolder;
     private boolean isShared;
@@ -62,13 +64,16 @@ public class UserFile implements Parcelable {
     private String updateAt;
     private String sha256;
     private String iv;
+    private String pwd;
+
+    private String remark;
 
     public UserFile() {
 
     }
 
     public UserFile(Parcel in) {
-        Bundle bundle = in.readBundle();
+        Bundle bundle = in.readBundle(getClass().getClassLoader());
         id = bundle.getInt(KEY_ID);
         fileName = bundle.getString(KEY_FILENAME);
         fileSize = bundle.getInt(KEY_FILESIZE);
@@ -82,6 +87,8 @@ public class UserFile implements Parcelable {
         updateAt = bundle.getString(KEY_UPDATED_AT);
         sha256 = bundle.getString(KEY_SHA256);
         iv = bundle.getString(KEY_IV);
+        pwd = bundle.getString(KEY_PWD);
+        remark = bundle.getString(KEY_REMARK);
     }
 
     public static final Parcelable.Creator<UserFile> CREATOR = new Parcelable.Creator<UserFile>(){
@@ -106,7 +113,7 @@ public class UserFile implements Parcelable {
         Bundle bundle = new Bundle();
         bundle.putInt(KEY_ID, id);
         bundle.putString(KEY_FILENAME, fileName);
-        bundle.putInt(KEY_FILESIZE, fileSize);
+        bundle.putLong(KEY_FILESIZE, fileSize);
         bundle.putBoolean(KEY_IS_FOLDER, isFolder);
         bundle.putInt(KEY_FROM_FOLDER, fromFolder);
         bundle.putBoolean(KEY_IS_ENCRYPTED, isEncrypted);
@@ -117,6 +124,8 @@ public class UserFile implements Parcelable {
         bundle.putString(KEY_UPDATED_AT, updateAt);
         bundle.putString(KEY_SHA256, sha256);
         bundle.putString(KEY_IV, iv);
+        bundle.putString(KEY_PWD, pwd);
+        bundle.putString(KEY_REMARK, remark);
         dest.writeBundle(bundle);
     }
 
@@ -136,11 +145,11 @@ public class UserFile implements Parcelable {
         this.fileName = fileName;
     }
 
-    public int getFileSize() {
+    public long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(int fileSize) {
+    public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
 
@@ -222,6 +231,22 @@ public class UserFile implements Parcelable {
 
     public void setIv(String iv) {
         this.iv = iv;
+    }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     @Override

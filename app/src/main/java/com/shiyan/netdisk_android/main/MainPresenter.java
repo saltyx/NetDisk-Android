@@ -26,10 +26,18 @@ package com.shiyan.netdisk_android.main;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
+import com.shiyan.netdisk_android.SecuDiskApplication;
 import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.data.DataSource;
 import com.shiyan.netdisk_android.model.UserFile;
+import com.shiyan.netdisk_android.utils.Utils;
+import com.squareup.haha.perflib.Main;
+import com.vincent.filepicker.filter.entity.BaseFile;
+import com.vincent.filepicker.filter.entity.VideoFile;
+
+import java.util.List;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -38,10 +46,10 @@ import com.shiyan.netdisk_android.model.UserFile;
 
 public class MainPresenter implements MainContract.Presenter {
 
+    final String TAG = getClass().getName();
 
-    DataRepoImpl mDataRepo;
-
-    MainContract.View mMainView;
+    private DataRepoImpl mDataRepo;
+    private MainContract.View mMainView;
 
     public MainPresenter(DataRepoImpl mDataRepo, MainContract.View mMainView) {
         this.mDataRepo = mDataRepo;
@@ -82,7 +90,7 @@ public class MainPresenter implements MainContract.Presenter {
             @Override
             public void onSuccess(@Nullable String success) {
                 mMainView.userFeedBack("delete success!",MainContract.FEED_BACK_TOAST_SHORT);
-                mMainView.remove(file.getId(),file.isFolder());
+                mMainView.remove(file);
             }
 
             @Override
@@ -103,7 +111,7 @@ public class MainPresenter implements MainContract.Presenter {
         final DataSource.ResultCallBack callback = new DataSource.ResultCallBack() {
             @Override public void onSuccess(@Nullable String success) {
                 mMainView.userFeedBack("success", MainContract.FEED_BACK_TOAST_SHORT);
-                mMainView.rename(file.getId(), file.getFileName(), file.isFolder());
+                mMainView.rename(file);
             }
 
             @Override public void onError(@Nullable String error) {
@@ -167,5 +175,44 @@ public class MainPresenter implements MainContract.Presenter {
                 mDataRepo.encryptFile(file.getId(), passPhrase, callback);
             }
         }
+    }
+
+    @Override public void createFolder(final UserFile file) {
+        mDataRepo.createFolder(file.getFileName(), file.getFromFolder(), new DataSource.ResultCallBack() {
+            @Override public void onSuccess(@Nullable String success) {
+                mMainView.addFolder(file);
+                mMainView.userFeedBack("success",MainContract.FEED_BACK_TOAST_SHORT);
+            }
+
+            @Override public void onError(@Nullable String error) {
+                mMainView.userFeedBack(error, MainContract.FEED_BACK_TOAST_LONG);
+            }
+        });
+    }
+
+    @Override public void uploadCommonFile(List<BaseFile> files) {
+        for (BaseFile file: files) {
+            String[] data = file.getPath().split("/");
+            String name = data[data.length-1];
+            final UserFile file1 = new UserFile();
+            file1.setFileName(name);
+            file1.setFileSize(file.getSize());
+            file1.setRemark(file.getPath());
+            file1.setFromFolder(SecuDiskApplication.CurrentFolder);
+            file1.setCreateAt(Utils.getNowTime());
+            file1.setUpdateAt(Utils.getNowTime());
+            mDataRepo.createFile(file1, new DataSource.ResultCallBack() {
+                @Override public void onSuccess(@Nullable String success) {
+                    mMainView.userFeedBack("success!", MainContract.FEED_BACK_TOAST_SHORT);
+                    mMainView.add(file1);
+                }
+
+                @Override public void onError(@Nullable String error) {
+                    mMainView.userFeedBack(error, MainContract.FEED_BACK_TOAST_LONG);
+                }
+            });
+        }
+
+
     }
 }
