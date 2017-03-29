@@ -58,15 +58,10 @@ import com.vincent.filepicker.Constant;
 import com.vincent.filepicker.activity.ImagePickActivity;
 import com.vincent.filepicker.activity.NormalFilePickActivity;
 import com.vincent.filepicker.activity.VideoPickActivity;
-import com.vincent.filepicker.filter.entity.AudioFile;
 import com.vincent.filepicker.filter.entity.BaseFile;
-import com.vincent.filepicker.filter.entity.ImageFile;
-import com.vincent.filepicker.filter.entity.NormalFile;
-import com.vincent.filepicker.filter.entity.VideoFile;
 
 import org.json.JSONException;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -122,32 +117,32 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
 
     @OnClick(R.id.upload_video) void onUploadVideoClick() {
+        mFloatBtnPlus.collapse();
         Intent intent2 = new Intent(getActivity(), VideoPickActivity.class);
         intent2.putExtra(IS_NEED_CAMERA, true);
         intent2.putExtra(Constant.MAX_NUMBER, 1);
         startActivityForResult(intent2, Constant.REQUEST_CODE_PICK_VIDEO);
-        mFloatBtnPlus.collapse();
     }
 
     @OnClick(R.id.upload_doc) void onUploadFileClick() {
+        mFloatBtnPlus.collapse();
         Intent intent4 = new Intent(getActivity(), NormalFilePickActivity.class);
         intent4.putExtra(Constant.MAX_NUMBER, 1);
         intent4.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf","zip"});
         startActivityForResult(intent4, Constant.REQUEST_CODE_PICK_FILE);
-        mFloatBtnPlus.collapse();
     }
 
     @OnClick(R.id.upload_photo) void doUploadPhoto() {
+        mFloatBtnPlus.collapse();
         Intent intent1 = new Intent(getActivity(), ImagePickActivity.class);
         intent1.putExtra(IS_NEED_CAMERA, true);
         intent1.putExtra(Constant.MAX_NUMBER, 1);
         startActivityForResult(intent1, Constant.REQUEST_CODE_PICK_IMAGE);
-        mFloatBtnPlus.collapse();
     }
 
     @OnClick(R.id.create_folder) void createFolder() {
-        buildDialogForCreateNewFolder();
         mFloatBtnPlus.collapse();
+        buildDialogForCreateNewFolder();
     }
 
     public ContentFragment() {}

@@ -58,7 +58,10 @@
             android:textAlignment="gravity"
             android:textSize="18sp"
             app:layout_constraintLeft_toRightOf="@+id/imageView3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="0.388"/>
 
         <ImageView
             android:id="@+id/imageView5"
@@ -114,19 +117,25 @@
             android:text="Delete"
             android:textSize="18sp"
             app:layout_constraintLeft_toRightOf="@+id/imageView5"
-            app:layout_constraintTop_toBottomOf="@+id/name" />
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="0.427"/>
 
         <TextView
             android:id="@+id/lock"
             android:layout_width="158dp"
             android:layout_height="27dp"
             android:layout_marginStart="6dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="24dp"
             android:gravity="center_vertical|center_horizontal"
             android:text="Encrypt/Decrypt"
             android:textSize="18sp"
             app:layout_constraintLeft_toRightOf="@+id/imageView6"
-            app:layout_constraintTop_toBottomOf="@+id/delete" />
+            app:layout_constraintTop_toBottomOf="@+id/delete"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="0.404"/>
 
         <Switch
             android:id="@+id/lock_switch"
@@ -150,7 +159,10 @@
             android:text="Rename"
             android:textSize="18sp"
             app:layout_constraintLeft_toRightOf="@+id/imageView7"
-            app:layout_constraintTop_toBottomOf="@+id/lock" />
+            app:layout_constraintTop_toBottomOf="@+id/lock"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="0.374"/>
 
         <TextView
             android:id="@+id/share"
@@ -162,7 +174,10 @@
             android:text="Share"
             android:textSize="18sp"
             app:layout_constraintLeft_toRightOf="@+id/imageView8"
-            app:layout_constraintTop_toBottomOf="@+id/rename" />
+            app:layout_constraintTop_toBottomOf="@+id/rename"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="0.395"/>
 
         <ImageView
             android:id="@+id/imageView2"
