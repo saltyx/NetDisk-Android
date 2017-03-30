@@ -21,4 +21,6 @@
     <string name="share">share</string>
     <string name="encryptOrDecrypt">encrypt or decrypt</string>
     <string name="rename">rename</string>
+
+    <string name="setting">Setting</string>
 </resources>

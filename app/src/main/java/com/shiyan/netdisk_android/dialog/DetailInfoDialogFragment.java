@@ -26,13 +26,14 @@ package com.shiyan.netdisk_android.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.shiyan.netdisk_android.R;
@@ -52,12 +53,13 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
     public static final String KEY_USER_FILE = "USER_FILE";
     private UserFile file;
     private OnMoreCallBack callback;
+    final String TAG = getClass().getName();
 
     @BindView(R.id.name) TextView name;
     @BindView(R.id.lock) TextView lock;
     @BindView(R.id.rename) TextView rename;
     @BindView(R.id.share) TextView share;
-    @BindView(R.id.lock_switch) Switch lockSwitch;
+    @BindView(R.id.lock_switch) SwitchCompat lockSwitch;
 
     @OnClick(R.id.delete) public void deleteFile() {
         if (file != null && callback != null) {
@@ -110,6 +112,7 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
             if (file!=null) {
                 name.setText(file.getFileName());
                 lockSwitch.setChecked(file.isEncrypted());
+                //Log.i(TAG, "onCreateView: ".concat(String.valueOf(file.toString())));
             }
         }
 

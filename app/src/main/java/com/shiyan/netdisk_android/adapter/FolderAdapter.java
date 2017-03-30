@@ -49,8 +49,11 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
 
     static class GridViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.folder_name)
-        TextView folderName;
+        @BindView(R.id.folder_name) TextView folderName;
+
+        @OnClick(R.id.folder_name) void onItemClick() {
+            callback.onItemClick(file);
+        }
 
         @OnClick(R.id.show_more) void onMoreClick() {
             callback.onMoreClick(file);
@@ -76,6 +79,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
 
     @Override public void changeData(List<UserFile> data) {
         this.mData = data;
+        notifyDataSetChanged();
     }
 
     @Override public void remove(UserFile file) {
@@ -118,7 +122,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
         String folderName = mData.get(position).getFileName();
-        holder.folderName.setText(folderName.substring(0,folderName.length() > 5 ? 5 : folderName.length()));
+        holder.folderName.setText(folderName);
         holder.file = mData.get(position);
     }
 
@@ -129,5 +133,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
 
     public interface CallBack {
         void onMoreClick(UserFile file);
+        void onItemClick(UserFile file);
     }
+
 }

@@ -59,7 +59,8 @@
             android:textSize="18sp"
             app:layout_constraintLeft_toRightOf="@+id/imageView3"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:maxLines="1"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintHorizontal_bias="0.388"/>
 
@@ -137,17 +138,19 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintHorizontal_bias="0.404"/>
 
-        <Switch
+        <android.support.v7.widget.SwitchCompat
             android:id="@+id/lock_switch"
+            style="@style/switch_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="13dp"
             android:layout_marginTop="123dp"
+            android:theme="@style/switch_style"
             app:layout_constraintHorizontal_bias="0.361"
             app:layout_constraintLeft_toRightOf="@+id/lock"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/rename"

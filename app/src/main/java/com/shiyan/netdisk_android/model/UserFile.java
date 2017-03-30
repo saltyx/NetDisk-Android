@@ -249,11 +249,23 @@ public class UserFile implements Parcelable {
         this.remark = remark;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "UserFile{" +
                 "id=" + id +
                 ", fileName='" + fileName + '\'' +
+                ", fileSize=" + fileSize +
+                ", isFolder=" + isFolder +
+                ", fromFolder=" + fromFolder +
+                ", isShared=" + isShared +
+                ", isEncrypted=" + isEncrypted +
+                ", downloadLink='" + downloadLink + '\'' +
+                ", downloadTimes=" + downloadTimes +
+                ", createAt='" + createAt + '\'' +
+                ", updateAt='" + updateAt + '\'' +
+                ", sha256='" + sha256 + '\'' +
+                ", iv='" + iv + '\'' +
+                ", pwd='" + pwd + '\'' +
+                ", remark='" + remark + '\'' +
                 '}';
     }
 }

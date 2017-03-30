@@ -24,9 +24,16 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar_main"
             android:layout_marginTop="0dp"
-            >
+            />
+        <FrameLayout
+            android:id="@+id/detailed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_main"
+            android:layout_marginTop="0dp"
+            android:visibility="gone"
+            />
 
-        </FrameLayout>
     </RelativeLayout>
 
 

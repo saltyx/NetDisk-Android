@@ -41,6 +41,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -98,6 +99,8 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     final static int MSG_DECRYPT = 0x0008;
     final static int MSG_ADD_FILE = 0x0009;
     final static int MSG_ADD_FOLDER = 0x000a;
+    final static int MSG_SET_TITLE = 0x000b;
+    final static int MSG_SHOW_HIDE_RECENT = 0x000c;
 
     final static int MSG_REFRESH = 0xf007;
 
@@ -110,15 +113,17 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     List<UserFile> allFolderData = null;
     boolean isGrid;
     boolean isRefresh;
+    String title;
 
-    @BindView(R.id.folder_recyler_view) RecyclerView folderRecyclerView;
-    @BindView(R.id.files_recycler_view) RecyclerView RecentFileRecyclerView;
+    @BindView(R.id.title) TextView mTitleView;
+    @BindView(R.id.detailed_folder) RecyclerView mFolderRecyclerView;
+    @BindView(R.id.recent_files) RecyclerView RecentFileRecyclerView;
     @BindView(R.id.swipeRerfreshLayout) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.float_plus) FloatingActionsMenu mFloatBtnPlus;
     @BindView(R.id.upload_photo) FloatingActionButton mFloatBtnUpload;
     @BindView(R.id.upload_doc) FloatingActionButton mFloatBtnUploadDoc;
     @BindView(R.id.create_folder) FloatingActionButton mFloatBtnCreateFolder;
-    @BindView(R.id.files_view) RecyclerView filesRView;
+    @BindView(R.id.detailed_files) RecyclerView mFilesRView;
 
     @OnClick(R.id.upload_video) void onUploadVideoClick() {
         mFloatBtnPlus.collapse();
@@ -161,9 +166,9 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setRefreshing(true);
-        folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
-        filesRView.addItemDecoration(new GridSpaceItemDecoration(12));
-        Log.i(TAG, "onCreateView: Running");
+        mFolderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
+        mFilesRView.addItemDecoration(new GridSpaceItemDecoration(12));
+
 
         return root;
     }
@@ -204,12 +209,16 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     @Override public void onRefresh() {
         if (!isRefresh) {
             isRefresh = true;
-            mPresenter.set();
+            mPresenter.set(SecuDiskApplication.CurrentFolder);
         }
     }
 
     @Override public void setPresenter(MainContract.Presenter presenter) {
         this.mPresenter = presenter;
+    }
+
+    @Override public String getTitle() {
+        return this.title;
     }
 
     @Override public void remove(UserFile file) {
@@ -242,6 +251,24 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
     @Override public void addFolder(UserFile file) {
         buildMessage(MSG_ADD_FOLDER, file);
+    }
+
+    @Override public void setTitle(String title) {
+        Message message = Message.obtain();
+        message.arg1 = MSG_SET_TITLE;
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_BUNDLE, title);
+        message.setData(bundle);
+        mHandler.sendMessage(message);
+    }
+
+    @Override public void showOrHideRecentFile(boolean showOrHide) {
+        Message message = Message.obtain();
+        message.arg1 = MSG_SHOW_HIDE_RECENT;
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(KEY_BUNDLE, showOrHide);
+        message.setData(bundle);
+        mHandler.sendMessage(message);
     }
 
     private void buildMessage(int type, @Nullable final UserFile file) {
@@ -328,8 +355,8 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
             if (mFileAdapter == null) {
                 mFileAdapter = new FileAdapter(allFileData);
-                filesRView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-                filesRView.setAdapter(mFileAdapter);
+                mFilesRView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                mFilesRView.setAdapter(mFileAdapter);
             } else {
                 mFileAdapter.changeData(allFileData);
             }
@@ -349,6 +376,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         try {
             isGrid = true;
             allFolderData = SerializeUserFile.serializeFolder(folders);
+            Log.i(TAG, "updateFolder: ".concat(String.valueOf(allFolderData.size())));
             if (mFolderAdapter == null) {
                 mFolderAdapter = new FolderAdapter(allFolderData,
                         new FolderAdapter.CallBack() {
@@ -385,10 +413,14 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                                     }).show(getActivity().getFragmentManager(),TAG);
                                 }
                             }
+
+                            @Override public void onItemClick(UserFile file) {
+                                mPresenter.goToNextFolder(file);
+                            }
                         });
 
-                folderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-                folderRecyclerView.setAdapter(mFolderAdapter);
+                mFolderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                mFolderRecyclerView.setAdapter(mFolderAdapter);
             } else {
                 mFolderAdapter.changeData(allFolderData);
             }
@@ -430,19 +462,23 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                         }).show(getActivity().getFragmentManager(),TAG);
                     }
                 }
+
+                @Override public void onItemClick(UserFile file) {
+                    mPresenter.goToNextFolder(file);
+                }
             });
         }
 
         if (toGrid) {
             isGrid = true;
-            folderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-            folderRecyclerView.setAdapter(mFolderAdapter);
+            mFolderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+            mFolderRecyclerView.setAdapter(mFolderAdapter);
         } else {
             isGrid = false;
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            folderRecyclerView.setLayoutManager(linearLayoutManager);
-            folderRecyclerView.setAdapter(mFolderAdapter);
+            mFolderRecyclerView.setLayoutManager(linearLayoutManager);
+            mFolderRecyclerView.setAdapter(mFolderAdapter);
 
         }
     }
@@ -467,13 +503,13 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
                 break;
             case FEED_BACK_SNACKBAR_SHORT:
-                Snackbar.make(folderRecyclerView, msg, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mFolderRecyclerView, msg, Snackbar.LENGTH_SHORT).show();
                 break;
             case FEED_BACK_SNACKBAR_LONG:
-                Snackbar.make(folderRecyclerView, msg, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mFolderRecyclerView, msg, Snackbar.LENGTH_LONG).show();
                 break;
             case FEED_BACK_SNACKBAR_INDEFINITE:
-                Snackbar.make(folderRecyclerView, msg, Snackbar.LENGTH_INDEFINITE).show();
+                Snackbar.make(mFolderRecyclerView, msg, Snackbar.LENGTH_INDEFINITE).show();
                 break;
             default:
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
@@ -506,9 +542,26 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         mFileAdapter.addItem(file);
     }
 
+    public void setTitleItem(String title) {
+        mTitleView.setText(title);
+        this.title = title;
+        Log.i(TAG, "setTitleItem: ".concat(title));
+    }
+
+    public void showOrHideRecentItems(boolean showOrHide) {
+        if (showOrHide) {
+            //show
+            RecentFileRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            //hide
+            RecentFileRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
     public void addFolderItem(UserFile file) {
         mFolderAdapter.addItem(file);
     }
+
 
     private void buildDialogForRename(final UserFile file) {
         final WithOneInputDialogFragment dialog = WithOneInputDialogFragment.newInstance(file);
@@ -605,6 +658,12 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                         break;
                     case MSG_ADD_FOLDER:
                         fragment.addFolderItem((UserFile) msg.getData().getParcelable(KEY_BUNDLE));
+                        break;
+                    case MSG_SET_TITLE:
+                        fragment.setTitleItem(msg.getData().getString(KEY_BUNDLE));
+                        break;
+                    case MSG_SHOW_HIDE_RECENT:
+                        fragment.showOrHideRecentItems(msg.getData().getBoolean(KEY_BUNDLE));
                         break;
                 }
             }

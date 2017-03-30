@@ -58,10 +58,14 @@ public interface MainContract {
         void refresh(boolean refresh);
         void add(UserFile file);
         void addFolder(UserFile file);
+        void setTitle(String title);
+        void showOrHideRecentFile(boolean showOrHide);
+        String getTitle();
     }
 
     interface Presenter extends BasePresenter {
-        void set();
+        void set(int folderId);
+        void setRoot();
         void change();
         void delete(UserFile file);
         void rename(UserFile file);
@@ -69,5 +73,7 @@ public interface MainContract {
         void encryptOrDecrypt(UserFile file, String passPhrase);
         void uploadCommonFile(List<BaseFile> file);
         void createFolder(UserFile file);
+        void goToNextFolder(UserFile file);
+        int backToPrevious();
     }
 }

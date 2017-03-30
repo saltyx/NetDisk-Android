@@ -28,6 +28,8 @@ import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
 
+import java.util.Stack;
+
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
@@ -39,11 +41,29 @@ public class SecuDiskApplication extends Application {
     public static String IP;
     public static String Port;
     public static int CurrentFolder;
+    private static Stack<Integer> FolderTrack;
     @Override
     public void onCreate() {
         super.onCreate();
         CurrentFolder = 1;//root
+        FolderTrack = new Stack<>();
+        FolderTrack.push(CurrentFolder);
         if (LeakCanary.isInAnalyzerProcess(this)) return;
         LeakCanary.install(this);
+    }
+
+    public static int findPreFolder() {
+        if (FolderTrack.isEmpty()) {
+            CurrentFolder = 1;
+            return 1;//root
+        } else {
+            FolderTrack.pop();CurrentFolder = FolderTrack.peek();
+            return CurrentFolder ;
+        }
+    }
+
+    public static void goToNext(int id) {
+        FolderTrack.push(id);
+        CurrentFolder = id;
     }
 }

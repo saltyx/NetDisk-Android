@@ -33,7 +33,6 @@ import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.data.DataSource;
 import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.Utils;
-import com.squareup.haha.perflib.Main;
 import com.vincent.filepicker.filter.entity.BaseFile;
 import com.vincent.filepicker.filter.entity.VideoFile;
 
@@ -60,11 +59,29 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void start() {
-        set();
+        setRoot();
     }
 
     @Override
-    public void set() {
+    public void set(int folderId) {
+
+        mDataRepo.getFilesByFolder(folderId, new DataSource.GetData<String>() {
+            @Override
+            public void onLoaded(String data) {
+                mMainView.showFiles(data);
+                Log.i(TAG, "onLoaded: ".concat(data));
+            }
+
+            @Override
+            public void onDataNotAvailable(@Nullable String msg) {
+                mMainView.userFeedBack(msg, MainContract.FEED_BACK_SNACKBAR_LONG);
+                mMainView.refresh(false);
+            }
+        });
+
+    }
+
+    @Override public void setRoot() {
         mDataRepo.getFilesByFolder(1, new DataSource.GetData<String>() {
             @Override
             public void onLoaded(String data) {
@@ -190,6 +207,44 @@ public class MainPresenter implements MainContract.Presenter {
         });
     }
 
+    @Override public void goToNextFolder(UserFile file) {
+        if (file != null) {
+            SecuDiskApplication.goToNext(file.getId());
+            if (mMainView.getTitle() == null) {
+                mMainView.setTitle(file.getFileName());
+            } else {
+                mMainView.setTitle(mMainView.getTitle().concat(">>").concat(file.getFileName()));
+            }
+            mMainView.showOrHideRecentFile(false);
+            set(SecuDiskApplication.CurrentFolder);
+        }
+    }
+
+    @Override public int backToPrevious() {
+        if (SecuDiskApplication.CurrentFolder != 1) {
+            //not root
+            int id = SecuDiskApplication.findPreFolder();
+            if (id == 1) {
+                //pre node is root
+                mMainView.setTitle("Recent");
+                mMainView.showOrHideRecentFile(true);
+                setRoot();
+            } else {
+                String title = mMainView.getTitle();
+                String newTitle = "";
+                String [] temp = title.split(">>");
+                for (int i = 0; i < temp.length-1; i++) {
+                    newTitle = newTitle.concat(temp[i]).concat(">>");
+                }
+                mMainView.setTitle(newTitle);set(id);
+            }
+            Log.i(TAG, "backToPrevious: ".concat(String.valueOf(id)));
+            return id;
+        } else {
+            return -1;
+        }
+    }
+
     @Override public void uploadCommonFile(List<BaseFile> files) {
         for (BaseFile file: files) {
             String[] data = file.getPath().split("/");
@@ -212,7 +267,5 @@ public class MainPresenter implements MainContract.Presenter {
                 }
             });
         }
-
-
     }
 }

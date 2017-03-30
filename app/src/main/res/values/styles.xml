@@ -32,5 +32,12 @@
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/white</item>
     </style>
-
+    
+    <style name="switch_style" parent="AppTheme">
+        <item name="colorControlActivated">@color/switch_enable</item>
+        <item name="android:colorForeground">@color/colorPrimary</item>
+        <item name="colorSwitchThumbNormal">@color/primary_text</item>
+        <item name="colorControlHighlight">@color/switch_enable</item>
+    </style>
+    
 </resources>

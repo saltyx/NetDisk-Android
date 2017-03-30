@@ -13,4 +13,5 @@
     <color name="half_black">#808080</color>
     <color name="white">#fafafa</color>
     <color name="subtitle">#f5f5f5</color>
+    <color name="switch_enable">#46bdbf</color>
 </resources>

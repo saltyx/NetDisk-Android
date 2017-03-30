@@ -37,10 +37,20 @@ import android.support.v4.app.FragmentTransaction;
 public class ActivityHelper {
 
     public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
-                                      @NonNull Fragment fragment, @NonNull int frameId) {
+                                      @NonNull Fragment fragment, int frameId) {
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(frameId, fragment);
         transaction.commit();
+    }
+
+    public static void replaceFragment(@NonNull FragmentManager fragmentManager,
+                                       @NonNull Fragment from,@NonNull Fragment to, int toId) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (!to.isAdded()) {
+            transaction.hide(from).add(toId,to).commit();
+        } else {
+            transaction.hide(from).show(to).commit();
+        }
     }
 }

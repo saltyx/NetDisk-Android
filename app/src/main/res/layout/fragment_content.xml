@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -56,12 +56,17 @@
                         android:textAlignment="gravity"
                         android:textSize="18sp"
                         tools:text="@string/recent_files" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/files_recycler_view"
+                    <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView3"
+                        android:src="@color/divider"
+                        android:layout_marginStart="8dp"
+                        android:layout_alignBottom="@+id/title"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recent_files"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/title"
                         />
 
                     <TextView
@@ -77,10 +82,16 @@
                         android:textSize="18sp"
                         tools:text="@string/folder"
                         android:foreground="?android:attr/selectableItemBackground"
-                        android:layout_below="@+id/files_recycler_view"/>
+                        android:layout_below="@+id/recent_files"/>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@color/divider"
+                        android:layout_marginStart="8dp"
+                        android:layout_alignBottom="@+id/textView6"/>
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/folder_recyler_view"
+                        android:id="@+id/detailed_folder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -100,9 +111,15 @@
                         android:textSize="18sp"
                         tools:text="@string/files"
                         android:foreground="?android:attr/selectableItemBackground"
-                        android:layout_below="@+id/folder_recyler_view"/>
+                        android:layout_below="@+id/detailed_folder"/>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@color/divider"
+                        android:layout_marginStart="8dp"
+                        android:layout_alignBottom="@+id/textView7"/>
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/files_view"
+                        android:id="@+id/detailed_files"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"

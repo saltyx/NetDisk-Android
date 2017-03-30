@@ -24,6 +24,9 @@
 
 package com.shiyan.netdisk_android.main;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -33,13 +36,21 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.shiyan.netdisk_android.R;
+import com.shiyan.netdisk_android.setting.SettingActivity;
 import com.shiyan.netdisk_android.utils.ActivityHelper;
 import com.shiyan.netdisk_android.utils.IMMLeaks;
 import com.shiyan.netdisk_android.utils.Inject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+
+    final String KEY_CONTENT = "CONTENT";
+    final String KEY_DETAILED = "DETAILED";
 
     @BindView(R.id.toolbar_main)
     Toolbar mainToolBar;
@@ -64,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             contentFragment = ContentFragment.newInstance();
             ActivityHelper.addFragmentToActivity(getSupportFragmentManager(),contentFragment ,R.id.content);
         }
+
 
         mPresenter = new MainPresenter(Inject.provideDataRepo(getApplication()), contentFragment);
 
@@ -130,8 +142,18 @@ public class MainActivity extends AppCompatActivity {
             case R.id.change_to_list:
                 showList();mPresenter.change();
                 return true;
+            case R.id.setting:
+                Intent intent = new Intent(this, SettingActivity.class);
+                startActivity(intent);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override public void onBackPressed() {
+        if (mPresenter.backToPrevious() == -1) {
+            super.onBackPressed();
+        }
     }
 }
