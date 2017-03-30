@@ -24,17 +24,17 @@
   -->
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="100dp"
-    android:layout_height="140dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="0dp"
-    android:background="@color/accent"
-    android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:orientation="vertical"
-    app:cardCornerRadius="6dp">
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:layout_width="160dp"
+                                    android:layout_height="160dp"
+                                    android:layout_marginEnd="0dp"
+                                    android:layout_marginStart="4dp"
+                                    android:background="@color/accent"
+                                    android:clickable="true"
+                                    android:foreground="?android:attr/selectableItemBackground"
+                                    android:orientation="vertical"
+                                    app:cardCornerRadius="6dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -42,7 +42,7 @@
 
         <ImageView
             android:id="@+id/file_image"
-            android:layout_width="100dp"
+            android:layout_width="160dp"
             android:layout_height="100dp"
             android:layout_marginEnd="0dp"
             android:layout_marginLeft="0dp"
@@ -56,7 +56,7 @@
             app:layout_constraintVertical_weight="1"
             app:srcCompat="@android:drawable/ic_input_get"
             tools:layout_editor_absoluteX="33dp"
-            tools:layout_editor_absoluteY="17dp" />
+            tools:layout_editor_absoluteY="17dp"/>
 
         <TextView
             android:id="@+id/file_name"
@@ -69,7 +69,8 @@
             android:layout_marginStart="0dp"
             android:background="@color/accent"
             android:foreground="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical|center_horizontal"
+            android:gravity="start|center_vertical"
+            android:maxLines="1"
             android:text="TextView"
             android:textAlignment="gravity"
             android:textSize="18sp"
@@ -79,7 +80,23 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/file_image"
             app:layout_constraintVertical_bias="0.0"
-            app:layout_constraintVertical_weight="1" />
+            app:layout_constraintVertical_weight="1"/>
+
+        <TextView
+            android:id="@+id/update_time"
+            android:layout_width="160dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/bg_gray"
+            android:maxLines="1"
+            android:text="updated at"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/file_name"/>
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
