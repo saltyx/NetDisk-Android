@@ -48,6 +48,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.SecuDiskApplication;
 import com.shiyan.netdisk_android.adapter.FileAdapter;
+import com.shiyan.netdisk_android.adapter.RecentFileAdapter;
 import com.shiyan.netdisk_android.adapter.FolderAdapter;
 import com.shiyan.netdisk_android.adapter.GridSpaceItemDecoration;
 import com.shiyan.netdisk_android.dialog.DetailInfoDialogFragment;
@@ -102,19 +103,22 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
     MainContract.Presenter mPresenter;
     FolderAdapter mFolderAdapter = null;
+    RecentFileAdapter mRecentFileAdapter = null;
     FileAdapter mFileAdapter = null;
     List<UserFile> data;
+    List<UserFile> allFileData = null;
+    List<UserFile> allFolderData = null;
     boolean isGrid;
     boolean isRefresh;
 
     @BindView(R.id.folder_recyler_view) RecyclerView folderRecyclerView;
-    @BindView(R.id.files_recycler_view) RecyclerView fileRecyclerView;
+    @BindView(R.id.files_recycler_view) RecyclerView RecentFileRecyclerView;
     @BindView(R.id.swipeRerfreshLayout) SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.float_plus) FloatingActionsMenu mFloatBtnPlus;
     @BindView(R.id.upload_photo) FloatingActionButton mFloatBtnUpload;
     @BindView(R.id.upload_doc) FloatingActionButton mFloatBtnUploadDoc;
     @BindView(R.id.create_folder) FloatingActionButton mFloatBtnCreateFolder;
-
+    @BindView(R.id.files_view) RecyclerView filesRView;
 
     @OnClick(R.id.upload_video) void onUploadVideoClick() {
         mFloatBtnPlus.collapse();
@@ -158,8 +162,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setRefreshing(true);
         folderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
-
-        
+        filesRView.addItemDecoration(new GridSpaceItemDecoration(12));
         Log.i(TAG, "onCreateView: Running");
 
         return root;
@@ -310,15 +313,25 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     public void updateFiles(String files) {
         try {
             data = SerializeUserFile.serialize(files);
-            if (mFileAdapter == null) {
-                mFileAdapter = new FileAdapter(data);
-                Log.i(TAG, String.valueOf(files));
+            allFileData = SerializeUserFile.serializeFile(files);
+            allFolderData = SerializeUserFile.serializeFolder(files);
+
+            if (mRecentFileAdapter == null) {
+                mRecentFileAdapter = new RecentFileAdapter(data, false);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                fileRecyclerView.setLayoutManager(linearLayoutManager);
-                fileRecyclerView.setAdapter(mFileAdapter);
+                RecentFileRecyclerView.setLayoutManager(linearLayoutManager);
+                RecentFileRecyclerView.setAdapter(mRecentFileAdapter);
             } else {
-                mFileAdapter.changeData(data);
+                mRecentFileAdapter.changeData(data);
+            }
+
+            if (mFileAdapter == null) {
+                mFileAdapter = new FileAdapter(allFileData);
+                filesRView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                filesRView.setAdapter(mFileAdapter);
+            } else {
+                mFileAdapter.changeData(allFileData);
             }
 
         } catch (JSONException e) {
@@ -335,9 +348,9 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
         try {
             isGrid = true;
-            data = SerializeUserFile.serializeFolder(folders);
+            allFolderData = SerializeUserFile.serializeFolder(folders);
             if (mFolderAdapter == null) {
-                mFolderAdapter = new FolderAdapter(data,
+                mFolderAdapter = new FolderAdapter(allFolderData,
                         new FolderAdapter.CallBack() {
                             @Override
                             public void onMoreClick(UserFile file) {
@@ -377,7 +390,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                 folderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
                 folderRecyclerView.setAdapter(mFolderAdapter);
             } else {
-                mFolderAdapter.changeData(data);
+                mFolderAdapter.changeData(allFolderData);
             }
         } catch (JSONException e) {
             userFeedBack(e.toString(),FEED_BACK_SNACKBAR_INDEFINITE);
@@ -386,7 +399,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
     public void changeLayout(Boolean toGrid) {
         if (mFolderAdapter == null) {
-            mFolderAdapter = new FolderAdapter(data, new FolderAdapter.CallBack() {
+            mFolderAdapter = new FolderAdapter(allFolderData, new FolderAdapter.CallBack() {
                 @Override
                 public void onMoreClick(UserFile file) {
                     if (file != null) {
@@ -439,8 +452,8 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
             if (mFolderAdapter == null) return;
             mFolderAdapter.remove(file);
         } else {
-            if (mFileAdapter == null) return;
-            mFileAdapter.remove(file);
+            if (mRecentFileAdapter != null) mRecentFileAdapter.remove(file);
+            if (mFileAdapter != null) mFileAdapter.remove(file);
         }
     }
 
@@ -471,6 +484,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         if (file.isFolder()) {
             mFolderAdapter.renameItem(file);
         } else {
+            mRecentFileAdapter.renameItem(file);
             mFileAdapter.renameItem(file);
         }
     }
@@ -488,6 +502,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     }
 
     public void addItem(UserFile file) {
+        mRecentFileAdapter.addItem(file);
         mFileAdapter.addItem(file);
     }
 

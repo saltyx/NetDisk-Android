@@ -28,11 +28,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.model.UserFile;
-import com.shiyan.netdisk_android.utils.Utils;
 
 import java.util.List;
 
@@ -40,47 +40,50 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ *
+ * @author shiyan
+ *
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class FileAdapter extends RecyclerView.Adapter<FileAdapter.MHolder> implements BaseAdapter {
+public class RecentFileAdapter extends RecyclerView.Adapter<RecentFileAdapter.FileViewHolder>
+                        implements BaseAdapter {
+    final static int MAX_SIZE = 5;
+
+    final String TAG = getClass().getName();
 
     private List<UserFile> data;
-    final String TAG = getClass().getName();
-    static class MHolder extends RecyclerView.ViewHolder {
+    private boolean showAll;
 
-        @BindView(R.id.file_name) TextView mFileName;
-        @BindView(R.id.file_size) TextView mFileSize;
+    static class FileViewHolder extends RecyclerView.ViewHolder {
 
-        MHolder(View item) {
+        @BindView(R.id.file_name) TextView fileName;
+        @BindView(R.id.file_image) ImageView fileImage;
+        @BindView(R.id.update_time) TextView updatedTime;
+
+        FileViewHolder(View item) {
             super(item);
             ButterKnife.bind(this,item);
         }
-
     }
 
-    public FileAdapter(List<UserFile> data) {
+    public RecentFileAdapter(List<UserFile> data, boolean showAll) {
+        if (!showAll) {
+            while (data.size() > MAX_SIZE) {
+                data.remove(0);
+            }
+        }
+        this.showAll = showAll;
         this.data = data;
     }
 
-    @Override public MHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return  new FileAdapter.MHolder(LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.item_file_all, parent, false));
-
-    }
-
-    @Override public void onBindViewHolder(MHolder holder, int position) {
-        UserFile file = data.get(position);
-        holder.mFileName.setText(file.getFileName());
-        holder.mFileSize.setText(Utils.calculateFileSize(file.getFileSize()));
-    }
-
-    @Override public int getItemCount() {
-        return data == null ? 0 : data.size();
-    }
-
     @Override public void changeData(List<UserFile> data) {
+        if (!showAll) {
+            while (data.size() >= MAX_SIZE) {
+                data.remove(0);
+            }
+        }
         this.data = data;
         notifyDataSetChanged();
     }
@@ -113,7 +116,30 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.MHolder> imple
     }
 
     @Override public void addItem(UserFile file) {
+        if (!showAll) {
+            if (data.size() > MAX_SIZE) {
+                data.remove(0);
+            }
+        }
         data.add(file);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public FileViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return  new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_file, parent, false));
+    }
+
+    @Override
+    public void onBindViewHolder(FileViewHolder holder, int position) {
+        holder.fileName.setText(data.get(position).getFileName());
+        String updatedTime = data.get(position).getUpdateAt();
+        holder.updatedTime.setText("updated at ".concat(updatedTime == null || updatedTime.length() == 0 ? "\njust now" : updatedTime));
+    }
+
+    @Override
+    public int getItemCount() {
+        return this.data == null ? 0 : this.data.size();
     }
 }

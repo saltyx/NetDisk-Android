@@ -44,4 +44,14 @@ public class Utils {
         Date curDate = new Date(System.currentTimeMillis());
         return formatter.format(curDate);
     }
+
+    public static String calculateFileSize(long size) {
+        double kb =size/1024;
+        double mb = kb/1024;
+        double gb = mb/1024;
+        if (mb < 1) return String.valueOf(kb).concat("KB");
+        if (gb < 1) return String.valueOf(mb).concat("MB");
+        return String.valueOf(gb).concat("GB");
+
+    }
 }
