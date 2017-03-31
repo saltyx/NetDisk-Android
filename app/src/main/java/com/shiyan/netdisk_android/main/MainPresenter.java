@@ -34,8 +34,8 @@ import com.shiyan.netdisk_android.data.DataSource;
 import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.Utils;
 import com.vincent.filepicker.filter.entity.BaseFile;
-import com.vincent.filepicker.filter.entity.VideoFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,14 +43,14 @@ import java.util.List;
  * Blog    https://saltyx.github.io
  */
 
-public class MainPresenter implements MainContract.Presenter {
+class MainPresenter implements MainContract.Presenter {
 
-    final String TAG = getClass().getName();
+    private final String TAG = getClass().getName();
 
     private DataRepoImpl mDataRepo;
     private MainContract.View mMainView;
 
-    public MainPresenter(DataRepoImpl mDataRepo, MainContract.View mMainView) {
+    MainPresenter(DataRepoImpl mDataRepo, MainContract.View mMainView) {
         this.mDataRepo = mDataRepo;
         this.mMainView = mMainView;
 
@@ -65,11 +65,11 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void set(int folderId) {
 
-        mDataRepo.getFilesByFolder(folderId, new DataSource.GetData<String>() {
+        mDataRepo.getFilesByFolder(folderId, new DataSource.LoadData<UserFile>() {
             @Override
-            public void onLoaded(String data) {
+            public void onLoaded(ArrayList<UserFile> data) {
                 mMainView.showFiles(data);
-                Log.i(TAG, "onLoaded: ".concat(data));
+                Log.i(TAG, "onLoaded: ".concat(data.toString()));
             }
 
             @Override
@@ -82,9 +82,9 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override public void setRoot() {
-        mDataRepo.getFilesByFolder(1, new DataSource.GetData<String>() {
+        mDataRepo.getFilesByFolder(1, new DataSource.LoadData<UserFile>() {
             @Override
-            public void onLoaded(String data) {
+            public void onLoaded(ArrayList<UserFile> data) {
                 mMainView.showFiles(data);
             }
 

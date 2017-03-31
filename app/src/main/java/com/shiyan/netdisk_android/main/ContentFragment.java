@@ -65,6 +65,7 @@ import com.vincent.filepicker.filter.entity.BaseFile;
 import org.json.JSONException;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -101,7 +102,6 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     final static int MSG_ADD_FOLDER = 0x000a;
     final static int MSG_SET_TITLE = 0x000b;
     final static int MSG_SHOW_HIDE_RECENT = 0x000c;
-
     final static int MSG_REFRESH = 0xf007;
 
     MainContract.Presenter mPresenter;
@@ -199,7 +199,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                 break;
         }
         if (filePaths == null || filePaths.isEmpty()) {
-            userFeedBack("Nothing gonna happen :(",FEED_BACK_SNACKBAR_LONG);
+            userFeedBack("Nothing gonna happen :(",FEED_BACK_TOAST_SHORT);
         } else {
             mPresenter.uploadCommonFile(filePaths);
             filePaths.clear();
@@ -280,20 +280,20 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         mHandler.sendMessage(message);
     }
 
-    @Override public void showFiles(String filesJson) {
+    @Override public void showFiles(ArrayList<UserFile> filesJson) {
         Message showFilesMsg = Message.obtain();
         showFilesMsg.arg1 = MSG_SHOW_FILES;
         Bundle bundle = new Bundle();
-        bundle.putString(KEY_BUNDLE, filesJson);
+        bundle.putParcelableArrayList(KEY_BUNDLE, filesJson);
         showFilesMsg.setData(bundle);
         mHandler.sendMessage(showFilesMsg);
     }
 
-    @Override public void showFolders(String filesJson) {
+    @Override public void showFolders(ArrayList<UserFile> filesJson) {
         Message showFolder = Message.obtain();
         showFolder.arg1 = MSG_SHOW_FOLDERS;
         Bundle bundle = new Bundle();
-        bundle.putString(KEY_BUNDLE, filesJson);
+        bundle.putParcelableArrayList(KEY_BUNDLE, filesJson);
         showFolder.setData(bundle);
         mHandler.sendMessage(showFolder);
     }
@@ -337,9 +337,9 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         }
     }
 
-    public void updateFiles(String files) {
+    public void updateFiles(ArrayList<UserFile> files) {
         try {
-            data = SerializeUserFile.serialize(files);
+            data = files;
             allFileData = SerializeUserFile.serializeFile(files);
             allFolderData = SerializeUserFile.serializeFolder(files);
 
@@ -361,12 +361,12 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                 mFileAdapter.changeData(allFileData);
             }
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
             userFeedBack(e.toString(), FEED_BACK_SNACKBAR_INDEFINITE);
         }
     }
 
-    public void updateFolder(String folders) {
+    public void updateFolder(List<UserFile> folders) {
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -424,7 +424,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
             } else {
                 mFolderAdapter.changeData(allFolderData);
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             userFeedBack(e.toString(),FEED_BACK_SNACKBAR_INDEFINITE);
         }
     }
@@ -526,15 +526,11 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     }
 
     public void encryptItem(UserFile file) {
-        if (file.isEncrypted()) {
-            //do encrypt
-        }
+
     }
 
     public void decryptItem(UserFile file) {
-        if (!file.isEncrypted()) {
-            // do decrypt
-        }
+
     }
 
     public void addItem(UserFile file) {
@@ -625,8 +621,9 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
             if (fragment != null) {
                 switch (msg.arg1) {
                     case MSG_SHOW_FOLDERS: case  MSG_SHOW_FILES:
-                        String str = msg.getData().getString(KEY_BUNDLE);
-                        fragment.updateFiles(str); fragment.updateFolder(str);
+                        ArrayList<UserFile> files = msg.getData().getParcelableArrayList(KEY_BUNDLE);
+                        fragment.updateFiles(files);
+                        fragment.updateFolder(files);
                         break;
                     case MSG_SHOW_BY_LIST:
                         fragment.changeLayout(false);

@@ -29,6 +29,7 @@ import com.shiyan.netdisk_android.BaseView;
 import com.shiyan.netdisk_android.model.UserFile;
 import com.vincent.filepicker.filter.entity.BaseFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,8 +46,8 @@ public interface MainContract {
     int FEED_BACK_SNACKBAR_INDEFINITE = 5;
 
     interface View extends BaseView <Presenter> {
-        void showFiles(String filesJson);
-        void showFolders(String folders);
+        void showFiles(ArrayList<UserFile> filesJson);
+        void showFolders(ArrayList<UserFile> folders);
         void showByGrid();
         void showByList();
         void toggle();
