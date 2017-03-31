@@ -36,22 +36,22 @@ import com.shiyan.netdisk_android.model.UserFile;
 
 public class LocalDataSourceImpl implements DataSource {
 
-    static LocalDataSourceImpl INSTANCE;
-    DBHelper mDBHelper;
+    static volatile LocalDataSourceImpl sInstance;
+    private DBHelper mDBHelper;
 
     private LocalDataSourceImpl(Application application) {
         mDBHelper = new DBHelper(application);
     }
 
     public static LocalDataSourceImpl getInstance(Application application) {
-        if (INSTANCE == null) {
+        if (sInstance == null) {
             synchronized (LocalDataSourceImpl.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new LocalDataSourceImpl(application);
+                if (sInstance == null) {
+                    sInstance = new LocalDataSourceImpl(application);
                 }
             }
         }
-        return INSTANCE;
+        return sInstance;
     }
 
     @Override

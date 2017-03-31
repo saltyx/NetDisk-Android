@@ -39,10 +39,10 @@ import com.shiyan.netdisk_android.model.UserFile;
 
 public class DataRepoImpl implements DataSource {
 
-    static DataRepoImpl INSTANCE;
+    static volatile DataRepoImpl sInstance;
 
-    final LocalDataSourceImpl localDataSource;
-    final RemoteDataSourceImpl remoteDataSource;
+    private final LocalDataSourceImpl localDataSource;
+    private final RemoteDataSourceImpl remoteDataSource;
 
     private DataRepoImpl(final LocalDataSourceImpl localDataSource,final RemoteDataSourceImpl remoteDataSource) {
         this.localDataSource = localDataSource;
@@ -50,14 +50,14 @@ public class DataRepoImpl implements DataSource {
     }
 
     public static DataRepoImpl getInstance(final LocalDataSourceImpl localDataSource,final RemoteDataSourceImpl remoteDataSource) {
-        if (INSTANCE == null) {
+        if (sInstance == null) {
             synchronized (DataRepoImpl.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new DataRepoImpl(localDataSource, remoteDataSource);
+                if (sInstance == null) {
+                    sInstance = new DataRepoImpl(localDataSource, remoteDataSource);
                 }
             }
         }
-        return INSTANCE;
+        return sInstance;
     }
 
     /**

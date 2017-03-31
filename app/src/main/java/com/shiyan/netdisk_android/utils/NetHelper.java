@@ -78,7 +78,6 @@ public class NetHelper {
 
     private final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
 
-    private static NetHelper INSTANCE;
     private OkHttpClient client;
 
     private NetHelper() {
@@ -86,17 +85,15 @@ public class NetHelper {
     }
 
     public static NetHelper getInstance() {
-        if (INSTANCE == null) {
-            synchronized (NetHelper.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new NetHelper();
-                }
-            }
-        }
-        return INSTANCE;
+
+        return NetHelperHolder.sInstance;
     }
 
-    public void newCall(final Request request, final CallBack callback) {
+    private static class NetHelperHolder {
+        private final static NetHelper sInstance = new NetHelper();
+    }
+
+    private void newCall(final Request request, final CallBack callback) {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

@@ -41,9 +41,9 @@ public class SPHelper {
     public final static String TOKEN_KEY = "TOKEN_";
     public final static String IS_FIRST_KEY = "IS_FIRST";
 
-    public final static String KEY = "SecureDisk";
+    private final static String KEY = "SecureDisk";
 
-    private static SPHelper INSTANCE;
+    private volatile static SPHelper sInstance;
     private SharedPreferences mSP;
 
     private SPHelper(Application context) {
@@ -51,14 +51,14 @@ public class SPHelper {
     }
 
     public static SPHelper getInstance(Application context) {
-        if (INSTANCE == null) {
+        if (sInstance == null) {
             synchronized (SPHelper.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new SPHelper(context);
+                if (sInstance == null) {
+                    sInstance = new SPHelper(context);
                 }
             }
         }
-        return INSTANCE;
+        return sInstance;
     }
 
     public SharedPreferences getSP() {

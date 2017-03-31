@@ -46,7 +46,6 @@ import java.io.File;
 public class RemoteDataSourceImpl implements DataSource {
     
     private final String TAG = getClass().getName();
-    private static RemoteDataSourceImpl INSTANCE;
     private final NetHelper netHelper ;
 
     private RemoteDataSourceImpl() {
@@ -54,14 +53,12 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     public static RemoteDataSourceImpl getInstance() {
-        if (INSTANCE == null) {
-            synchronized (RemoteDataSourceImpl.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new RemoteDataSourceImpl();
-                }
-            }
-        }
-        return INSTANCE;
+
+        return RemoteDBImplHolder.sInstance;
+    }
+
+    private static class RemoteDBImplHolder {
+        private static final RemoteDataSourceImpl sInstance = new RemoteDataSourceImpl();
     }
 
     @Override
