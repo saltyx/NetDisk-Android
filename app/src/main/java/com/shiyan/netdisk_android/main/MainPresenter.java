@@ -117,9 +117,9 @@ public class MainPresenter implements MainContract.Presenter {
         };
 
         if (file.isFolder()) {
-            mDataRepo.deleteFolder(file.getId(), callBack);
+            mDataRepo.deleteFolder(file, callBack);
         } else {
-            mDataRepo.deleteFiles(file.getId(), callBack);
+            mDataRepo.deleteFiles(file, callBack);
         }
     }
 
@@ -136,9 +136,9 @@ public class MainPresenter implements MainContract.Presenter {
             }
         };
         if (file.isFolder()) {
-            mDataRepo.updateFolder(file.getId(), file.getFileName(),callback);
+            mDataRepo.updateFolder(file,callback);
         } else {
-            mDataRepo.updateFile(file.getId(), file.getFileName(), callback);
+            mDataRepo.updateFile(file, callback);
         }
     }
 
@@ -155,15 +155,15 @@ public class MainPresenter implements MainContract.Presenter {
         };
         if (file.isFolder()) {
             if (file.isShared()) {
-                mDataRepo.cancelShare(file.getId(), callback);
+                mDataRepo.cancelShare(file, callback);
             } else {
-                mDataRepo.shareFile(file.getId(), callback);
+                mDataRepo.shareFile(file, callback);
             }
         } else {
             if (file.isShared()) {
-                mDataRepo.cancelShare(file.getId(), callback);
+                mDataRepo.cancelShare(file, callback);
             } else {
-                mDataRepo.shareFile(file.getId(), callback);
+                mDataRepo.shareFile(file, callback);
             }
         }
     }
@@ -181,21 +181,21 @@ public class MainPresenter implements MainContract.Presenter {
         };
         if (file.isFolder()) {
             if (file.isEncrypted()) {
-                mDataRepo.decryptFolder(file.getId(), passPhrase, callback);
+                mDataRepo.decryptFolder(file, passPhrase, callback);
             } else {
-                mDataRepo.encryptFolder(file.getId(), passPhrase, callback);
+                mDataRepo.encryptFolder(file, passPhrase, callback);
             }
         } else {
             if (file.isEncrypted()) {
-                mDataRepo.decryptFile(file.getId(), passPhrase, callback);
+                mDataRepo.decryptFile(file, passPhrase, callback);
             } else {
-                mDataRepo.encryptFile(file.getId(), passPhrase, callback);
+                mDataRepo.encryptFile(file, passPhrase, callback);
             }
         }
     }
 
     @Override public void createFolder(final UserFile file) {
-        mDataRepo.createFolder(file.getFileName(), file.getFromFolder(), new DataSource.ResultCallBack() {
+        mDataRepo.createFolder(file, new DataSource.ResultCallBack() {
             @Override public void onSuccess(@Nullable String success) {
                 mMainView.addFolder(file);
                 mMainView.userFeedBack("success",MainContract.FEED_BACK_TOAST_SHORT);

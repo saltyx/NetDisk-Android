@@ -62,9 +62,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void createFolder(String folderName, int fromFolder, final ResultCallBack callBack) {
+    public void createFolder(UserFile file, final ResultCallBack callBack) {
         try {
-            netHelper.createFolder(fromFolder, folderName, new CallBack() {
+            netHelper.createFolder(file.getFromFolder(), file.getFileName(), new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -80,9 +80,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void deleteFolder(int id, final ResultCallBack callBack) {
+    public void deleteFolder(UserFile file, final ResultCallBack callBack) {
         try {
-            netHelper.deleteFolder(id, new CallBack() {
+            netHelper.deleteFolder(file.getId(), new CallBack() {
                 @Override
                 public void success(@NonNull String data) {
                     callBack.onSuccess(data);
@@ -99,9 +99,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void updateFolder(int id, String newName, final ResultCallBack callBack) {
+    public void updateFolder(UserFile file, final ResultCallBack callBack) {
         try {
-            netHelper.updateFolder(id, newName, new CallBack() {
+            netHelper.updateFolder(file.getId(), file.getFileName(), new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -118,15 +118,15 @@ public class RemoteDataSourceImpl implements DataSource {
 
     /**
      * encrypt all the files in the folder
-     * @param id folder's id
+     * @param file the file
      * @param passPhrase password
      * @param callBack callback when the server responses
      */
     @Override
-    public void encryptFolder(int id, String passPhrase, final ResultCallBack callBack) {
+    public void encryptFolder(UserFile file, String passPhrase, final ResultCallBack callBack) {
         try {
 
-            netHelper.encryptFolder(id, passPhrase, new CallBack() {
+            netHelper.encryptFolder(file.getId(), passPhrase, new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -142,9 +142,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void decryptFolder(int id, String passPhrase, final ResultCallBack callBack) {
+    public void decryptFolder(UserFile file, String passPhrase, final ResultCallBack callBack) {
         try {
-            netHelper.decryptFolder(id, passPhrase, new CallBack() {
+            netHelper.decryptFolder(file.getId(), passPhrase, new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -201,9 +201,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void encryptFile(int id, String passPhrase, final ResultCallBack callBack) {
+    public void encryptFile(UserFile file, String passPhrase, final ResultCallBack callBack) {
         try {
-            netHelper.encryptFile(id, passPhrase, new CallBack() {
+            netHelper.encryptFile(file.getId(), passPhrase, new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -218,9 +218,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void decryptFile(int id, String passPhrase, final ResultCallBack callBack) {
+    public void decryptFile(UserFile file, String passPhrase, final ResultCallBack callBack) {
         try {
-            netHelper.decryptFile(id, passPhrase, new CallBack() {
+            netHelper.decryptFile(file.getId(), passPhrase, new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -236,9 +236,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void copyFile(int id, int dstFolder, final ResultCallBack callBack) {
+    public void copyFile(UserFile file, final ResultCallBack callBack) {
         try {
-            netHelper.copyFile(id, dstFolder, new CallBack() {
+            netHelper.copyFile(file.getId(), file.getFromFolder(), new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -253,9 +253,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void deleteFiles(int id, final ResultCallBack callBack) {
+    public void deleteFiles(UserFile file, final ResultCallBack callBack) {
         try {
-            netHelper.deleteFile(id, new CallBack() {
+            netHelper.deleteFile(file.getId(), new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -270,9 +270,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void moveFile(int id, int dstFolder, final ResultCallBack callBack) {
+    public void moveFile(UserFile file, final ResultCallBack callBack) {
         try {
-            netHelper.moveFile(id, dstFolder, new CallBack() {
+            netHelper.moveFile(file.getId(), file.getFromFolder(), new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -287,9 +287,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void updateFile(int id, String newName, final ResultCallBack callBack) {
+    public void updateFile(UserFile file, final ResultCallBack callBack) {
         try {
-            netHelper.updateFile(id, newName, new CallBack() {
+            netHelper.updateFile(file.getId(), file.getFileName(), new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -304,9 +304,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void shareFile(int id, final ResultCallBack callBack) {
+    public void shareFile(UserFile file, final ResultCallBack callBack) {
         try {
-            netHelper.shareFile(id, new CallBack() {
+            netHelper.shareFile(file.getId(), new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }
@@ -321,9 +321,9 @@ public class RemoteDataSourceImpl implements DataSource {
     }
 
     @Override
-    public void cancelShare(int id, final ResultCallBack callBack) {
+    public void cancelShare(UserFile file, final ResultCallBack callBack) {
         try {
-            netHelper.cancelSharingFile(id, new CallBack() {
+            netHelper.cancelSharingFile(file.getId(), new CallBack() {
                 @Override public void success(@NonNull String data) {
                     callBack.onSuccess(data);
                 }

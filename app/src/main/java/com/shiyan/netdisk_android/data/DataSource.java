@@ -39,11 +39,6 @@ public interface DataSource {
 
     String JSON_EXCEPTION = "JSON_EXCEPTION";
 
-    interface LoadData<T> {
-        void onLoaded(List<T> data);
-        void onDataNotAvailable(@Nullable String msg);
-    }
-
     interface GetData<T> {
         void onLoaded(T data);
         void onDataNotAvailable(@Nullable String msg);
@@ -54,22 +49,22 @@ public interface DataSource {
         void onError(@Nullable String error);
     }
 
-    void createFolder(String folderName, int fromFolder, ResultCallBack callBack);
-    void deleteFolder(int id, ResultCallBack callBack);
-    void updateFolder(int id, String newName, ResultCallBack callBack);
-    void encryptFolder(int id, String passPhrase, ResultCallBack callBack);
-    void decryptFolder(int id, String passPhrase, ResultCallBack callBack);
+    void createFolder(UserFile file, ResultCallBack callBack);
+    void deleteFolder(UserFile file, ResultCallBack callBack);
+    void updateFolder(UserFile file, ResultCallBack callBack);
+    void encryptFolder(UserFile file,String passPhrase, ResultCallBack callBack);
+    void decryptFolder(UserFile file,String passPhrase, ResultCallBack callBack);
     void getFolder(int id, GetData callback);
     void getFilesByFolder(int id, GetData callback);
 
     void createFile(UserFile file, ResultCallBack callBack);
-    void encryptFile(int id, String passPhrase, ResultCallBack callBack);
-    void decryptFile(int id, String passPhrase, ResultCallBack callBack);
-    void copyFile(int id, int dstFolder, ResultCallBack callBack);
-    void deleteFiles(int id, ResultCallBack callBack);
-    void moveFile(int id, int dstFolder, ResultCallBack callBack);
-    void updateFile(int id, String newName, ResultCallBack callBack);
-    void shareFile(int id, ResultCallBack callBack);
-    void cancelShare(int id, ResultCallBack callBack);
+    void encryptFile(UserFile file,String passPhrase, ResultCallBack callBack);
+    void decryptFile(UserFile file,String passPhrase, ResultCallBack callBack);
+    void copyFile(UserFile file, ResultCallBack callBack);//相当于新建file
+    void deleteFiles(UserFile file, ResultCallBack callBack);
+    void moveFile(UserFile file, ResultCallBack callBack);//相当于更新file
+    void updateFile(UserFile file, ResultCallBack callBack);
+    void shareFile(UserFile file, ResultCallBack callBack);
+    void cancelShare(UserFile file, ResultCallBack callBack);
 
 }

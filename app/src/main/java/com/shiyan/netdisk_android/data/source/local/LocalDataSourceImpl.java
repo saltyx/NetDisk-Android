@@ -25,6 +25,9 @@
 package com.shiyan.netdisk_android.data.source.local;
 
 import android.app.Application;
+import android.content.ContentValues;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.shiyan.netdisk_android.data.DataSource;
 import com.shiyan.netdisk_android.model.UserFile;
@@ -54,82 +57,69 @@ public class LocalDataSourceImpl implements DataSource {
         return sInstance;
     }
 
-    @Override
-    public void createFolder(String folderName, int fromFolder, ResultCallBack callBack) {
+    @Override public void createFolder(UserFile file, ResultCallBack callBack) {
 
     }
 
-    @Override
-    public void deleteFolder(int id, ResultCallBack callBack) {
+    @Override public void deleteFolder(UserFile file, ResultCallBack callBack) {
 
     }
 
-    @Override
-    public void updateFolder(int id, String newName, ResultCallBack callBack) {
+    @Override public void updateFolder(UserFile file, ResultCallBack callBack) {
 
     }
 
-    @Override
-    public void encryptFolder(int id, String passPhrase, ResultCallBack callBack) {
+    @Override public void encryptFolder(UserFile file,String passPhrase, ResultCallBack callBack) {
 
     }
 
-    @Override
-    public void decryptFolder(int id, String passPhrase, ResultCallBack callBack) {
+    @Override public void decryptFolder(UserFile file,String passPhrase, ResultCallBack callBack) {
 
     }
 
-    @Override
-    public void getFolder(int id, GetData callback) {
+    @Override public void getFolder(int id, GetData callback) {
 
     }
 
-    @Override
-    public void getFilesByFolder(int id, GetData callback) {
-
-    }
-
-    @Override
-    public void encryptFile(int id, String passPhrase, ResultCallBack callBack) {
-
-    }
-
-    @Override
-    public void decryptFile(int id, String passPhrase, ResultCallBack callBack) {
-
-    }
-
-    @Override
-    public void copyFile(int id, int dstFolder, ResultCallBack callBack) {
-
-    }
-
-    @Override
-    public void deleteFiles(int id, ResultCallBack callBack) {
-
-    }
-
-    @Override
-    public void moveFile(int id, int dstFolder, ResultCallBack callBack) {
-
-    }
-
-    @Override
-    public void updateFile(int id, String newName, ResultCallBack callBack) {
-
-    }
-
-    @Override
-    public void shareFile(int id, ResultCallBack callBack) {
-
-    }
-
-    @Override
-    public void cancelShare(int id, ResultCallBack callBack) {
+    @Override public void getFilesByFolder(int id, GetData callback) {
 
     }
 
     @Override public void createFile(UserFile file, ResultCallBack callBack) {
 
     }
+
+    @Override public void encryptFile(UserFile file,String passPhrase ,ResultCallBack callBack) {
+
+    }
+
+    @Override public void decryptFile(UserFile file, String passPhrase, ResultCallBack callBack) {
+
+    }
+
+    @Override public void copyFile(UserFile file, ResultCallBack callBack) {
+
+    }
+
+    @Override public void deleteFiles(UserFile file, ResultCallBack callBack) {
+
+    }
+
+    @Override public void moveFile(UserFile file, ResultCallBack callBack) {
+
+    }
+
+    @Override public void updateFile(UserFile file, ResultCallBack callBack) {
+
+    }
+
+    @Override public void shareFile(UserFile file, ResultCallBack callBack) {
+
+    }
+
+    @Override public void cancelShare(UserFile file, ResultCallBack callBack) {
+
+    }
+
+
 }

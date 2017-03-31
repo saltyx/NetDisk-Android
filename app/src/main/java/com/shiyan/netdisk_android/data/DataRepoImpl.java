@@ -62,45 +62,38 @@ public class DataRepoImpl implements DataSource {
 
     /**
      *
-     * @param folderName folder's name
-     * @param fromFolder
-     * @param callBack
+     * @param file the file
+     * @param callBack callback when the file created
      */
-    @Override
-    public void createFolder(String folderName, int fromFolder, ResultCallBack callBack) {
-        remoteDataSource.createFolder(folderName, fromFolder, callBack);
+    @Override public void createFolder(UserFile file, ResultCallBack callBack) {
+        remoteDataSource.createFolder(file, callBack);
     }
 
-    @Override
-    public void deleteFolder(int id, ResultCallBack callBack) {
-        remoteDataSource.deleteFolder(id, callBack);
+    @Override public void deleteFolder(UserFile file, ResultCallBack callBack) {
+        remoteDataSource.deleteFolder(file, callBack);
     }
 
     /**
      * Update the folder's name
-     * @param id folder's id
-     * @param newName new filename
+     * @param file folder's id
      * @param callBack callback when the server responses
      */
-    @Override
-    public void updateFolder(int id, String newName, ResultCallBack callBack) {
-        remoteDataSource.updateFolder(id, newName, callBack);
+    @Override public void updateFolder(UserFile file, ResultCallBack callBack) {
+        remoteDataSource.updateFolder(file, callBack);
     }
 
     /**
      * Encrypt all the files and folders in the folder
-     * @param id folder's id
+     * @param file folder's id
      * @param passPhrase password
      * @param callBack callback
      */
-    @Override
-    public void encryptFolder(int id, String passPhrase, ResultCallBack callBack) {
-        remoteDataSource.encryptFolder(id, passPhrase, callBack);
+    @Override public void encryptFolder(UserFile file, String passPhrase, ResultCallBack callBack) {
+        remoteDataSource.encryptFolder(file, passPhrase, callBack);
     }
 
-    @Override
-    public void decryptFolder(int id, String passPhrase, ResultCallBack callBack) {
-        remoteDataSource.decryptFolder(id, passPhrase, callBack);
+    @Override public void decryptFolder(UserFile file, String passPhrase, ResultCallBack callBack) {
+        remoteDataSource.decryptFolder(file, passPhrase, callBack);
     }
 
     /**
@@ -108,8 +101,7 @@ public class DataRepoImpl implements DataSource {
      * @param id folder's id
      * @param callback when the data is ready, callback
      */
-    @Override
-    public void getFolder(int id, GetData callback) {
+    @Override public void getFolder(int id, GetData callback) {
         remoteDataSource.getFolder(id, callback);
     }
 
@@ -118,61 +110,52 @@ public class DataRepoImpl implements DataSource {
      * @param id folder's id
      * @param callback when the data is loaded, callback the json string
      */
-    @Override
-    public void getFilesByFolder(int id, GetData callback) {
+    @Override public void getFilesByFolder(int id, GetData callback) {
         remoteDataSource.getFilesByFolder(id, callback);
     }
 
     /**
      * Encrypt the file in your server
-     * @param id the file's id
+     * @param file the file's id
      * @param passPhrase password
      * @param callBack when the encryption is done, callback
      */
-    @Override
-    public void encryptFile(int id, String passPhrase, ResultCallBack callBack) {
-        remoteDataSource.encryptFile(id, passPhrase, callBack);
+    @Override public void encryptFile(UserFile file, String passPhrase, ResultCallBack callBack) {
+        remoteDataSource.encryptFile(file, passPhrase, callBack);
     }
 
     /**
      * Decrypted the file in your server
-     * @param id the file's id
+     * @param file the file's id
      * @param passPhrase password
      * @param callBack when the decryption is done, callback
      */
-    @Override
-    public void decryptFile(int id, String passPhrase, ResultCallBack callBack) {
-        remoteDataSource.decryptFile(id, passPhrase, callBack);
+    @Override public void decryptFile(UserFile file, String passPhrase, ResultCallBack callBack) {
+        remoteDataSource.decryptFile(file, passPhrase, callBack);
     }
 
-    @Override
-    public void copyFile(int id, int dstFolder, ResultCallBack callBack) {
-
-    }
-
-    @Override
-    public void deleteFiles(int id, ResultCallBack callBack) {
+    @Override public void copyFile(UserFile file, ResultCallBack callBack) {
 
     }
 
-    @Override
-    public void moveFile(int id, int dstFolder, ResultCallBack callBack) {
+    @Override public void deleteFiles(UserFile file, ResultCallBack callBack) {
 
     }
 
-    @Override
-    public void updateFile(int id, String newName, ResultCallBack callBack) {
-        remoteDataSource.updateFile(id, newName, callBack);
+    @Override public void moveFile(UserFile file, ResultCallBack callBack) {
+
     }
 
-    @Override
-    public void shareFile(int id, ResultCallBack callBack) {
-        remoteDataSource.shareFile(id, callBack);
+    @Override public void updateFile(UserFile file, ResultCallBack callBack) {
+        remoteDataSource.updateFile(file, callBack);
     }
 
-    @Override
-    public void cancelShare(int id, ResultCallBack callBack) {
-        remoteDataSource.cancelShare(id, callBack);
+    @Override public void shareFile(UserFile file, ResultCallBack callBack) {
+        remoteDataSource.shareFile(file, callBack);
+    }
+
+    @Override public void cancelShare(UserFile file, ResultCallBack callBack) {
+        remoteDataSource.cancelShare(file, callBack);
     }
 
     @Override public void createFile(UserFile file, ResultCallBack callBack) {
