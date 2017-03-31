@@ -72,6 +72,27 @@ public class UserFile implements Parcelable {
 
     }
 
+    public UserFile(int id, String fileName, long fileSize, boolean isFolder, int fromFolder,
+                    boolean isShared, boolean isEncrypted, String downloadLink, int downloadTimes,
+                    String createAt, String updateAt, String sha256, String iv,
+                    String pwd, String remark) {
+        this.id = id;
+        this.fileName = fileName;
+        this.fileSize = fileSize;
+        this.isFolder = isFolder;
+        this.fromFolder = fromFolder;
+        this.isShared = isShared;
+        this.isEncrypted = isEncrypted;
+        this.downloadLink = downloadLink;
+        this.downloadTimes = downloadTimes;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+        this.sha256 = sha256;
+        this.iv = iv;
+        this.pwd = pwd;
+        this.remark = remark;
+    }
+
     public UserFile(Parcel in) {
         Bundle bundle = in.readBundle(getClass().getClassLoader());
         id = bundle.getInt(KEY_ID);

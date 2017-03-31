@@ -28,6 +28,7 @@ import android.support.annotation.Nullable;
 
 import com.shiyan.netdisk_android.model.UserFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +39,11 @@ import java.util.List;
 public interface DataSource {
 
     String JSON_EXCEPTION = "JSON_EXCEPTION";
+
+    interface LoadData<T> {
+        void onLoaded(ArrayList<T> data);
+        void onDataNotAvailable(@Nullable String msg);
+    }
 
     interface GetData<T> {
         void onLoaded(T data);
@@ -55,7 +61,7 @@ public interface DataSource {
     void encryptFolder(UserFile file,String passPhrase, ResultCallBack callBack);
     void decryptFolder(UserFile file,String passPhrase, ResultCallBack callBack);
     void getFolder(int id, GetData callback);
-    void getFilesByFolder(int id, GetData callback);
+    void getFilesByFolder(int id, LoadData callback);
 
     void createFile(UserFile file, ResultCallBack callBack);
     void encryptFile(UserFile file,String passPhrase, ResultCallBack callBack);

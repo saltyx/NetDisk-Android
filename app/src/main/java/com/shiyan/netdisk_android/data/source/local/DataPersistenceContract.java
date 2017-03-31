@@ -31,26 +31,26 @@ import android.provider.BaseColumns;
  * Blog    https://saltyx.github.io
  */
 
-public final class DataPersistenceContract {
+final class DataPersistenceContract {
 
     private DataPersistenceContract() {}
 
-    public static abstract class FilesEntry implements BaseColumns {
+    static abstract class FilesEntry implements BaseColumns {
 
-        public static final String TABLE_NAME = "files";
-        public static final String COLUMN_NAME_ID = "id";
-        public static final String COLUMN_NAME_NAME = "file_name";
-        public static final String COLUMN_NAME_FILE_SIZE = "file_size";
-        public static final String COLUMN_NAME_IS_FOLDER = "is_folder";
-        public static final String COLUMN_NAME_FROM_FOLDER = "from_folder";
-        public static final String COLUMN_NAME_IS_SHARED = "is_shared";
-        public static final String COLUMN_NAME_IS_ENCRYPTED = "is_encrypted";
-        public static final String COLUMN_NAME_DOWNLOAD_LINK = "download_link";
-        public static final String COLUMN_NAME_DOWNLOAD_TIMES = "download_times";
-        public static final String COLUMN_NAME_CREATE_AT = "create_at";
-        public static final String COLUMN_NAME_UPDATE_AT = "update_at";
-        public static final String COLUMN_NAME_IV = "iv";
-        public static final String COLUMN_NAME_SHA256 = "sha256";
+        static final String TABLE_NAME = "files";
+        static final String COLUMN_NAME_ID = "id";
+        static final String COLUMN_NAME_NAME = "file_name";
+        static final String COLUMN_NAME_FILE_SIZE = "file_size";
+        static final String COLUMN_NAME_IS_FOLDER = "is_folder";
+        static final String COLUMN_NAME_FROM_FOLDER = "from_folder";
+        static final String COLUMN_NAME_IS_SHARED = "is_shared";
+        static final String COLUMN_NAME_IS_ENCRYPTED = "is_encrypted";
+        static final String COLUMN_NAME_DOWNLOAD_LINK = "download_link";
+        static final String COLUMN_NAME_DOWNLOAD_TIMES = "download_times";
+        static final String COLUMN_NAME_CREATE_AT = "create_at";
+        static final String COLUMN_NAME_UPDATE_AT = "update_at";
+        static final String COLUMN_NAME_IV = "iv";
+        static final String COLUMN_NAME_SHA256 = "sha256";
 
     }
 }

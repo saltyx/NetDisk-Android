@@ -90,6 +90,16 @@ public class SerializeUserFile {
         return result;
     }
 
+    public static List<UserFile> serializeFolder(List<UserFile> list) {
+        List<UserFile> result = new ArrayList<>();
+        for (UserFile file:list) {
+            if (file.isFolder()) {
+                result.add(file);
+            }
+        }
+        return result;
+    }
+
     public static List<UserFile> serializeFile(String data) throws JSONException {
         List<UserFile> list = serialize(data);
         List<UserFile> result = new ArrayList<>();
@@ -102,4 +112,13 @@ public class SerializeUserFile {
         return result;
     }
 
+    public static List<UserFile> serializeFile(List<UserFile> list) {
+        List<UserFile> result = new ArrayList<>();
+        for (UserFile file:list) {
+            if (!file.isFolder()) {
+                result.add(file);
+            }
+        }
+        return result;
+    }
 }

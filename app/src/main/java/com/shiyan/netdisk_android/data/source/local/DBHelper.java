@@ -33,7 +33,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Blog    https://saltyx.github.io
  */
 
-public class DBHelper extends SQLiteOpenHelper {
+class DBHelper extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 1;
     private static final String DB_NAME = "NetDisk.db";
@@ -59,7 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     DataPersistenceContract.FilesEntry.COLUMN_NAME_SHA256 + TEXT_TYPE +
                     " )";
 
-    public DBHelper(Context context) {
+    DBHelper(Context context) {
         super(context, DB_NAME,null, DB_VERSION);
     }
 

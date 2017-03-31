@@ -110,7 +110,8 @@ public class DataRepoImpl implements DataSource {
      * @param id folder's id
      * @param callback when the data is loaded, callback the json string
      */
-    @Override public void getFilesByFolder(int id, GetData callback) {
+    @SuppressWarnings("unchecked")
+    @Override public void getFilesByFolder(int id, LoadData callback) {
         remoteDataSource.getFilesByFolder(id, callback);
     }
 

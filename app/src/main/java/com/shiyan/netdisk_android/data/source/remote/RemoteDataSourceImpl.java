@@ -32,11 +32,13 @@ import com.shiyan.netdisk_android.data.DataSource;
 import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.CallBack;
 import com.shiyan.netdisk_android.utils.NetHelper;
+import com.shiyan.netdisk_android.utils.SerializeUserFile;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -178,7 +180,7 @@ public class RemoteDataSourceImpl implements DataSource {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void getFilesByFolder(int id, final GetData callback) {
+    public void getFilesByFolder(int id, final LoadData callback) {
         netHelper.getFilesByFolder(id, new CallBack() {
             @Override
             public void success(@NonNull String data) {
@@ -186,7 +188,8 @@ public class RemoteDataSourceImpl implements DataSource {
                     Log.i(TAG, data);
                     JSONObject obj = new JSONObject(data);
                     String info = obj.getString("info");
-                    callback.onLoaded(info);
+                    ArrayList<UserFile> files = (ArrayList<UserFile>) SerializeUserFile.serialize(info);
+                    callback.onLoaded(files);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     callback.onDataNotAvailable(e.toString());
