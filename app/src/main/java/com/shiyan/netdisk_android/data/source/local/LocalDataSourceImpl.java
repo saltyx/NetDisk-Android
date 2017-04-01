@@ -180,7 +180,10 @@ public class LocalDataSourceImpl implements DataSource {
                 COLUMN_NAME_SHA256              ,
         };
 
-        Cursor c = db.query(TABLE_NAME, projection,null,null,null,null,null);
+        String selection = COLUMN_NAME_ID + " = ? ";
+        String[] args = {String.valueOf(id)};
+
+        Cursor c = db.query(TABLE_NAME, projection,selection,args,null,null,null);
 
         if (c== null || c.getCount() <= 0) return null;
 
