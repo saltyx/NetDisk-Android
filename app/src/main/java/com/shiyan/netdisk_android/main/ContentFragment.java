@@ -85,7 +85,7 @@ import static com.vincent.filepicker.activity.VideoPickActivity.IS_NEED_CAMERA;
  */
 public class ContentFragment extends Fragment implements MainContract.View , SwipeRefreshLayout.OnRefreshListener {
 
-    final String TAG = getClass().getName();
+    public final String TAG = getClass().getName();
     final static String KEY_BUNDLE = "KEY_BUNDLE";
     List<BaseFile> filePaths;
 
@@ -339,9 +339,8 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
 
     public void updateFiles(ArrayList<UserFile> files) {
         try {
-            data = files;
+            data = new ArrayList<>(files);
             allFileData = SerializeUserFile.serializeFile(files);
-            allFolderData = SerializeUserFile.serializeFolder(files);
 
             if (mRecentFileAdapter == null) {
                 mRecentFileAdapter = new RecentFileAdapter(data, false);
@@ -366,7 +365,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         }
     }
 
-    public void updateFolder(List<UserFile> folders) {
+    public void updateFolder(ArrayList<UserFile> folders) {
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -376,7 +375,6 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         try {
             isGrid = true;
             allFolderData = SerializeUserFile.serializeFolder(folders);
-            Log.i(TAG, "updateFolder: ".concat(String.valueOf(allFolderData.size())));
             if (mFolderAdapter == null) {
                 mFolderAdapter = new FolderAdapter(allFolderData,
                         new FolderAdapter.CallBack() {

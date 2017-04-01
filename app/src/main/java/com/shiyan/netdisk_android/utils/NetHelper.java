@@ -248,6 +248,9 @@ public class NetHelper {
         buildRequest(buildBaseFileUrl("shareOrCancel/cancel"), buildCancelSharingFileParam(id), Method.POST, callBack);
     }
 
+    public void getFile(int id, final CallBack callBack) throws JSONException {
+        buildRequest(buildBaseFileUrl("%d",id),null, Method.GET, callBack);
+    }
 
     private void buildRequest(String url, String data,Method method, final CallBack callBack) {
         Request.Builder base = new Request.Builder()
