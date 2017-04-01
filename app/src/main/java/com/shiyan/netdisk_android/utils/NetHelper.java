@@ -24,6 +24,10 @@
 
 package com.shiyan.netdisk_android.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.annotation.Nullable;
+
 import com.shiyan.netdisk_android.SecuDiskApplication;
 import com.shiyan.netdisk_android.model.UserFile;
 
@@ -32,6 +36,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -248,8 +253,18 @@ public class NetHelper {
         buildRequest(buildBaseFileUrl("shareOrCancel/cancel"), buildCancelSharingFileParam(id), Method.POST, callBack);
     }
 
-    public void getFile(int id, final CallBack callBack) throws JSONException {
-        buildRequest(buildBaseFileUrl("%d",id),null, Method.GET, callBack);
+    public Bitmap getFile(int id) throws JSONException, IOException {
+        Request request = new Request.Builder()
+                .url(buildBaseFileUrl("%d", id))
+                .header("Authorization", String.format("Token token=%s",SecuDiskApplication.Token))
+                .get().build();
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            InputStream inputStream = response.body().byteStream();
+            return BitmapFactory.decodeStream(inputStream);
+        } else {
+            return null;
+        }
     }
 
     private void buildRequest(String url, String data,Method method, final CallBack callBack) {
@@ -380,5 +395,10 @@ public class NetHelper {
         }
 
         return String.format(Locale.US, base.concat(param), SecuDiskApplication.IP, SecuDiskApplication.Port, id[0]);
+    }
+
+    public interface GetImageCallBack {
+        void onImageLoaded(Bitmap image);
+        void onError(@Nullable String msg);
     }
 }

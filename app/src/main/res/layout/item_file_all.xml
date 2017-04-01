@@ -27,7 +27,7 @@
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     xmlns:tools="http://schemas.android.com/tools"
                                     android:layout_width="match_parent"
-                                    android:layout_height="160dp"
+                                    android:layout_height="270dp"
                                     android:layout_marginEnd="0dp"
                                     android:layout_marginStart="4dp"
                                     android:background="@color/accent"
@@ -43,19 +43,22 @@
         <ImageView
             android:id="@+id/file_image"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="210dp"
             android:layout_marginEnd="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="-31dp"
+            android:adjustViewBounds="true"
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_weight="1"
             app:srcCompat="@android:drawable/ic_input_get"
-            />
+            tools:scaleX="1"/>
 
         <TextView
             android:id="@+id/file_name"
@@ -90,7 +93,7 @@
             android:layout_marginRight="0dp"
             android:layout_marginTop="8dp"
             android:background="@color/bg_gray"
-            android:gravity="right|center_vertical"
+            android:gravity="end|center_vertical"
             android:maxLines="1"
             android:text=""
             android:textAlignment="gravity"

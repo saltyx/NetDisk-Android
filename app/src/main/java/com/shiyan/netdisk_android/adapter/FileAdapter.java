@@ -24,16 +24,24 @@
 
 package com.shiyan.netdisk_android.adapter;
 
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.model.UserFile;
+import com.shiyan.netdisk_android.utils.ImageLoader;
 import com.shiyan.netdisk_android.utils.Utils;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,6 +60,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.MHolder> imple
 
         @BindView(R.id.file_name) TextView mFileName;
         @BindView(R.id.file_size) TextView mFileSize;
+        @BindView(R.id.file_image) ImageView mFileImage;
 
         MHolder(View item) {
             super(item);
@@ -70,10 +79,16 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.MHolder> imple
 
     }
 
-    @Override public void onBindViewHolder(MHolder holder, int position) {
+    @Override public void onBindViewHolder(final MHolder holder, int position) {
         UserFile file = data.get(position);
         holder.mFileName.setText(file.getFileName());
         holder.mFileSize.setText(Utils.calculateFileSize(file.getFileSize()));
+        if (!Utils.isImage(file.getFileName())) {
+            holder.mFileImage.setImageResource(R.drawable.ic_note_black_24dp);
+        } else {
+            DownLoadImageTask action = new DownLoadImageTask(holder.mFileImage);
+            action.execute(file.getId());
+        }
     }
 
     @Override public int getItemCount() {
@@ -116,4 +131,5 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.MHolder> imple
         data.add(file);
         notifyDataSetChanged();
     }
+
 }

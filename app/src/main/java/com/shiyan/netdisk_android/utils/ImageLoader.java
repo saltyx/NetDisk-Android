@@ -24,44 +24,45 @@
 
 package com.shiyan.netdisk_android.utils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.LruCache;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class Utils {
+public class ImageLoader {
 
-    private static String[] IMAGE_SUFFIX = {"jpg","png","jpeg","bmp"};
-    /**
-     * get current tile
-     * @return time
-     */
-    public static String getNowTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-        Date curDate = new Date(System.currentTimeMillis());
-        return formatter.format(curDate);
+    private LruCache<Integer ,Bitmap> mCache;
+
+    public static final long LRU_CACHE_SIZE = Runtime.getRuntime().maxMemory()/8;
+
+    private ImageLoader() {
+        mCache = new LruCache<>((int)LRU_CACHE_SIZE);
     }
 
-    public static String calculateFileSize(long size) {
-        double kb =size/1024;
-        double mb = kb/1024;
-        double gb = mb/1024;
-        if (mb < 1) return String.valueOf(kb).concat("KB");
-        if (gb < 1) return String.valueOf(mb).concat("MB");
-        return String.valueOf(gb).concat("GB");
-
+    public static ImageLoader getInstance() {
+        return ILHolder.sInstance;
     }
 
-    public static boolean isImage(String path) {
-        String[] params = path.split("\\.");
-        if (params.length == 1) return false;
-        for (String str:IMAGE_SUFFIX) {
-            if (params[params.length-1].contentEquals(str)) return true;
-        }
-        return false;
+    private static class ILHolder {
+        private final static ImageLoader sInstance = new ImageLoader();
+    }
+
+    public Bitmap getImage(final int id) throws JSONException, IOException {
+        Bitmap result = mCache.get(id);
+        if (result != null) return result;
+        result = NetHelper.getInstance().getFile(id);
+        if (result == null) return null;
+        mCache.put(id, result);
+        return result;
+
     }
 }

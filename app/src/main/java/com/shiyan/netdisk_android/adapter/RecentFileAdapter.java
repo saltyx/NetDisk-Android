@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.model.UserFile;
+import com.shiyan.netdisk_android.utils.Utils;
 
 import java.util.List;
 
@@ -133,9 +134,19 @@ public class RecentFileAdapter extends RecyclerView.Adapter<RecentFileAdapter.Fi
 
     @Override
     public void onBindViewHolder(FileViewHolder holder, int position) {
+        UserFile file = data.get(position);
         holder.fileName.setText(data.get(position).getFileName());
         String updatedTime = data.get(position).getUpdateAt();
         holder.updatedTime.setText("updated at ".concat(updatedTime == null || updatedTime.length() == 0 ? "\njust now" : updatedTime));
+        if (file.isFolder()) {
+            holder.fileImage.setImageResource(R.drawable.ic_folder_black_24dp);
+        }
+        else if (!Utils.isImage(file.getFileName())) {
+            holder.fileImage.setImageResource(R.drawable.ic_note_black_24dp);
+        } else {
+            DownLoadImageTask action = new DownLoadImageTask(holder.fileImage);
+            action.execute(file.getId());
+        }
     }
 
     @Override

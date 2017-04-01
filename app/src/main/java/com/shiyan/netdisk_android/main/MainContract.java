@@ -24,6 +24,8 @@
 
 package com.shiyan.netdisk_android.main;
 
+import android.graphics.Bitmap;
+
 import com.shiyan.netdisk_android.BasePresenter;
 import com.shiyan.netdisk_android.BaseView;
 import com.shiyan.netdisk_android.model.UserFile;

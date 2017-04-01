@@ -32,8 +32,11 @@ import com.shiyan.netdisk_android.SecuDiskApplication;
 import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.data.DataSource;
 import com.shiyan.netdisk_android.model.UserFile;
+import com.shiyan.netdisk_android.utils.SerializeServerBack;
 import com.shiyan.netdisk_android.utils.Utils;
 import com.vincent.filepicker.filter.entity.BaseFile;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -258,8 +261,13 @@ class MainPresenter implements MainContract.Presenter {
             file1.setUpdateAt(Utils.getNowTime());
             mDataRepo.createFile(file1, new DataSource.ResultCallBack() {
                 @Override public void onSuccess(@Nullable String success) {
-                    mMainView.userFeedBack("success!", MainContract.FEED_BACK_TOAST_SHORT);
-                    mMainView.add(file1);
+                    try {
+                        file1.setId(SerializeServerBack.getSuccessResponseInt(success));
+                        mMainView.userFeedBack("success!", MainContract.FEED_BACK_TOAST_SHORT);
+                        mMainView.add(file1);
+                    } catch (JSONException e) {
+                        mMainView.userFeedBack("JSON EXCEPTION",MainContract.FEED_BACK_TOAST_SHORT);
+                    }
                 }
 
                 @Override public void onError(@Nullable String error) {

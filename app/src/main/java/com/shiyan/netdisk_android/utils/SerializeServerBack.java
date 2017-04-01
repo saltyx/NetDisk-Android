@@ -24,44 +24,19 @@
 
 package com.shiyan.netdisk_android.utils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
+ * this class is used to handle the JSON returned by server
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class Utils {
+public class SerializeServerBack {
 
-    private static String[] IMAGE_SUFFIX = {"jpg","png","jpeg","bmp"};
-    /**
-     * get current tile
-     * @return time
-     */
-    public static String getNowTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-        Date curDate = new Date(System.currentTimeMillis());
-        return formatter.format(curDate);
-    }
-
-    public static String calculateFileSize(long size) {
-        double kb =size/1024;
-        double mb = kb/1024;
-        double gb = mb/1024;
-        if (mb < 1) return String.valueOf(kb).concat("KB");
-        if (gb < 1) return String.valueOf(mb).concat("MB");
-        return String.valueOf(gb).concat("GB");
-
-    }
-
-    public static boolean isImage(String path) {
-        String[] params = path.split("\\.");
-        if (params.length == 1) return false;
-        for (String str:IMAGE_SUFFIX) {
-            if (params[params.length-1].contentEquals(str)) return true;
-        }
-        return false;
+    public static int getSuccessResponseInt(String json) throws JSONException {
+        JSONObject jsonObject = new JSONObject(json);
+        return jsonObject.getInt("info");
     }
 }

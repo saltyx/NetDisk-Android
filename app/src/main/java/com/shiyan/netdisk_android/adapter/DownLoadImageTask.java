@@ -22,46 +22,38 @@
  * SOFTWARE.
  */
 
-package com.shiyan.netdisk_android.utils;
+package com.shiyan.netdisk_android.adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.widget.ImageView;
+
+import com.shiyan.netdisk_android.utils.ImageLoader;
 
 /**
  * Contact shiyan233@hotmail.com
  * Blog    https://saltyx.github.io
  */
 
-public class Utils {
+class DownLoadImageTask extends AsyncTask<Integer,Void,Bitmap> {
 
-    private static String[] IMAGE_SUFFIX = {"jpg","png","jpeg","bmp"};
-    /**
-     * get current tile
-     * @return time
-     */
-    public static String getNowTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-        Date curDate = new Date(System.currentTimeMillis());
-        return formatter.format(curDate);
+    private ImageView imageView;
+
+    DownLoadImageTask(ImageView view) {
+        imageView = view;
     }
 
-    public static String calculateFileSize(long size) {
-        double kb =size/1024;
-        double mb = kb/1024;
-        double gb = mb/1024;
-        if (mb < 1) return String.valueOf(kb).concat("KB");
-        if (gb < 1) return String.valueOf(mb).concat("MB");
-        return String.valueOf(gb).concat("GB");
-
-    }
-
-    public static boolean isImage(String path) {
-        String[] params = path.split("\\.");
-        if (params.length == 1) return false;
-        for (String str:IMAGE_SUFFIX) {
-            if (params[params.length-1].contentEquals(str)) return true;
+    @Override protected Bitmap doInBackground(Integer... params) {
+        try {
+            return ImageLoader.getInstance().getImage(params[0]);
+        } catch (Exception e) {
+            return null;
         }
-        return false;
     }
+
+    @Override protected void onPostExecute(Bitmap bitmap) {
+        if (bitmap == null) return;
+        imageView.setImageBitmap(bitmap);
+    }
+
 }
