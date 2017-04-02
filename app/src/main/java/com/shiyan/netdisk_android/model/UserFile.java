@@ -97,7 +97,7 @@ public class UserFile implements Parcelable {
         Bundle bundle = in.readBundle(getClass().getClassLoader());
         id = bundle.getInt(KEY_ID);
         fileName = bundle.getString(KEY_FILENAME);
-        fileSize = bundle.getInt(KEY_FILESIZE);
+        fileSize = bundle.getLong(KEY_FILESIZE);
         isFolder = bundle.getBoolean(KEY_IS_FOLDER);
         fromFolder = bundle.getInt(KEY_FROM_FOLDER);
         isShared = bundle.getBoolean(KEY_IS_SHARED);

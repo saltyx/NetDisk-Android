@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-    package="com.shiyan.netdisk_android">
+          package="com.shiyan.netdisk_android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:name=".SecuDiskApplication"
@@ -16,20 +16,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.MainActivity" />
+        <activity android:name=".main.MainActivity"/>
         <activity
             android:name=".welcome.WelcomeActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".setting.SettingActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"/>
+        <activity android:name=".detailed.DetailedActivity"
+            android:parentActivityName=".main.MainActivity">
+        </activity>
     </application>
 
 </manifest>

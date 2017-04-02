@@ -24,9 +24,9 @@
 
 package com.shiyan.netdisk_android.adapter;
 
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
-import android.support.annotation.Nullable;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,17 +35,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shiyan.netdisk_android.R;
+import com.shiyan.netdisk_android.detailed.DetailedActivity;
 import com.shiyan.netdisk_android.model.UserFile;
-import com.shiyan.netdisk_android.utils.ImageLoader;
 import com.shiyan.netdisk_android.utils.Utils;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -55,16 +53,30 @@ import butterknife.ButterKnife;
 public class FileAdapter extends RecyclerView.Adapter<FileAdapter.MHolder> implements BaseAdapter {
 
     private List<UserFile> data;
+
     final String TAG = getClass().getName();
+
     static class MHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.file_name) TextView mFileName;
         @BindView(R.id.file_size) TextView mFileSize;
         @BindView(R.id.file_image) ImageView mFileImage;
 
-        MHolder(View item) {
+        @OnClick(R.id.file_image) void onClick() {
+            Intent intent = new Intent(context, DetailedActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(DetailedActivity.KEY_USER, mFile);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+        }
+
+        private Context context;
+        private UserFile mFile;
+
+        MHolder(View item, Context context) {
             super(item);
             ButterKnife.bind(this,item);
+            this.context = context;
         }
 
     }
@@ -75,7 +87,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.MHolder> imple
 
     @Override public MHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return  new FileAdapter.MHolder(LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.item_file_all, parent, false));
+                R.layout.item_file_all, parent, false), parent.getContext());
 
     }
 
@@ -83,6 +95,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.MHolder> imple
         UserFile file = data.get(position);
         holder.mFileName.setText(file.getFileName());
         holder.mFileSize.setText(Utils.calculateFileSize(file.getFileSize()));
+        holder.mFile = file;
         if (!Utils.isImage(file.getFileName())) {
             holder.mFileImage.setImageResource(R.drawable.ic_note_black_24dp);
         } else {
