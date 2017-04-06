@@ -34,7 +34,7 @@ import java.util.Locale;
  */
 
 public class Utils {
-
+    private static int FILE_NAME_MAX_LEN = 15;
     private static String[] IMAGE_SUFFIX = {"jpg","png","jpeg","bmp"};
     /**
      * get current tile
@@ -63,5 +63,17 @@ public class Utils {
             if (params[params.length-1].contentEquals(str)) return true;
         }
         return false;
+    }
+
+    public static String getFileType(String filename) {
+        String[] params = filename.split("\\.");
+        if (params.length == 1) return "file";
+        return params[params.length-1];
+    }
+
+    public static String getProperLengthFileName(String filename) {
+        if (filename.length() <= FILE_NAME_MAX_LEN ) return filename;
+        return filename.substring(0, FILE_NAME_MAX_LEN).concat("...");
+
     }
 }

@@ -29,12 +29,15 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.data.DataSource;
+import com.shiyan.netdisk_android.dialog.DetailInfoDialogFragment;
 import com.shiyan.netdisk_android.dialog.WithOneInputDialogFragment;
 import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.ImageLoader;
@@ -42,6 +45,7 @@ import com.shiyan.netdisk_android.utils.Inject;
 import com.shiyan.netdisk_android.utils.Utils;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -56,106 +60,70 @@ public class DetailedActivity extends AppCompatActivity {
 
     private DataRepoImpl mDB;
 
-    @BindView(R.id.name) TextView mFileName;
-    @BindView(R.id.delete) TextView mDeleteFile;
-    @BindView(R.id.lock) TextView mLock;
-    @BindView(R.id.lock_switch) SwitchCompat mSwitch;
-    @BindView(R.id.rename) TextView mRename;
-    @BindView(R.id.share) TextView mShare;
-    @BindView(R.id.file_image) ImageView mImage;
+    @BindView(R.id.title) TextView mTitleView;
+    @BindView(R.id.file_image) ImageView mFileImageView;
+    @BindView(R.id.name) TextView mFileNameTextView;
+    @BindView(R.id.type) TextView mFileTypeTextView;
+    @BindView(R.id.size) TextView mFileSizeTextView;
+    @BindView(R.id.create_time) TextView mFileCreateTimeTextView;
+    @BindView(R.id.update_time) TextView mFileUpdateTimeTextView;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
 
-    @OnClick(R.id.delete) void onDelete() {
-        if (mFile == null) return;
-        mDB.deleteFiles(mFile, new DataSource.ResultCallBack() {
-            @Override public void onSuccess(@Nullable String success) {
+    @OnClick(R.id.rename) void onRenameClick() {
+        final WithOneInputDialogFragment dialogFragment = WithOneInputDialogFragment.newInstance(mFile);
+        dialogFragment.setTitle("Rename ".concat(Utils.getProperLengthFileName(mFile.getFileName())))
+                .setCallBack(new WithOneInputDialogFragment.CallBack() {
+                    @Override public void onOkClick(String text) {
+                        mFile.setFileName(text);
+                        mDB.updateFile(mFile, new DataSource.ResultCallBack() {
+                            @Override public void onSuccess(@Nullable String success) {
 
-            }
+                            }
 
-            @Override public void onError(@Nullable String error) {
+                            @Override public void onError(@Nullable String error) {
 
-            }
-        });
-    }
-
-    @OnClick(R.id.lock) void onLock() {
-        if (mFile == null) return;
-        String title = "Encrypt ".concat(mFile.getFileName());
-        final boolean backup = mFile.isEncrypted();
-
-        mFile.setEncrypted(true);
-        if (mFile.isEncrypted()) {
-            title = "Decrypt ".concat(mFile.getFileName());
-            mFile.setEncrypted(false);
-        }
-        buildDialog(title, new WithOneInputDialogFragment.CallBack() {
-            @Override public void onOkClick(String text) {
-                mDB.decryptFile(mFile, text, new DataSource.ResultCallBack() {
-                    @Override public void onSuccess(@Nullable String success) {
-
+                            }
+                        });
                     }
 
-                    @Override public void onError(@Nullable String error) {
-                        mFile.setEncrypted(backup);
+                    @Override public void onCancelClick() {
+                        dialogFragment.dismiss();
                     }
                 });
-            }
+        dialogFragment.show(getFragmentManager(), TAG);
+    }
 
-            @Override public void onCancelClick() {
-
-            }
-        });
+    @OnClick(R.id.move) void onMoveClick() {
 
     }
 
-    @OnClick(R.id.rename) void onRename() {
-        if (mFile == null) return;
-        final String backup = mFile.getFileName();
-        buildDialog("Rename ".concat(mFile.getFileName()), new WithOneInputDialogFragment.CallBack() {
-            @Override public void onOkClick(String text) {
-                mFile.setFileName(text);
-                mDB.updateFile(mFile, new DataSource.ResultCallBack() {
-                    @Override public void onSuccess(@Nullable String success) {
+    @OnClick(R.id.save) void onSaveClick() {
 
-                    }
-
-                    @Override public void onError(@Nullable String error) {
-                        mFile.setFileName(backup);
-                    }
-                });
-            }
-
-            @Override public void onCancelClick() {
-
-            }
-        });
     }
 
-    @OnClick(R.id.share) void onShare() {
-        if (mFile == null) return;
-        final boolean backup = mFile.isShared();
-        String title = "Share ".concat(mFile.getFileName());
-        mFile.setShared(true);
-        if (mFile.isShared()) {
-            mFile.setShared(false);
-            title = "Private ".concat(mFile.getFileName());
-        }
-        buildDialog(title, new WithOneInputDialogFragment.CallBack() {
-            @Override public void onOkClick(String text) {
-                mDB.shareFile(mFile, new DataSource.ResultCallBack() {
-                    @Override public void onSuccess(@Nullable String success) {
+    @OnClick(R.id.delete) void onDeleteClick() {
 
-                    }
+    }
 
-                    @Override public void onError(@Nullable String error) {
-                        mFile.setShared(backup);
-                    }
-                });
-            }
-
-            @Override public void onCancelClick() {
+    @OnClick(R.id.more) void onMoreClick() {
+        final DetailInfoDialogFragment dialogFragment = DetailInfoDialogFragment.newInstance(mFile);
+        dialogFragment.setCallBack(new DetailInfoDialogFragment.OnMoreCallBack() {
+            @Override public void onDeletedClick(UserFile file) {
 
             }
-        });
+
+            @Override public void onRenameClick(UserFile file) {
+
+            }
+
+            @Override public void onEncryptOrDecryptClick(UserFile file) {
+
+            }
+
+            @Override public void onShareClick(UserFile file) {
+
+            }
+        }).show(getFragmentManager(), TAG);
     }
 
     private UserFile mFile;
@@ -165,29 +133,38 @@ public class DetailedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detailed);
         ButterKnife.bind(this);
 
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        mDB = Inject.provideDataRepo(getApplication());
         Intent intent = getIntent();
         if (intent == null) return;
         Bundle bundle = intent.getExtras();
         mFile = bundle.getParcelable(KEY_USER);
         if (mFile == null) return;
-        mFileName.setText(mFile.getFileName());
-        mSwitch.setChecked(mFile.isEncrypted());
-        mDB = Inject.provideDataRepo(getApplication());
-        if (!Utils.isImage(mFile.getFileName())) return;
-        try {
-            mImage.setImageBitmap(ImageLoader.getInstance().getImage(mFile.getId()));
-        } catch (JSONException e) {
-            e.printStackTrace();
-            mImage.setImageResource(R.drawable.ic_note_black_24dp);
-        } catch (IOException ee) {
-            mImage.setImageResource(R.drawable.ic_note_black_24dp);
+        mTitleView.setText(mFile.getFileName());
+        mFileNameTextView.setText(Utils.getProperLengthFileName(mFile.getFileName()));
+        mFileTypeTextView.setText(Utils.getFileType(mFile.getFileName()));
+        mFileSizeTextView.setText(Utils.calculateFileSize(mFile.getFileSize()));
+        mFileCreateTimeTextView.setText(mFile.getCreateAt());
+        mFileUpdateTimeTextView.setText(mFile.getUpdateAt());
+        if (Utils.isImage(mFile.getFileName())) {
+            try {
+                mFileImageView.setImageBitmap(
+                        ImageLoader.getInstance().getImage(mFile.getId()));
+            } catch (Exception e) {
+                mFileImageView.setImageResource(R.drawable.ic_note_black_24dp);
+            }
+        } else {
+            mFileImageView.setImageResource(R.drawable.ic_note_black_24dp);
         }
     }
 
-    private void buildDialog(String title, WithOneInputDialogFragment.CallBack callBack) {
-        final WithOneInputDialogFragment dialogFragment = WithOneInputDialogFragment.newInstance(mFile)
-                .setTitle(title)
-                .setCallBack(callBack);
-        dialogFragment.show(getFragmentManager(), TAG);
+    @Override public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
