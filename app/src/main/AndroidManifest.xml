@@ -30,8 +30,11 @@
         <activity
             android:name=".setting.SettingActivity"
             android:launchMode="singleTask"/>
-        <activity android:name=".detailed.DetailedActivity"
+        <activity
+            android:name=".detailed.DetailedActivity"
             android:parentActivityName=".main.MainActivity">
+        </activity>
+        <activity android:name=".detailed.ChooseFolderActivity">
         </activity>
     </application>
 

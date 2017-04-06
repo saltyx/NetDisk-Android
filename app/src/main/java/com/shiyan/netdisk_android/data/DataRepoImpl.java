@@ -144,7 +144,7 @@ public class DataRepoImpl implements DataSource {
     }
 
     @Override public void moveFile(UserFile file, ResultCallBack callBack) {
-
+        remoteDataSource.moveFile(file, callBack);
     }
 
     @Override public void updateFile(UserFile file, ResultCallBack callBack) {

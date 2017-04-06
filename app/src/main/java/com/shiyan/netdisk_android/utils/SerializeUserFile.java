@@ -123,4 +123,20 @@ public class SerializeUserFile {
         }
         return result;
     }
+
+    public static List<UserFile> sort(List<UserFile> files) {
+        List<UserFile> temp1 = new ArrayList<>();
+        List<UserFile> temp2 = new ArrayList<>();
+        for (UserFile f: files) {
+            if (f.isFolder()) {
+                temp1.add(f);
+            } else {
+                temp2.add(f);
+            }
+        }
+        temp1.addAll(temp2);
+        files.clear();
+        temp2.clear();
+        return temp1;
+    }
 }

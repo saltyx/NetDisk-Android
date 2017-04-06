@@ -25,6 +25,8 @@
 package com.shiyan.netdisk_android.detailed;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.data.DataRepoImpl;
@@ -48,6 +51,8 @@ import org.json.JSONException;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +60,10 @@ import butterknife.OnClick;
 
 public class DetailedActivity extends AppCompatActivity {
 
+    public static final int FEED_BACK = 0x0001;
+
     public static final String KEY_USER = "USER_KEY";
+    public static final int REQUEST_CODE = 1;
     public final String TAG = getClass().getName();
 
     private DataRepoImpl mDB;
@@ -77,11 +85,23 @@ public class DetailedActivity extends AppCompatActivity {
                         mFile.setFileName(text);
                         mDB.updateFile(mFile, new DataSource.ResultCallBack() {
                             @Override public void onSuccess(@Nullable String success) {
-
+                                Message msg = Message.obtain();
+                                msg.arg1 = FEED_BACK;
+                                Bundle bundle = new Bundle();
+                                bundle.putString(KEY_USER, "success");
+                                msg.setData(bundle);
+                                mHandler.sendMessage(msg);
+                                dialogFragment.dismiss();
                             }
 
                             @Override public void onError(@Nullable String error) {
-
+                                Message msg = Message.obtain();
+                                msg.arg1 = FEED_BACK;
+                                Bundle bundle = new Bundle();
+                                bundle.putString(KEY_USER, "success");
+                                msg.setData(bundle);
+                                mHandler.sendMessage(msg);
+                                dialogFragment.dismiss();
                             }
                         });
                     }
@@ -94,7 +114,8 @@ public class DetailedActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.move) void onMoveClick() {
-
+        Intent intent = new Intent(this, ChooseFolderActivity.class);
+        startActivityForResult(intent,REQUEST_CODE);
     }
 
     @OnClick(R.id.save) void onSaveClick() {
@@ -163,8 +184,70 @@ public class DetailedActivity extends AppCompatActivity {
         }
     }
 
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    int id = data.getIntExtra(ChooseFolderActivity.KEY_EXTRAS, -1);
+                    if (id != -1) {
+                        final int backup = mFile.getFromFolder();
+                        mFile.setFromFolder(id);
+                        mDB.moveFile(mFile, new DataSource.ResultCallBack() {
+                            @Override public void onSuccess(@Nullable String success) {
+                                Message msg = Message.obtain();
+                                msg.arg1 = FEED_BACK;
+                                Bundle bundle = new Bundle();
+                                bundle.putString(KEY_USER, "success");
+                                msg.setData(bundle);
+                                mHandler.sendMessage(msg);
+                            }
+
+                            @Override public void onError(@Nullable String error) {
+                                Message msg = Message.obtain();
+                                msg.arg1 = FEED_BACK;
+                                Bundle bundle = new Bundle();
+                                bundle.putString(KEY_USER, error);
+                                msg.setData(bundle);
+                                mHandler.sendMessage(msg);
+                                mFile.setFromFolder(backup);
+                            }
+                        });
+                    }
+                    break;
+                case RESULT_CANCELED:
+                    feedback("canceled");
+                    break;
+            }
+        }
+    }
+
     @Override public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
+
+    private void feedback(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private static class MHandler extends Handler {
+        private final WeakReference<DetailedActivity> reference;
+
+        MHandler(DetailedActivity activity) {
+            this.reference = new WeakReference<>(activity);
+        }
+
+        @Override public void handleMessage(Message msg) {
+            DetailedActivity activity = reference.get();
+            if (activity == null) return;
+            switch (msg.arg1) {
+                case FEED_BACK:
+                    activity.feedback(msg.getData().getString(KEY_USER));
+                    break;
+            }
+        }
+    }
+
+    private final Handler mHandler = new DetailedActivity.MHandler(this);
+
 }
