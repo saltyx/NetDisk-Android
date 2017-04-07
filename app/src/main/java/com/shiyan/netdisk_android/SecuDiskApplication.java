@@ -26,6 +26,7 @@ package com.shiyan.netdisk_android;
 
 import android.app.Application;
 
+import com.liulishuo.filedownloader.FileDownloader;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.Stack;
@@ -50,6 +51,7 @@ public class SecuDiskApplication extends Application {
         FolderTrack.push(CurrentFolder);
         if (LeakCanary.isInAnalyzerProcess(this)) return;
         LeakCanary.install(this);
+        FileDownloader.init(getApplicationContext());
     }
 
     public static int findPreFolder() {

@@ -253,7 +253,7 @@ public class NetHelper {
         buildRequest(buildBaseFileUrl("shareOrCancel/cancel"), buildCancelSharingFileParam(id), Method.POST, callBack);
     }
 
-    public Bitmap getFile(int id) throws JSONException, IOException {
+    public Bitmap getImage(int id) throws JSONException, IOException {
         Request request = new Request.Builder()
                 .url(buildBaseFileUrl("%d", id))
                 .header("Authorization", String.format("Token token=%s",SecuDiskApplication.Token))
@@ -265,6 +265,14 @@ public class NetHelper {
         } else {
             return null;
         }
+    }
+
+    public void getFile(int id, Callback callback) throws JSONException, IOException {
+        Request request = new Request.Builder()
+                .url(buildBaseFileUrl("%d", id))
+                .header("Authorization", String.format("Token token=%s",SecuDiskApplication.Token))
+                .get().build();
+        client.newCall(request).enqueue(callback);
     }
 
     private void buildRequest(String url, String data,Method method, final CallBack callBack) {

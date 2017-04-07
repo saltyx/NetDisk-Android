@@ -140,7 +140,7 @@ public class DataRepoImpl implements DataSource {
     }
 
     @Override public void deleteFiles(UserFile file, ResultCallBack callBack) {
-
+        remoteDataSource.deleteFiles(file,callBack);
     }
 
     @Override public void moveFile(UserFile file, ResultCallBack callBack) {

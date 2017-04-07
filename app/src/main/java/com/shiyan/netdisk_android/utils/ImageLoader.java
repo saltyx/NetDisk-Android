@@ -25,8 +25,6 @@
 package com.shiyan.netdisk_android.utils;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.LruCache;
 
 import org.json.JSONException;
@@ -59,7 +57,7 @@ public class ImageLoader {
     public Bitmap getImage(final int id) throws JSONException, IOException {
         Bitmap result = mCache.get(id);
         if (result != null) return result;
-        result = NetHelper.getInstance().getFile(id);
+        result = NetHelper.getInstance().getImage(id);
         if (result == null) return null;
         mCache.put(id, result);
         return result;

@@ -24,6 +24,8 @@
 
 package com.shiyan.netdisk_android.utils;
 
+import com.shiyan.netdisk_android.SecuDiskApplication;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -75,5 +77,9 @@ public class Utils {
         if (filename.length() <= FILE_NAME_MAX_LEN ) return filename;
         return filename.substring(0, FILE_NAME_MAX_LEN).concat("...");
 
+    }
+
+    public static String buildBaseFileUrl(String param, int... id) {
+        return String.format(Locale.US, "http://%s:%s/v1/file/".concat(param), SecuDiskApplication.IP, SecuDiskApplication.Port, id[0]);
     }
 }

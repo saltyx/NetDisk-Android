@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shiyan.netdisk_android.R;
@@ -42,6 +43,9 @@ import com.shiyan.netdisk_android.model.UserFile;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * Contact shiyan233@hotmail.com
@@ -59,7 +63,17 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
     @BindView(R.id.lock) TextView lock;
     @BindView(R.id.rename) TextView rename;
     @BindView(R.id.share) TextView share;
+    @BindView(R.id.delete) TextView delete;
     @BindView(R.id.lock_switch) SwitchCompat lockSwitch;
+    @BindView(R.id.imageView5) ImageView deleteImage;
+    @BindView(R.id.imageView6) ImageView lockImage;
+    @BindView(R.id.imageView3) ImageView nameImage;
+    @BindView(R.id.imageView7) ImageView renameImage;
+    @BindView(R.id.imageView8) ImageView shareImage;
+    @BindView(R.id.imageView2) ImageView dividerName;
+    @BindView(R.id.imageView4) ImageView dividerDelete;
+    @BindView(R.id.imageView9) ImageView dividerLock;
+    @BindView(R.id.imageView10) ImageView dividerRename;
 
     @OnClick(R.id.delete) public void deleteFile() {
         if (file != null && callback != null) {
@@ -116,6 +130,26 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
             }
         }
 
+        name.setVisibility(showName);
+        nameImage.setVisibility(showName);
+        dividerName.setVisibility(showName);
+
+        rename.setVisibility(showRename);
+        renameImage.setVisibility(showRename);
+        dividerRename.setVisibility(showRename);
+
+        lock.setVisibility(showLock);
+        dividerLock.setVisibility(showLock);
+        lockImage.setVisibility(showLock);
+
+        lockSwitch.setVisibility(showLock);
+
+        share.setVisibility(showShare);
+        shareImage.setVisibility(showShare);
+
+        delete.setVisibility(showDelete);
+        deleteImage.setVisibility(showDelete);
+        dividerDelete.setVisibility(showDelete);
         return root;
     }
 
@@ -130,10 +164,46 @@ public class DetailInfoDialogFragment extends AttachDialogFragment {
         return this;
     }
 
+    public DetailInfoDialogFragment hideOption(int... options) {
+        for (int option:options) {
+            switch (option) {
+                case NAME:
+                    showName =GONE;
+                    break;
+                case RENAME:
+                    showRename = GONE;
+                    break;
+                case LOCK:
+                    showLock = GONE;
+                    break;
+                case SHARE:
+                    showShare = GONE;
+                    break;
+                case DELETE:
+                    showDelete = GONE;
+                    break;
+
+            }
+        }
+        return this;
+    }
+
     public interface OnMoreCallBack {
         void onDeletedClick(UserFile file);
         void onRenameClick(UserFile file);
         void onEncryptOrDecryptClick(UserFile file);
         void onShareClick(UserFile file);
     }
+
+    public static final int NAME = 0xF001;
+    public static final int RENAME= 0xF002;
+    public static final int LOCK = 0xF003;
+    public static final int SHARE = 0xF004;
+    public static final int DELETE= 0xF005;
+
+    private int showName =   VISIBLE;
+    private int showRename =VISIBLE;
+    private int showLock = VISIBLE;
+    private int showShare =VISIBLE;
+    private int showDelete =VISIBLE;
 }
