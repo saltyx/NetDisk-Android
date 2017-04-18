@@ -77,9 +77,9 @@ public class NetHelper {
     private final static String IO_ERROR = "IO_ERROR";
     private final static String RESPONSE_ERROR = "RESPONSE_ERROR";
 
-    private final String FOLDER_BASE_URL = "http://%s:%s/v1/folder/";
-    private final String FILE_BASE_URL = "http://%s:%s/v1/file/";
-    private final String UPLOAD_BASE_URL = "http://%s:%s/v1/upload/";
+    private final String FOLDER_BASE_URL = "http://%s:%s/api/v1/folder/";
+    private final String FILE_BASE_URL = "http://%s:%s/api/v1/file/";
+    private final String UPLOAD_BASE_URL = "http://%s:%s/api/v1/upload/";
 
     private final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
 
@@ -125,7 +125,7 @@ public class NetHelper {
         data.put("user", object);
 
         Request request = new Request.Builder()
-                .url(String.format("http://%s:%s/v1/login", loginModel.ip, loginModel.port))
+                .url(String.format("http://%s:%s/api/v1/login", loginModel.ip, loginModel.port))
                 .post(RequestBody.create(MediaType.parse("application/json"), data.toString()))
                 .build();
         newCall(request, callback);
