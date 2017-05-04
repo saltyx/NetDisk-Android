@@ -41,6 +41,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +117,8 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
     boolean isRefresh;
     String title;
 
+    @BindView(R.id.scroll_view) ScrollView mScrollView;
+
     @BindView(R.id.title) TextView mTitleView;
     @BindView(R.id.detailed_folder) RecyclerView mFolderRecyclerView;
     @BindView(R.id.recent_files) RecyclerView RecentFileRecyclerView;
@@ -169,7 +173,11 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
         mFolderRecyclerView.addItemDecoration(new GridSpaceItemDecoration(12));
         mFilesRView.addItemDecoration(new GridSpaceItemDecoration(12));
 
-
+        mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override public void onScrollChanged() {
+                mSwipeRefreshLayout.setEnabled(mScrollView.getScrollY() == 0);
+            }
+        });
         return root;
     }
 
@@ -415,7 +423,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                             @Override public void onItemClick(UserFile file) {
                                 mPresenter.goToNextFolder(file);
                             }
-                        });
+                        },false);
 
                 mFolderRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
                 mFolderRecyclerView.setAdapter(mFolderAdapter);
@@ -464,7 +472,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                 @Override public void onItemClick(UserFile file) {
                     mPresenter.goToNextFolder(file);
                 }
-            });
+            },false);
         }
 
         if (toGrid) {

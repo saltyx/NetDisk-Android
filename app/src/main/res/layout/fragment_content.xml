@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
-            <android.support.v4.widget.NestedScrollView
+            <ScrollView android:id="@+id/scroll_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <RelativeLayout
@@ -126,7 +126,7 @@
                         android:layout_below="@+id/textView7"
                         />
                 </RelativeLayout>
-            </android.support.v4.widget.NestedScrollView>
+            </ScrollView>
 
             <com.getbase.floatingactionbutton.FloatingActionsMenu
                 android:id="@+id/float_plus"

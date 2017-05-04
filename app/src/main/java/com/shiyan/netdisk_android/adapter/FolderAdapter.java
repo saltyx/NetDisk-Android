@@ -50,11 +50,14 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
     static class GridViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.folder_name) TextView folderName;
+        @BindView(R.id.folder_updated_time) TextView updatedTime;
 
         @OnClick(R.id.folder_name) void onItemClick() {
             callback.onItemClick(file);
         }
-
+        @OnClick(R.id.folder_updated_time) void onItemClick1() {
+            callback.onItemClick(file);
+        }
         @OnClick(R.id.show_more) void onMoreClick() {
             callback.onMoreClick(file);
         }
@@ -62,7 +65,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
         UserFile file;
         CallBack callback;
 
-        public GridViewHolder(View item, CallBack callback) {
+        GridViewHolder(View item, CallBack callback) {
             super(item);
             this.callback = callback;
             ButterKnife.bind(this, item);
@@ -71,10 +74,12 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
 
     private List<UserFile> mData;
     private CallBack mCallback;
+    private boolean mShowDetail;
 
-    public FolderAdapter(List<UserFile> data, CallBack callback) {
+    public FolderAdapter(List<UserFile> data, CallBack callback, boolean showDetail) {
         this.mData = data;
         this.mCallback = callback;
+        this.mShowDetail = showDetail;
     }
 
     @Override public void changeData(List<UserFile> data) {
@@ -124,6 +129,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.GridViewHo
         String folderName = mData.get(position).getFileName();
         holder.folderName.setText(folderName);
         holder.file = mData.get(position);
+        holder.updatedTime.setText(mData.get(position).getUpdateAt());
     }
 
     @Override
