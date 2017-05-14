@@ -27,10 +27,12 @@ package com.shiyan.netdisk_android.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +51,8 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
+    final String TAG = getClass().getName();
+
     final String KEY_CONTENT = "CONTENT";
     final String KEY_DETAILED = "DETAILED";
 
@@ -58,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     MainPresenter mPresenter;
     Menu mMenu;
+    ContentFragment contentFragment;
+    SearchResultFragment searchResultFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +75,23 @@ public class MainActivity extends AppCompatActivity {
         mainToolBar.inflateMenu(R.menu.main_toolbar_menus);
         setSupportActionBar(mainToolBar);
 
-        ContentFragment contentFragment =
+        contentFragment =
                 (ContentFragment) getSupportFragmentManager().findFragmentById(R.id.content);
-        if (contentFragment == null) {
+
+        searchResultFragment =
+                (SearchResultFragment) getSupportFragmentManager().findFragmentById(R.id.search_result);
+
+        if (null == contentFragment) {
             contentFragment = ContentFragment.newInstance();
             ActivityHelper.addFragmentToActivity(getSupportFragmentManager(),contentFragment ,R.id.content);
         }
 
+        if (null == searchResultFragment) {
+            searchResultFragment = SearchResultFragment.newInstance();
+            //ActivityHelper.addFragmentToActivity(getSupportFragmentManager(), searchResultFragment, R.id.search_result);
+        }
 
-        mPresenter = new MainPresenter(Inject.provideDataRepo(getApplication()), contentFragment);
+        mPresenter = new MainPresenter(Inject.provideDataRepo(getApplication()), contentFragment, searchResultFragment);
 
         mPresenter.start();
 
@@ -89,6 +103,18 @@ public class MainActivity extends AppCompatActivity {
         mMenu = menu;
         getMenuInflater().inflate(R.menu.main_toolbar_menus, menu);
         final MenuItem actionMenuItem = menu.findItem(R.id.action_search);
+        MenuItemCompat.setOnActionExpandListener(actionMenuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override public boolean onMenuItemActionExpand(MenuItem item) {
+                ActivityHelper.replaceFragment(getSupportFragmentManager(), contentFragment,searchResultFragment, R.id.content);
+                return true;
+            }
+
+            @Override public boolean onMenuItemActionCollapse(MenuItem item) {
+                ActivityHelper.replaceFragment(getSupportFragmentManager(),searchResultFragment, contentFragment, R.id.content);
+
+                return true;
+            }
+        });
 
         searchView = (SearchView) actionMenuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -104,10 +130,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
+                mPresenter.query(newText);
                 return false;
             }
         });
+
 
         return true;
     }

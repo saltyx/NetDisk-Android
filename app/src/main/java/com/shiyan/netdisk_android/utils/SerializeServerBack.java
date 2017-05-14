@@ -24,6 +24,7 @@
 
 package com.shiyan.netdisk_android.utils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +38,11 @@ public class SerializeServerBack {
 
     public static int getSuccessResponseInt(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
-        return jsonObject.getInt("info");
+        return jsonObject.getInt("success");
+    }
+
+    public static String getSuccessResponseInfo(String json) throws JSONException {
+        JSONObject object = new JSONObject(json);
+        return object.get("info").toString();
     }
 }

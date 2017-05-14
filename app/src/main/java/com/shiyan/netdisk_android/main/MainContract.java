@@ -66,6 +66,11 @@ public interface MainContract {
         String getTitle();
     }
 
+    interface SearchView extends BaseView <Presenter> {
+        void show(ArrayList<UserFile> data);
+        void userFeedBack(String msg);
+    }
+
     interface Presenter extends BasePresenter {
         void set(int folderId);
         void setRoot();

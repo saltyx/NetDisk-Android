@@ -68,7 +68,6 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/title"
                         />
-
                     <TextView
                         android:id="@+id/textView6"
                         android:layout_width="match_parent"
@@ -97,7 +96,15 @@
                         android:layout_marginTop="10dp"
                         android:layout_below="@+id/textView6"
                         />
+                    <LinearLayout
+                        android:id="@+id/noFolderContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="vertical"
+                        android:layout_below="@id/detailed_folder"
+                        android:visibility="gone">
 
+                    </LinearLayout>
                     <TextView
                         android:id="@+id/textView7"
                         android:layout_width="match_parent"
@@ -111,7 +118,7 @@
                         android:textSize="18sp"
                         tools:text="@string/files"
                         android:foreground="?android:attr/selectableItemBackground"
-                        android:layout_below="@+id/detailed_folder"/>
+                        android:layout_below="@+id/noFolderContent"/>
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

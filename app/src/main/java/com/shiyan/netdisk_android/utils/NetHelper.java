@@ -80,6 +80,9 @@ public class NetHelper {
     private final String FOLDER_BASE_URL = "http://%s:%s/api/v1/folder/";
     private final String FILE_BASE_URL = "http://%s:%s/api/v1/file/";
     private final String UPLOAD_BASE_URL = "http://%s:%s/api/v1/upload/";
+    private final String SEARCH_BASE_URL = "http://%s:%s/api/v1/search/";
+    private final String SHARED_BASE_URL = "http://%s:%s/api/v1/shared/";
+
 
     private final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json");
 
@@ -253,6 +256,10 @@ public class NetHelper {
         buildRequest(buildBaseFileUrl("shareOrCancel/cancel"), buildCancelSharingFileParam(id), Method.POST, callBack);
     }
 
+    public void query(String queryText, final CallBack callBack) {
+        buildRequest(buildSearchUrl(queryText), null, Method.GET, callBack);
+    }
+
     public Bitmap getImage(int id) throws JSONException, IOException {
         Request request = new Request.Builder()
                 .url(buildBaseFileUrl("%d", id))
@@ -395,6 +402,10 @@ public class NetHelper {
 
     private String buildBaseFolderUrl(String param, int... id) {
         return buildBaseUrl(FOLDER_BASE_URL, param, id);
+    }
+
+    private String buildSearchUrl(String param) {
+        return buildBaseUrl(SEARCH_BASE_URL, param);
     }
 
     private String buildBaseUrl(String base, String param, int... id) {

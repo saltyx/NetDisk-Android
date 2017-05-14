@@ -27,12 +27,16 @@ package com.shiyan.netdisk_android.main;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.shiyan.netdisk_android.SecuDiskApplication;
 import com.shiyan.netdisk_android.data.DataRepoImpl;
 import com.shiyan.netdisk_android.data.DataSource;
 import com.shiyan.netdisk_android.model.UserFile;
+import com.shiyan.netdisk_android.utils.CallBack;
+import com.shiyan.netdisk_android.utils.NetHelper;
 import com.shiyan.netdisk_android.utils.SerializeServerBack;
+import com.shiyan.netdisk_android.utils.SerializeUserFile;
 import com.shiyan.netdisk_android.utils.Utils;
 import com.vincent.filepicker.filter.entity.BaseFile;
 
@@ -52,12 +56,13 @@ class MainPresenter implements MainContract.Presenter {
 
     private DataRepoImpl mDataRepo;
     private MainContract.View mMainView;
+    private MainContract.SearchView mSearchView;
 
-    MainPresenter(DataRepoImpl mDataRepo, MainContract.View mMainView) {
+    MainPresenter(DataRepoImpl mDataRepo, MainContract.View mainView, MainContract.SearchView searchView) {
         this.mDataRepo = mDataRepo;
-        this.mMainView = mMainView;
-
-        mMainView.setPresenter(this);
+        this.mMainView = mainView;
+        this.mSearchView = searchView;
+        mainView.setPresenter(this);
     }
 
     @Override
@@ -275,5 +280,24 @@ class MainPresenter implements MainContract.Presenter {
                 }
             });
         }
+    }
+
+    public void query(String queryText) {
+        if (null == queryText || queryText.contentEquals("")) return;
+
+        NetHelper.getInstance().query(queryText, new CallBack() {
+            @Override public void success(@NonNull String data) {
+                try {
+                    mSearchView.show(new ArrayList<>(SerializeUserFile.serialize(SerializeServerBack.getSuccessResponseInfo(data))));
+                } catch (JSONException e) {
+                    // do nothing
+                    mSearchView.userFeedBack(e.getMessage());
+                }
+            }
+
+            @Override public void error(@Nullable String error) {
+                mSearchView.userFeedBack(error);
+            }
+        });
     }
 }

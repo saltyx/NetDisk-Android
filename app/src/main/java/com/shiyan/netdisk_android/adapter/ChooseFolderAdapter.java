@@ -84,7 +84,8 @@ public class ChooseFolderAdapter extends RecyclerView.Adapter<ChooseFolderAdapte
     }
 
     @Override public CFViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new CFViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_choose_folder,parent,false));
+        return new CFViewHolder(LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.item_choose_folder,parent,false));
     }
 
     @Override public void onBindViewHolder(CFViewHolder holder, int position) {

@@ -24,4 +24,6 @@
 
     <string name="setting">Setting</string>
 
+    <string name="string_for_search_result">Search Result</string>
+
 </resources>
