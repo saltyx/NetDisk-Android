@@ -154,11 +154,11 @@ class MainPresenter implements MainContract.Presenter {
     public void shareOrCancel(UserFile file) {
         final DataSource.ResultCallBack callback = new DataSource.ResultCallBack() {
             @Override public void onSuccess(@Nullable String success) {
-
+                Log.i(TAG, "onSuccess: "+success);
             }
 
             @Override public void onError(@Nullable String error) {
-
+                
             }
         };
         if (file.isFolder()) {

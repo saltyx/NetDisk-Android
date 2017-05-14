@@ -80,6 +80,11 @@ public class Utils {
     }
 
     public static String buildBaseFileUrl(String param, int... id) {
-        return String.format(Locale.US, "http://%s:%s/v1/file/".concat(param), SecuDiskApplication.IP, SecuDiskApplication.Port, id[0]);
+        return String.format(Locale.US, "http://%s:%s/api/v1/file/".concat(param), SecuDiskApplication.IP, SecuDiskApplication.Port, id[0]);
     }
+
+    public static String buildSharedFileUrl(int id) {
+        return String.format(Locale.US, "http://%s:%s/api/v1/shared/%d",SecuDiskApplication.IP, SecuDiskApplication.Port,id);
+    }
+
 }

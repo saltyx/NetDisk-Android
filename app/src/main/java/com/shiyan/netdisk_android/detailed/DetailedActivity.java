@@ -62,6 +62,7 @@ import com.shiyan.netdisk_android.service.DownloadService;
 import com.shiyan.netdisk_android.utils.ImageLoader;
 import com.shiyan.netdisk_android.utils.Inject;
 import com.shiyan.netdisk_android.utils.NetHelper;
+import com.shiyan.netdisk_android.utils.SerializeServerBack;
 import com.shiyan.netdisk_android.utils.Utils;
 
 import org.json.JSONException;
@@ -231,8 +232,29 @@ public class DetailedActivity extends AppCompatActivity {
                 dialogFragment.show(getFragmentManager(), TAG);
             }
 
-            @Override public void onShareClick(UserFile file) {
+            @Override public void onShareClick(final UserFile file) {
+                mDB.shareFile(file, new DataSource.ResultCallBack() {
+                    @Override public void onSuccess(@Nullable String success) {
+                        try {
+                            if (200 == SerializeServerBack.getSuccessResponseInt(success)) {
+                                //share it
+                                Intent shareLinkIntent = new Intent();
+                                shareLinkIntent.setAction(Intent.ACTION_SEND);
+                                shareLinkIntent.putExtra(Intent.EXTRA_TEXT, Utils.buildSharedFileUrl(file.getId()));
+                                shareLinkIntent.setType("text/plain");
+                                startActivity(Intent.createChooser(shareLinkIntent,"Share the link"));
+                            } else {
 
+                            }
+                        } catch (JSONException e) {
+
+                        }
+                    }
+
+                    @Override public void onError(@Nullable String error) {
+
+                    }
+                });
             }
         }).hideOption(DetailInfoDialogFragment.RENAME,DetailInfoDialogFragment.DELETE)
                 .show(getFragmentManager(), TAG);

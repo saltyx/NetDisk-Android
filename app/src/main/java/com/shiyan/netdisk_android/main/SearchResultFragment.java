@@ -104,7 +104,6 @@ public class SearchResultFragment extends Fragment implements MainContract.Searc
         });
         mSearchResult.setAdapter(mAdapter);
         mSearchResult.setLayoutManager(new LinearLayoutManager(getContext()));
-        //mSearchResult.set
         return root;
 
     }

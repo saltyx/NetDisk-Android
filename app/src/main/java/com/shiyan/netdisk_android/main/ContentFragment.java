@@ -416,7 +416,7 @@ public class ContentFragment extends Fragment implements MainContract.View , Swi
                                             mPresenter.shareOrCancel(file);
                                             dialog.dismiss();
                                         }
-                                    }).show(getActivity().getFragmentManager(),TAG);
+                                    }).hideOption(DetailInfoDialogFragment.SHARE).show(getActivity().getFragmentManager(),TAG);
                                 }
                             }
 
