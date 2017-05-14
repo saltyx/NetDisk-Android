@@ -25,6 +25,7 @@
 package com.shiyan.netdisk_android.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,9 +63,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         @OnClick(R.id.more) void onMoreClick() {
             //show more options
             //build a dialog for more options
+            callBack.onMoreClick(currentFile);
         }
 
         UserFile currentFile;
+        CallBack callBack;
 
         SearchResultVH(View itemView) {
             super(itemView);
@@ -74,9 +77,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     private ArrayList<UserFile> mData;
+    private CallBack mCallback;
 
-    public SearchResultAdapter(ArrayList<UserFile> data) {
+    public SearchResultAdapter(ArrayList<UserFile> data, CallBack callBack) {
         this.mData = data;
+        this.mCallback = callBack;
     }
 
     @Override public SearchResultVH onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -89,6 +94,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         holder.currentFile = file;
         holder.mFileName.setText(file.getFileName());
         holder.mCreatedTime.setText(file.getCreateAt());
+        holder.callBack = mCallback;
         if (file.isFolder()) {
             holder.mIconImage.setImageResource(R.drawable.ic_folder_black_24dp);
         } else {
@@ -115,5 +121,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     @Override public void addItem(UserFile file) {
 
+    }
+
+    public interface CallBack{
+        public void onMoreClick(UserFile file);
     }
 }

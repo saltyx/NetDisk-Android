@@ -40,6 +40,8 @@ import android.widget.Toast;
 
 import com.shiyan.netdisk_android.R;
 import com.shiyan.netdisk_android.adapter.SearchResultAdapter;
+import com.shiyan.netdisk_android.dialog.DetailInfoDialogFragment;
+import com.shiyan.netdisk_android.dialog.WithOneInputDialogFragment;
 import com.shiyan.netdisk_android.model.UserFile;
 import com.shiyan.netdisk_android.utils.SerializeUserFile;
 
@@ -75,7 +77,31 @@ public class SearchResultFragment extends Fragment implements MainContract.Searc
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_search_result, container, false);
         ButterKnife.bind(this, root);
-        mAdapter = new SearchResultAdapter(null);
+        mAdapter = new SearchResultAdapter(null, new SearchResultAdapter.CallBack() {
+            @Override public void onMoreClick(UserFile file) {
+                //build more dialog
+                final DetailInfoDialogFragment dialog = DetailInfoDialogFragment.newInstance(file);
+                dialog.setCallBack(new DetailInfoDialogFragment.OnMoreCallBack() {
+                    @Override public void onDeletedClick(UserFile file) {
+                        mPresenter.delete(file);
+                        dialog.dismiss();
+                    }
+
+                    @Override public void onRenameClick(UserFile file) {
+                        buildDialogForRename(file);
+                        dialog.dismiss();
+                    }
+
+                    @Override public void onEncryptOrDecryptClick(UserFile file) {
+                        buildDialogForEncryptOrDecrypt(file);
+                    }
+
+                    @Override public void onShareClick(UserFile file) {
+
+                    }
+                }).show(getActivity().getFragmentManager(), TAG);
+            }
+        });
         mSearchResult.setAdapter(mAdapter);
         mSearchResult.setLayoutManager(new LinearLayoutManager(getContext()));
         //mSearchResult.set
@@ -108,6 +134,37 @@ public class SearchResultFragment extends Fragment implements MainContract.Searc
 
     public void showResult(ArrayList<UserFile> data) {
         mAdapter.changeData(SerializeUserFile.sort(data));
+    }
+
+    private void buildDialogForRename(final UserFile file) {
+        final WithOneInputDialogFragment dialog = WithOneInputDialogFragment.newInstance(file);
+        dialog.setCallBack(new WithOneInputDialogFragment.CallBack() {
+            @Override public void onOkClick(String text) {
+                file.setFileName(text);
+                mPresenter.rename(file);
+                dialog.dismiss();
+            }
+
+            @Override public void onCancelClick() {
+                dialog.dismiss();
+            }
+        }).show(getActivity().getFragmentManager(), TAG);
+    }
+
+    private void buildDialogForEncryptOrDecrypt(final UserFile file) {
+        final WithOneInputDialogFragment dialog = WithOneInputDialogFragment.newInstance(file);
+        String title = file.isEncrypted() ? "Decrypt " : "Encrypt ";
+        dialog.setTitle(title.concat(file.getFileName()))
+                .setCallBack(new WithOneInputDialogFragment.CallBack() {
+                    @Override public void onOkClick(String text) {
+                        mPresenter.encryptOrDecrypt(file, text);
+                        dialog.dismiss();
+                    }
+
+                    @Override public void onCancelClick() {
+                        dialog.dismiss();
+                    }
+                }).show(getActivity().getFragmentManager(), TAG);
     }
 
     private static class MHandler extends Handler {
