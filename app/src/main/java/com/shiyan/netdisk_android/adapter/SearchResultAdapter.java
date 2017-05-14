@@ -72,7 +72,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         SearchResultVH(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
         }
     }
 

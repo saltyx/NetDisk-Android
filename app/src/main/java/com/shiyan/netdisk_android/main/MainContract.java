@@ -68,6 +68,7 @@ public interface MainContract {
 
     interface SearchView extends BaseView <Presenter> {
         void show(ArrayList<UserFile> data);
+        void share(UserFile file);
         void userFeedBack(String msg);
     }
 
@@ -83,5 +84,6 @@ public interface MainContract {
         void createFolder(UserFile file);
         void goToNextFolder(UserFile file);
         int backToPrevious();
+        void query(String queryText);
     }
 }

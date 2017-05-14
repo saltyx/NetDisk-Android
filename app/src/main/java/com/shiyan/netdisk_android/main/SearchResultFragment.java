@@ -25,6 +25,7 @@
 package com.shiyan.netdisk_android.main;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -43,7 +44,11 @@ import com.shiyan.netdisk_android.adapter.SearchResultAdapter;
 import com.shiyan.netdisk_android.dialog.DetailInfoDialogFragment;
 import com.shiyan.netdisk_android.dialog.WithOneInputDialogFragment;
 import com.shiyan.netdisk_android.model.UserFile;
+import com.shiyan.netdisk_android.utils.SerializeServerBack;
 import com.shiyan.netdisk_android.utils.SerializeUserFile;
+import com.shiyan.netdisk_android.utils.Utils;
+
+import org.json.JSONException;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -59,6 +64,7 @@ public class SearchResultFragment extends Fragment implements MainContract.Searc
     final String TAG = getClass().getName();
 
     final static int MSG_SHOW_SEARCH_RESULT = 0x0001;
+    final static int MSG_SHARE = 0x0002;
     final static String KEY_BUNDLE = "KEY_BUNDLE";
 
     private MainContract.Presenter mPresenter;
@@ -78,7 +84,7 @@ public class SearchResultFragment extends Fragment implements MainContract.Searc
         View root = inflater.inflate(R.layout.fragment_search_result, container, false);
         ButterKnife.bind(this, root);
         mAdapter = new SearchResultAdapter(null, new SearchResultAdapter.CallBack() {
-            @Override public void onMoreClick(UserFile file) {
+            @Override public void onMoreClick(final UserFile file) {
                 //build more dialog
                 final DetailInfoDialogFragment dialog = DetailInfoDialogFragment.newInstance(file);
                 dialog.setCallBack(new DetailInfoDialogFragment.OnMoreCallBack() {
@@ -97,9 +103,14 @@ public class SearchResultFragment extends Fragment implements MainContract.Searc
                     }
 
                     @Override public void onShareClick(UserFile file) {
-
+                        //Log.i(TAG, "onShareClick: "+file.toString());
+                        mPresenter.shareOrCancel(file);
                     }
-                }).show(getActivity().getFragmentManager(), TAG);
+                });
+                if (file.isFolder()) {
+                    dialog.hideOption(DetailInfoDialogFragment.SHARE);
+                }
+                dialog.show(getActivity().getFragmentManager(), TAG);
             }
         });
         mSearchResult.setAdapter(mAdapter);
@@ -125,6 +136,15 @@ public class SearchResultFragment extends Fragment implements MainContract.Searc
         mHandler.sendMessage(msg);
     }
 
+    @Override public void share(UserFile file) {
+        Message msg = Message.obtain();
+        msg.arg1 = MSG_SHARE;
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_BUNDLE, file);
+        msg.setData(bundle);
+        mHandler.sendMessage(msg);
+    }
+
     @Override public void userFeedBack(String msg) {
         if (msg == null || msg.contentEquals("")) return;
         //Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
@@ -133,6 +153,15 @@ public class SearchResultFragment extends Fragment implements MainContract.Searc
 
     public void showResult(ArrayList<UserFile> data) {
         mAdapter.changeData(SerializeUserFile.sort(data));
+    }
+
+    public void shareFile(UserFile file) {
+        Intent shareLinkIntent = new Intent();
+        shareLinkIntent.setAction(Intent.ACTION_SEND);
+        shareLinkIntent.putExtra(Intent.EXTRA_TEXT, Utils.buildSharedFileUrl(file.getId()));
+        shareLinkIntent.setType("text/plain");
+        startActivity(Intent.createChooser(shareLinkIntent,"Share the link"));
+
     }
 
     private void buildDialogForRename(final UserFile file) {
@@ -180,6 +209,10 @@ public class SearchResultFragment extends Fragment implements MainContract.Searc
                     case MSG_SHOW_SEARCH_RESULT:
                         ArrayList<UserFile> data = msg.getData().getParcelableArrayList(KEY_BUNDLE);
                         fragment.showResult(data);
+                        break;
+                    case MSG_SHARE:
+                        UserFile file = msg.getData().getParcelable(KEY_BUNDLE);
+                        fragment.shareFile(file);
                         break;
                 }
             }

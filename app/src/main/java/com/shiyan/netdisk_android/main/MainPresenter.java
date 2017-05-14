@@ -24,6 +24,7 @@
 
 package com.shiyan.netdisk_android.main;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -62,7 +63,8 @@ class MainPresenter implements MainContract.Presenter {
         this.mDataRepo = mDataRepo;
         this.mMainView = mainView;
         this.mSearchView = searchView;
-        mainView.setPresenter(this);
+        this.mMainView.setPresenter(this);
+        this.mSearchView.setPresenter(this);
     }
 
     @Override
@@ -151,29 +153,24 @@ class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void shareOrCancel(UserFile file) {
+    public void shareOrCancel(final UserFile file) {
         final DataSource.ResultCallBack callback = new DataSource.ResultCallBack() {
             @Override public void onSuccess(@Nullable String success) {
-                Log.i(TAG, "onSuccess: "+success);
+
+                try {
+                    if (200 == SerializeServerBack.getSuccessResponseInt(success)) {
+                        mSearchView.share(file);
+                    }
+                } catch (JSONException e) {
+                    Log.i(TAG, "onSuccess: "+e.getMessage());
+                }
             }
 
             @Override public void onError(@Nullable String error) {
-                
+                Log.i(TAG, "onError: "+error);
             }
         };
-        if (file.isFolder()) {
-            if (file.isShared()) {
-                mDataRepo.cancelShare(file, callback);
-            } else {
-                mDataRepo.shareFile(file, callback);
-            }
-        } else {
-            if (file.isShared()) {
-                mDataRepo.cancelShare(file, callback);
-            } else {
-                mDataRepo.shareFile(file, callback);
-            }
-        }
+        mDataRepo.shareFile(file, callback);
     }
 
     @Override
@@ -282,7 +279,7 @@ class MainPresenter implements MainContract.Presenter {
         }
     }
 
-    public void query(String queryText) {
+    @Override public void query(String queryText) {
         if (null == queryText || queryText.contentEquals("")) return;
 
         NetHelper.getInstance().query(queryText, new CallBack() {
