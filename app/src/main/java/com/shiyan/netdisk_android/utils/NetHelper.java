@@ -249,11 +249,11 @@ public class NetHelper {
     }
 
     public void shareFile(int id, final CallBack callBack) throws JSONException {
-        buildRequest(buildBaseFileUrl("shareOrCancel"),buildShareFileParam(id), Method.POST,callBack);
+        buildRequest(buildBaseFileUrl("share"),buildShareFileParam(id), Method.POST,callBack);
     }
 
     public void cancelSharingFile(int id, final CallBack callBack) throws JSONException {
-        buildRequest(buildBaseFileUrl("shareOrCancel/cancel"), buildCancelSharingFileParam(id), Method.POST, callBack);
+        buildRequest(buildBaseFileUrl("share/cancel"), buildCancelSharingFileParam(id), Method.POST, callBack);
     }
 
     public void query(String queryText, final CallBack callBack) {
